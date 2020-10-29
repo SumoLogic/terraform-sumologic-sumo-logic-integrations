@@ -3,7 +3,7 @@
 Configure Sumo Logic Applications and Connections using Terraform modules.
 The modules configure/create the following resources:
 - A source under the specified collector for the integration in Sumo Logic.
-- App dashboards in the specified folder.
+- App dashboards in the specified folder in Sumo Logic.
 - Webhook configurations in JIRA, Bitbucket or other chosen systems.
 
 ## Getting Started
@@ -48,23 +48,23 @@ Sumo Logic Connections do not need a collector or folder.
 Configure the collector resource as below:
 
 ```shell
-resource "sumologic_collector" "atlassian_collector" {
-  name     = "Atlassian"
+resource "sumologic_collector" "sumo_atlassian_collector" {
+  name     = "SumoLogic Atlassian"
   category = "Atlassian"
 }
 ```
 
-In the module declaration, pass the collector id as `sumologic_collector.atlassian_collector.id`.
+In the module declaration, pass the collector id as `sumologic_collector.sumo_atlassian_collector.id`.
 
 Configure a folder as below:
 
 ```shell
 data "sumologic_personal_folder" "personalFolder" {}
 resource "sumologic_folder" "folder" {
-  name        = "Atlassian"
-  description = "Atlassian Applications"
+  name        = "SumoLogic Atlassian"
+  description = "SumoLogic Atlassian Applications"
   parent_id   = data.sumologic_personal_folder.personalFolder.id
-  depends_on  = [sumologic_collector.atlassian_collector]
+  depends_on  = [sumologic_collector.sumo_atlassian_collector]
 }
 ```
 
@@ -80,7 +80,7 @@ module "sumologic-jira-cloud-app" {
   sumo_access_id    = "<SUMOLOGIC ACCESS ID>"
   sumo_access_key   = "<SUMOLOGIC ACCESS KEY>"
   sumo_api_endpoint = "<SUMOLOGIC ENDPOINT URI>"
-  collector_id      = sumologic_collector.atlassian_collector.id
+  collector_id      = sumologic_collector.sumo_atlassian_collector.id
   source_category   = "Atlassian/Cloud/Jira"
   folder_id         = sumologic_folder.folder.id
   jira_cloud_jql    = ""                                           # Optional

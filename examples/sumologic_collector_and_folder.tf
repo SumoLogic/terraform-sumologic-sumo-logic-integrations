@@ -6,16 +6,16 @@ provider "sumologic" {
 }
 
 # Create/Delete Collector
-resource "sumologic_collector" "atlassian_collector" {
-  name     = "Atlassian"
+resource "sumologic_collector" "sumo_atlassian_collector" {
+  name     = "SumoLogic Atlassian"
   category = "Atlassian"
 }
 
 # Create Folder for all Jira Apps
 data "sumologic_personal_folder" "personalFolder" {}
 resource "sumologic_folder" "folder" {
-  name        = "Atlassian"
-  description = "Atlassian Applications"
+  name        = "SumoLogic Atlassian"
+  description = "SumoLogic Atlassian Applications"
   parent_id   = data.sumologic_personal_folder.personalFolder.id
-  depends_on  = [sumologic_collector.atlassian_collector]
+  depends_on  = [sumologic_collector.sumo_atlassian_collector]
 }

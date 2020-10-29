@@ -11,7 +11,7 @@ module "sumologic-jira-cloud-app" {
   sumo_access_id    = "<SUMO_ACCESS_ID>"
   sumo_access_key   = "<SUMO_ACCESS_KEY>"
   sumo_api_endpoint = "https://api.sumologic.com/api/v1/"
-  collector_id      = sumologic_collector.atlassian_collector.id
+  collector_id      = sumologic_collector.sumo_atlassian_collector.id
   source_category   = "Atlassian/Cloud/Jira"
   folder_id         = sumologic_folder.folder.id
   jira_cloud_jql    = ""
