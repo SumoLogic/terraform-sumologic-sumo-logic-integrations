@@ -48,13 +48,13 @@ Sumo Logic Connections do not need a collector or folder.
 Configure the collector resource as below:
 
 ```shell
-resource "sumologic_collector" "sumo_atlassian_collector" {
+resource "sumologic_collector" "sumo_collector" {
   name     = "SumoLogic Atlassian"
   category = "Atlassian"
 }
 ```
 
-In the module declaration, pass the collector id as `sumologic_collector.sumo_atlassian_collector.id`.
+In the module declaration, pass the collector id as `sumologic_collector.sumo_collector.id`.
 
 Configure a folder as below:
 
@@ -64,7 +64,7 @@ resource "sumologic_folder" "folder" {
   name        = "SumoLogic Atlassian"
   description = "SumoLogic Atlassian Applications"
   parent_id   = data.sumologic_personal_folder.personalFolder.id
-  depends_on  = [sumologic_collector.sumo_atlassian_collector]
+  depends_on  = [sumologic_collector.sumo_collector]
 }
 ```
 
@@ -80,11 +80,12 @@ module "sumologic-jira-cloud-app" {
   sumo_access_id    = "<SUMOLOGIC ACCESS ID>"
   sumo_access_key   = "<SUMOLOGIC ACCESS KEY>"
   sumo_api_endpoint = "<SUMOLOGIC ENDPOINT URI>"
-  collector_id      = sumologic_collector.sumo_atlassian_collector.id
+  collector_id      = sumologic_collector.sumo_collector.id
   source_category   = "Atlassian/Cloud/Jira"
   folder_id         = sumologic_folder.folder.id
   jira_cloud_jql    = ""                                           # Optional
   jira_cloud_events = ["jira:issue_created", "jira:issue_updated"] # Optional. By default all events are configured.
+  app_version       = "1.0"
   #  version = "{revision}"
 }
 ```

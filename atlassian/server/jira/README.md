@@ -31,15 +31,16 @@ module "sumologic-jira-server-app" {
   providers = {
     jira = jira.server
   }
-  sumo_access_id     = "<SUMO_ACCESS_ID>"
-  sumo_access_key    = "<SUMO_ACCESS_KEY>"
-  sumo_api_endpoint  = "https://api.sumologic.com/api/v1/"
-  collector_id       = sumologic_collector.sumo_atlassian_collector.id
-  source_category    = "Atlassian/Jira/Events"
-  folder_id          = sumologic_folder.folder.id
-  jira_server_jql    = ""                                           # Optional
-  jira_server_events = ["jira:issue_created", "jira:issue_updated"] # Optional. By default all events are configured.
-  app_version            = "1.0"
+  sumo_access_id                          = "<SUMO_ACCESS_ID>"
+  sumo_access_key                         = "<SUMO_ACCESS_KEY>"
+  sumo_api_endpoint                       = "https://api.sumologic.com/api/v1/"
+  collector_id                            = sumologic_collector.sumo_collector.id
+  source_category                         = "Atlassian/Jira/Events"
+  jira_server_access_logs_sourcecategory  = "Atlassian/Jira/Server*"
+  folder_id                               = sumologic_folder.folder.id
+  jira_server_jql                         = ""                                           # Optional
+  jira_server_events                      = ["jira:issue_created", "jira:issue_updated"] # Optional. By default all events are configured.
+  app_version                             = "1.0"
 }
 ```
 
@@ -53,6 +54,7 @@ module "sumologic-jira-server-app" {
 |collector_id|Sumo Logic Collector ID|string||yes
 |folder_id|Sumo Logic Folder ID|string||yes
 |source_category|Jira Server Source Category|string|Atlassian/Jira/Events|yes
+|jira_server_access_logs_sourcecategory|This module configures Jira Server WebHooks and creates resources in Sumo Logic. Jira Server Logs collection needs to be configured as explained in Step 1 here. Configure the log collection and update the variable jira_server_access_logs_sourcecategory |string|"Atlassian/Jira/Server*"|yes
 |jira_server_jql|Jira Server Query Language expression|string||no
 |jira_server_events|Jira Server Events to Push to Sumo Logic|list|List of all the Jira Server Events|yes
 |app_version|The app_version input parameter can be used to install a new copy of the app. When the app_version field is changed, it will force Terraform to install a new app folder with the current timestamp.|String|1.0|no

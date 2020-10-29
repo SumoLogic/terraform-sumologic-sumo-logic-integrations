@@ -6,7 +6,7 @@ provider "sumologic" {
 }
 
 # Create/Delete Collector
-resource "sumologic_collector" "sumo_atlassian_collector" {
+resource "sumologic_collector" "sumo_collector" {
   name     = "SumoLogic Atlassian"
   category = "Atlassian"
 }
@@ -17,5 +17,5 @@ resource "sumologic_folder" "folder" {
   name        = "SumoLogic Atlassian"
   description = "SumoLogic Atlassian Applications"
   parent_id   = data.sumologic_personal_folder.personalFolder.id
-  depends_on  = [sumologic_collector.sumo_atlassian_collector]
+  depends_on  = [sumologic_collector.sumo_collector]
 }
