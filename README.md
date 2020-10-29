@@ -1,12 +1,16 @@
 # terraform-sumologic-integrations
 
-Configure Sumo Logic Applications using Terraform modules.
+Configure Sumo Logic Applications and Connections using Terraform modules.
+The modules configure/create the following resources:
+- A source under the specified collector for the integration in Sumo Logic.
+- App dashboards in the specified folder.
+- Webhook configurations in JIRA, Bitbucket or other chosen systems.
 
 ## Getting Started
 
 #### Requirements
 
-* [Terraform 0.12.26+](https://www.terraform.io/downloads.html)
+* [Terraform 0.13+](https://www.terraform.io/downloads.html)
 * [curl](https://curl.haxx.se/download.html) for App installations.
 
 #### Sumo Logic Provider
@@ -22,9 +26,7 @@ You can also define these values in `terraform.tfvars`.
 
 #### REST Api Provider
 
-Two REST API provider configurations are required by these modules:
-
-1. Sumo Logic REST Api provider configuration is required for App installations and is needed for all integrations involving App configuration and installation:
+Sumo Logic REST Api provider configuration is required for App installations and is needed for all integrations involving App configuration and installation:
 
 ```shell
 provider "restapi" {
@@ -38,22 +40,10 @@ provider "restapi" {
 ```
 You can also define these values in `terraform.tfvars`.
 
-2. Opsgenie REST Api provider configuration is required for configuring webhooks in Opsgenie and is needed for Opsgenie integration configuration:
-
-```shell
-provider "restapi" {
-  alias                = "opsgenie"
-  uri                  = "https://api.opsgenie.com"
-  write_returns_object = true
-  headers              = { Content-Type = "application/json", Authorization = "GenieKey <OPSGENIE KEY>" }
-}
-```
-You can also define these values in `terraform.tfvars`.
-
 #### Prerequisites for using Modules
 
-All App integrations needs a collector and a folder where the App should be installed.
-Sumo Logic Webhooks do not need a collector or folder.
+All App integrations need a collector and a folder where the App should be installed.
+Sumo Logic Connections do not need a collector or folder.
 
 Configure the collector resource as below:
 
@@ -80,25 +70,7 @@ resource "sumologic_folder" "folder" {
 
 In the module declaration, pass the folder id as `sumologic_folder.folder.id`.
 
-#### Module Declaration
-
-##### Opsgenie
-
-```shell
-module "sumologic-jira-opsgenie-app" {
-  source = "github.com/SumoLogic/sumologic-terraform-integrations//atlassian/cloud/opsgenie"
-  providers = {
-    restapi = restapi.opsgenie
-  }
-  sumo_access_id    = "<SUMOLOGIC ACCESS ID>"
-  sumo_access_key   = "<SUMOLOGIC ACCESS KEY>"
-  sumo_api_endpoint = "<SUMOLOGIC ENDPOINT URI>"
-  collector_id      = sumologic_collector.atlassian_collector.id
-  source_category   = "Atlassian/Opsgenie"
-  folder_id         = sumologic_folder.folder.id
-  #  version = "{revision}"
-}
-```
+#### Module Declaration Example
 
 ##### Jira Cloud
 
