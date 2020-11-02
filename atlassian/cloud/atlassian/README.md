@@ -6,7 +6,7 @@ This module installs [Sumo Logic Atlassian application](https://help.sumologic.c
 
 ## Requirements
 
-* Terraform >= 0.12.26
+* [Terraform](https://www.terraform.io/downloads.html) >= 0.13.0
 * Null >= 2.1
 
 ## Module Declaration

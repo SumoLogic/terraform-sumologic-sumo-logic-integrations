@@ -6,7 +6,7 @@ This module installs [Sumo Logic Jira Server application](https://help.sumologic
 
 ## Requirements
 
-* Terraform >= 0.12.26
+* [Terraform](https://www.terraform.io/downloads.html) >= 0.13.0
 * Template >= 2.1
 * Null >= 2.1
 
