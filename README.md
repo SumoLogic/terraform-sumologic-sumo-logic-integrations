@@ -92,3 +92,17 @@ module "sumologic-jira-cloud-app" {
 ```
 
 See respective module readme and examples for more details.
+
+## Modules
+
+- Atlassian
+  - Cloud
+      - [Jira](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/cloud/jira)
+      - [Bitbucket](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/cloud/bitbucket)
+      - [Atlassian](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/cloud/atlassian/)
+  - Server
+      - [Jira](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/server/jira)
+  - Sumo Logic Connections
+      - [Jira Cloud](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/webhooks/sumologic_jira_cloud)
+      - [Jira Server](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/webhooks/sumologic_jira_server)
+      - [Jira Service Desk](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/webhooks/sumologic_jira_service_desk)
