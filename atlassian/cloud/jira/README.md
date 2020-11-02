@@ -27,7 +27,9 @@ provider "jira" {
 
 ```shell
 module "sumologic-jira-cloud-app" {
-  source            = "git@github.com:SumoLogic/terraform-sumologic-integrations//atlassian/cloud/jira"
+  source            = "SumoLogic/integrations/sumologic//atlassian/cloud/jira"
+  version           = "{revision}"\
+
   sumo_access_id    = "<SUMO_ACCESS_ID>"
   sumo_access_key   = "<SUMO_ACCESS_KEY>"
   sumo_api_endpoint = "https://api.sumologic.com/api/v1/"

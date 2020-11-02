@@ -8,7 +8,9 @@ provider "jira" {
 
 # Jira Server
 module "sumologic-jira-server-app" {
-  source = "git@github.com:SumoLogic/terraform-sumologic-integrations//atlassian/server/jira"
+  source             = "SumoLogic/integrations/sumologic//atlassian/server/jira"
+  version            = "{revision}"
+
   providers = {
     jira = jira.server
   }

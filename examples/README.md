@@ -24,7 +24,9 @@ provider "jira" {
 
 # Jira Server
 module "sumologic-jira-server-app" {
-  source = "git@github.com:SumoLogic/terraform-sumologic-integrations//atlassian/server/jira"
+  source             = "SumoLogic/integrations/sumologic//atlassian/server/jira"
+  version            = "{revision}"
+
   providers = {
     jira = jira.server
   }
@@ -37,7 +39,6 @@ module "sumologic-jira-server-app" {
   jira_server_jql    = ""                                           # Optional
   jira_server_events = ["jira:issue_created", "jira:issue_updated"] # Optional. By default all events are configured.
   app_version        = "1.0"
-  #  version = "{revision}"
 }
 ```
 

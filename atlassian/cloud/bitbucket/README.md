@@ -25,7 +25,9 @@ provider "bitbucket" {
 ### Bitbucket Module
 ```shell
 module "sumologic-jira-bitbucket-app" {
-  source                 = "git@github.com:SumoLogic/terraform-sumologic-integrations//atlassian/cloud/bitbucket"
+  source                 = "SumoLogic/integrations/sumologic//atlassian/cloud/bitbucket"
+  version                = "{revision}"
+
   sumo_access_id         = "<SUMO_ACCESS_ID>"
   sumo_access_key        = "<SUMO_ACCESS_KEY>"
   sumo_api_endpoint      = "https://api.sumologic.com/api/v1/"

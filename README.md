@@ -76,7 +76,9 @@ In the module declaration, pass the folder id as `sumologic_folder.folder.id`.
 
 ```shell
 module "sumologic-jira-cloud-app" {
-  source = "github.com/SumoLogic/sumologic-terraform-integrations//atlassian/cloud/jira"
+  source            = "SumoLogic/integrations/sumologic//atlassian/cloud/jira"
+  version           = "{revision}"
+
   sumo_access_id    = "<SUMOLOGIC ACCESS ID>"
   sumo_access_key   = "<SUMOLOGIC ACCESS KEY>"
   sumo_api_endpoint = "<SUMOLOGIC ENDPOINT URI>"
@@ -86,7 +88,6 @@ module "sumologic-jira-cloud-app" {
   jira_cloud_jql    = ""                                           # Optional
   jira_cloud_events = ["jira:issue_created", "jira:issue_updated"] # Optional. By default all events are configured.
   app_version       = "1.0"
-  #  version = "{revision}"
 }
 ```
 
