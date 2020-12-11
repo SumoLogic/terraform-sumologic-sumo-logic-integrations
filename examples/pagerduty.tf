@@ -9,7 +9,7 @@ module "sumologic-jira-pagerduty-app" {
 
   sumo_access_id                            = "<SUMO_ACCESS_ID>"
   sumo_access_key                           = "<SUMO_ACCESS_KEY>"
-  sumo_api_endpoint                            = "https://api.sumologic.com/api/v1/"
+  sumo_api_endpoint                         = "https://api.sumologic.com/api/v1/"
   collector_id                              = sumologic_collector.sumo_collector.id
   source_category                           = "Pagerduty"
   folder_id                                 = sumologic_folder.folder.id

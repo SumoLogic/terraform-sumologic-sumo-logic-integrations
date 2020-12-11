@@ -8,7 +8,7 @@ This module installs [Sumo Logic Pagerduty V2 application](https://help.sumologi
 
 * [Terraform](https://www.terraform.io/downloads.html) >= 0.13.0
 * Null >= 2.1
-* Pagerduty >= 1.2
+* Pagerduty >= 1.7
 
 ## Module Declaration
 
@@ -33,7 +33,7 @@ module "sumologic-jira-pagerduty-app" {
   collector_id                            = sumologic_collector.sumo_collector.id
   source_category                         = "Pagerduty"
   folder_id                               = sumologic_folder.folder.id
-  pagerduty_services_pagerduty_webhooks   = ["SERVICE_ID1","SERVICE_ID2"] # By default all events are configured.
+  pagerduty_services_pagerduty_webhooks   = ["SERVICE_ID1","SERVICE_ID2"]
   app_version                             = "1.0"
 }
 ```
