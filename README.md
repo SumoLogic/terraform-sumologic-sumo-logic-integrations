@@ -14,7 +14,32 @@ The modules configure/create the following resources:
 
 * [Terraform 0.13+](https://www.terraform.io/downloads.html)
 * [curl](https://curl.haxx.se/download.html) for App installations.
+* [Sumo Logic Terraform Provider](https://registry.terraform.io/providers/SumoLogic/sumologic/latest)
+* [Null Terraform Provider](https://registry.terraform.io/providers/hashicorp/null/latest).
 * Respective Terraform providers based on selections.
+
+    Create a `providers.tf` file and add the requirements in the following format:
+
+    ```shell
+    terraform {
+      required_version = ">= 0.13"
+
+      required_providers {
+        null = {
+          version = "~> 2.1"
+        }
+        sumologic = {
+          source  = "sumologic/sumologic"
+          version = "~> 2.1.0"
+        }
+        jira = {
+          source  = "fourplusone/jira"
+          version = "~> 0.1.14"
+        }
+
+      }
+    }
+    ```
 
 #### Sumo Logic Provider
 
