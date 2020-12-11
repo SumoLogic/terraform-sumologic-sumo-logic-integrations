@@ -4,6 +4,8 @@
 
 This module installs [Sumo Logic Github application](https://help.sumologic.com/07Sumo-Logic-Apps/08App_Development/Github) in Sumo Logic and configures Webhooks in Github to send events to Sumo Logic.
 
+Note: This module doesn't create the field required by Github App, please configure the field as defined [here](https://help.sumologic.com/07Sumo-Logic-Apps/08App_Development/GitHub/01Collect-Logs-for-the-GitHub-App#enable-github-event-tagging-at-sumo-logic).
+
 ## Requirements
 
 * [Terraform](https://www.terraform.io/downloads.html) >= 0.13.0
