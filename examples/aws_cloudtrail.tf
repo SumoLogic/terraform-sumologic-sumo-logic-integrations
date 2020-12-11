@@ -10,7 +10,7 @@ module "sumologic-cloudtrail-apps" {
   sumo_api_endpoint                    = "https://api.sumologic.com/api/v1/"
   sumo_collector_name                  = "sumo-logic-terraform-cloudtrail"
   sumo_source_name                     = "sumo-logic-terraform-cloudtrail"
-  sumo_source_category                 = "Labs/CloudTrail"
+  sumo_source_category                 = "AWS/CloudTrail"
   sumo_aws_account_id                  = "926226587429"
   folder_id                            = sumologic_folder.folder.id
   app_version                          = "1.0"

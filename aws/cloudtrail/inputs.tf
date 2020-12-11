@@ -38,7 +38,7 @@ variable "sumo_source_name" {
 variable "sumo_source_category" {
   type        = string
   description = "Provide a CloudTrail Source Category."
-  default = "Labs/CloudTrail"
+  default = "AWS/CloudTrail"
 }
 variable "sumo_aws_account_id" {
   type        = number

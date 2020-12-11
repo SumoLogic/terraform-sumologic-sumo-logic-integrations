@@ -29,7 +29,7 @@ module "sumologic-cloudtrail-apps" {
   sumo_api_endpoint                    = "https://api.sumologic.com/api/v1/"
   sumo_collector_name                  = "sumo-logic-terraform-cloudtrail"
   sumo_source_name                     = "sumo-logic-terraform-cloudtrail"
-  sumo_source_category                 = "Labs/CloudTrail"
+  sumo_source_category                 = "AWS/CloudTrail"
   sumo_aws_account_id                  = "926226587429"
   folder_id                            = sumologic_folder.folder.id
   app_version                          = "1.0"
@@ -48,6 +48,6 @@ module "sumologic-cloudtrail-apps" {
 |folder_id|Sumo Logic Folder ID|string||yes
 |sumo_collector_name|Provide a Collector Name|string|sumo-logic-terraform-cloudtrail|no
 |sumo_source_name|Provide a CloudTrail Source Name|string|sumo-logic-terraform-cloudtrail|no
-|sumo_source_category|Provide a CloudTrail Source Category|string|Labs/CloudTrail|no
-|sumo_aws_account_id|Provide the Sumo Logic AWS Account ID. Get the Account ID - [Visit](https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/Amazon-Web-Services/Grant-Access-to-an-AWS-Product#iam-role)|string|Atlassian/Bitbucket|no
+|sumo_source_category|Provide a CloudTrail Source Category|string|AWS/CloudTrail|no
+|sumo_aws_account_id|Provide the Sumo Logic AWS Account ID. Get the Account ID - [Visit](https://help.sumologic.com/03Send-Data/Sources/02Sources-for-Hosted-Collectors/Amazon-Web-Services/Grant-Access-to-an-AWS-Product#iam-role)|string|926226587429|no
 |app_version|The app_version input parameter can be used to install a new copy of the app. When the app_version field is changed, it will force Terraform to install a new app folder with the current timestamp.|String|1.0|no
