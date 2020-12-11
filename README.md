@@ -4,7 +4,9 @@ Configure Sumo Logic Applications and Connections using Terraform modules.
 The modules configure/create the following resources:
 - A source under the specified collector for the integration in Sumo Logic.
 - App dashboards in the specified folder in Sumo Logic.
-- Webhook configurations in JIRA, Bitbucket or other chosen systems.
+- Connections in Sumo Logic.
+- Webhook configurations in JIRA, Bitbucket, Pagerduty or other chosen systems.
+- Resources in cloud systems such as AWS.
 
 ## Getting Started
 
@@ -12,6 +14,7 @@ The modules configure/create the following resources:
 
 * [Terraform 0.13+](https://www.terraform.io/downloads.html)
 * [curl](https://curl.haxx.se/download.html) for App installations.
+* Respective Terraform providers based on selections.
 
 #### Sumo Logic Provider
 
@@ -49,8 +52,8 @@ Configure the collector resource as below:
 
 ```shell
 resource "sumologic_collector" "sumo_collector" {
-  name     = "SumoLogic Atlassian"
-  category = "Atlassian"
+  name     = "SumoLogic Integrations"
+  category = "SumoLogic"
 }
 ```
 
@@ -61,8 +64,8 @@ Configure a folder as below:
 ```shell
 data "sumologic_personal_folder" "personalFolder" {}
 resource "sumologic_folder" "folder" {
-  name        = "SumoLogic Atlassian"
-  description = "SumoLogic Atlassian Applications"
+  name        = "SumoLogic Applications"
+  description = "SumoLogic Applications Folder"
   parent_id   = data.sumologic_personal_folder.personalFolder.id
   depends_on  = [sumologic_collector.sumo_collector]
 }
@@ -106,3 +109,8 @@ See respective module readme and examples for more details.
       - [Jira Cloud](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/webhooks/sumologic_jira_cloud)
       - [Jira Server](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/webhooks/sumologic_jira_server)
       - [Jira Service Desk](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/webhooks/sumologic_jira_service_desk)
+- AWS
+  - [CloudTrail](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/aws/cloudtrail)
+- [Github](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/github)
+- [Pagerduty](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/pagerduty)
+
