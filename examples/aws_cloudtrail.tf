@@ -1,6 +1,6 @@
 # CloudTrail Apps
 module "sumologic-cloudtrail-apps" {
-  source = "SumoLogic/integrations/sumologic//aws/cloudtrail"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudtrail"
   version                              = "{revision}"
 
   sumo_access_id                       = "<SUMO_ACCESS_ID>"

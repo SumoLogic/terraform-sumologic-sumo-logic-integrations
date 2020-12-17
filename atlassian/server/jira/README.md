@@ -12,7 +12,7 @@ This module installs [Sumo Logic Jira Server application](https://help.sumologic
 
 ## Module Declaration
 
-This module requires Sumo Logic collector Id and Folder id as explained [here](https://github.com/SumoLogic/terraform-sumologic-integrations#prerequisites-for-using-modules).
+This module requires Sumo Logic collector Id and Folder id as explained [here](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations#prerequisites-for-using-modules).
 
 ### JIRA Server Provider
 ```shell
@@ -27,7 +27,7 @@ provider "jira" {
 ### Jira Server
 ```shell
 module "sumologic-jira-server-app" {
-  source                                  = "SumoLogic/integrations/sumologic//atlassian/server/jira"
+  source                                  = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/server/jira"
   version                                 = "{revision}"
 
   providers = {

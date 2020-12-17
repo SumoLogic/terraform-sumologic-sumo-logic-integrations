@@ -11,11 +11,11 @@ This module installs [Sumo Logic Atlassian application](https://help.sumologic.c
 
 ## Module Declaration
 
-This module requires Sumo Logic collector Id and Folder id as explained [here](https://github.com/SumoLogic/terraform-sumologic-integrations#prerequisites-for-using-modules).
+This module requires Sumo Logic collector Id and Folder id as explained [here](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations#prerequisites-for-using-modules).
 
 ```shell
 module "sumologic-jira-atlassian-app" {
-  source = "SumoLogic/integrations/sumologic//atlassian/cloud/atlassian"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/atlassian"
   sumo_access_id                       = "<SUMO_ACCESS_ID>"
   sumo_access_key                      = "<SUMO_ACCESS_KEY>"
   sumo_api_endpoint                    = "https://api.sumologic.com/api/v1/"

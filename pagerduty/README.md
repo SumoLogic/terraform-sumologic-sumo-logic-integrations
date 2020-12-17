@@ -12,7 +12,7 @@ This module installs [Sumo Logic Pagerduty V2 application](https://help.sumologi
 
 ## Module Declaration
 
-This module requires Sumo Logic collector Id and Folder id as explained [here](https://github.com/SumoLogic/terraform-sumologic-integrations#prerequisites-for-using-modules).
+This module requires Sumo Logic collector Id and Folder id as explained [here](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations#prerequisites-for-using-modules).
 
 ### Pagerduty Provider
 ```shell
@@ -24,7 +24,7 @@ provider "pagerduty" {
 ### Pagerduty Module
 ```shell
 module "sumologic-jira-pagerduty-app" {
-  source                                  = "SumoLogic/integrations/sumologic//pagerduty"
+  source                                  = "SumoLogic/sumo-logic-integrations/sumologic//pagerduty"
   version                                 = "{revision}"
 
   sumo_access_id                          = "<SUMO_ACCESS_ID>"
