@@ -24,7 +24,7 @@ provider "jira" {
 
 # Jira Server
 module "sumologic-jira-server-app" {
-  source             = "SumoLogic/integrations/sumologic//atlassian/server/jira"
+  source             = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/server/jira"
   version            = "{revision}"
 
   providers = {

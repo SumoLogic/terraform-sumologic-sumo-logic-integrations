@@ -5,7 +5,7 @@ provider "github" {
 
 ### Github Module
 module "sumologic-jira-github-app" {
-  source                      = "SumoLogic/integrations/sumologic//github"
+  source                      = "SumoLogic/sumo-logic-integrations/sumologic//github"
   version                     = "{revision}"
 
   sumo_access_id              = "<SUMO_ACCESS_ID>"

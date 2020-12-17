@@ -26,7 +26,7 @@ provider "sumologic" {
 ### Sumo Logic to Jira Service Desk Webhook
 ```shell
 module "sumologic-jira-service-desk-webhook" {
-  source                      = "SumoLogic/integrations/sumologic//atlassian/webhooks/sumologic_jira_service_desk"
+  source                      = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/webhooks/sumologic_jira_service_desk"
   version                     = "{revision}"
 
   jira_servicedesk_url        = "<JIRA_SERVICE_DESK_URL>"

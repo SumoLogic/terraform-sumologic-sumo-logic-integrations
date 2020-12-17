@@ -4,7 +4,7 @@ provider "pagerduty" {
 
 ### Pagerduty Module
 module "sumologic-jira-pagerduty-app" {
-  source                                    = "SumoLogic/integrations/sumologic//pagerduty"
+  source                                    = "SumoLogic/sumo-logic-integrations/sumologic//pagerduty"
   version                                   = "{revision}"
 
   sumo_access_id                            = "<SUMO_ACCESS_ID>"

@@ -17,11 +17,11 @@ Apps installed are:
 
 ## Module Declaration
 
-This module requires Sumo Logic External Id and Folder id as explained [here](https://github.com/SumoLogic/terraform-sumologic-integrations#prerequisites-for-using-modules).
+This module requires Sumo Logic External Id and Folder id as explained [here](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations#prerequisites-for-using-modules).
 
 ```shell
 module "sumologic-cloudtrail-apps" {
-  source = "SumoLogic/integrations/sumologic//aws/cloudtrail"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudtrail"
   sumo_access_id                       = "<SUMO_ACCESS_ID>"
   sumo_access_key                      = "<SUMO_ACCESS_KEY>"
   sumo_external_id                     = "<SUMO_EXTERNAL_ID>"

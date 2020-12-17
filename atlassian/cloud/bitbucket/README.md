@@ -12,7 +12,7 @@ This module installs [Sumo Logic Bitbucket application](https://help.sumologic.c
 
 ## Module Declaration
 
-This module requires Sumo Logic collector Id and Folder id as explained [here](https://github.com/SumoLogic/terraform-sumologic-integrations#prerequisites-for-using-modules).
+This module requires Sumo Logic collector Id and Folder id as explained [here](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations#prerequisites-for-using-modules).
 
 ### BitBucket Provider
 ```shell
@@ -25,7 +25,7 @@ provider "bitbucket" {
 ### Bitbucket Module
 ```shell
 module "sumologic-jira-bitbucket-app" {
-  source                 = "SumoLogic/integrations/sumologic//atlassian/cloud/bitbucket"
+  source                 = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/bitbucket"
   version                = "{revision}"
 
   sumo_access_id         = "<SUMO_ACCESS_ID>"

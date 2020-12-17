@@ -1,6 +1,6 @@
 # Atlassian App
 module "sumologic-jira-atlassian-app" {
-  source                               = "SumoLogic/integrations/sumologic//atlassian/cloud/atlassian"
+  source                               = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/atlassian"
   version                              = "{revision}"
 
   sumo_access_id                       = "<SUMO_ACCESS_ID>"
