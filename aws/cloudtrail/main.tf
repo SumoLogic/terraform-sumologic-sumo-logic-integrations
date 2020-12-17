@@ -226,7 +226,7 @@ resource "sumologic_collector" "collector" {
 
 # Create the source based on a flag.
 resource "sumologic_cloudtrail_source" "terraform_cloudtrail_source" {
-  depends_on = [aws_cloudtrail.aws_s3_cloudtrail]
+  depends_on = [aws_cloudtrail.aws_s3_cloudtrail, aws_iam_role_policy_attachment.sumologic_logs_policy_attach]
   name          = var.sumo_source_name
   description   = "Sumo Logic Source for CloudTrail"
   category      = var.sumo_source_category
