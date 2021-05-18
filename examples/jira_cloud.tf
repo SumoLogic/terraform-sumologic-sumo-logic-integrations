@@ -7,7 +7,7 @@ provider "jira" {
 
 # Jira Cloud
 module "sumologic-jira-cloud-app" {
-  source            = "SumoLogic/integrations/sumologic//atlassian/cloud/jira"
+  source            = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/jira"
   version           = "{revision}"
 
   sumo_access_id    = "<SUMO_ACCESS_ID>"

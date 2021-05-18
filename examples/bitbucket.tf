@@ -6,7 +6,7 @@ provider "bitbucket" {
 
 # Bitbucket
 module "sumologic-jira-bitbucket-app" {
-  source                 = "SumoLogic/integrations/sumologic//atlassian/cloud/bitbucket"
+  source                 = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/bitbucket"
   version                = "{revision}"
 
   sumo_access_id         = "<SUMO_ACCESS_ID>"

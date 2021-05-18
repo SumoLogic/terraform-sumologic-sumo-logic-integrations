@@ -1,4 +1,4 @@
-# terraform-sumologic-integrations
+# terraform-sumologic-sumo-logic-integrations
 
 Configure Sumo Logic Applications and Connections using Terraform modules.
 The modules configure/create the following resources:
@@ -104,7 +104,7 @@ In the module declaration, pass the folder id as `sumologic_folder.folder.id`.
 
 ```shell
 module "sumologic-jira-cloud-app" {
-  source            = "SumoLogic/integrations/sumologic//atlassian/cloud/jira"
+  source            = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/jira"
   version           = "{revision}"
 
   sumo_access_id    = "<SUMOLOGIC ACCESS ID>"
@@ -125,17 +125,17 @@ See respective module readme and examples for more details.
 
 - Atlassian
   - Cloud
-      - [Jira](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/cloud/jira)
-      - [Bitbucket](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/cloud/bitbucket)
-      - [Atlassian](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/cloud/atlassian/)
+      - [Jira](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/atlassian/cloud/jira)
+      - [Bitbucket](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/atlassian/cloud/bitbucket)
+      - [Atlassian](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/atlassian/cloud/atlassian/)
   - Server
-      - [Jira](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/server/jira)
+      - [Jira](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/atlassian/server/jira)
   - Sumo Logic Connections
-      - [Jira Cloud](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/webhooks/sumologic_jira_cloud)
-      - [Jira Server](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/webhooks/sumologic_jira_server)
-      - [Jira Service Desk](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/atlassian/webhooks/sumologic_jira_service_desk)
+      - [Jira Cloud](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/atlassian/webhooks/sumologic_jira_cloud)
+      - [Jira Server](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/atlassian/webhooks/sumologic_jira_server)
+      - [Jira Service Desk](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/atlassian/webhooks/sumologic_jira_service_desk)
 - AWS
-  - [CloudTrail](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/aws/cloudtrail)
-- [Github](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/github)
-- [Pagerduty](https://github.com/SumoLogic/terraform-sumologic-integrations/tree/master/pagerduty)
+  - [CloudTrail](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/aws/cloudtrail)
+- [Github](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/github)
+- [Pagerduty](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/pagerduty)
 

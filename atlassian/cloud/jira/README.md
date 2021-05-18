@@ -12,7 +12,7 @@ This module installs [Sumo Logic Jira Cloud application](https://help.sumologic.
 
 ## Module Declaration
 
-This module requires Sumo Logic collector Id and Folder id as explained [here](https://github.com/SumoLogic/terraform-sumologic-integrations#prerequisites-for-using-modules).
+This module requires Sumo Logic collector Id and Folder id as explained [here](https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations#prerequisites-for-using-modules).
 
 ### JIRA Cloud Provider
 
@@ -27,7 +27,7 @@ provider "jira" {
 
 ```shell
 module "sumologic-jira-cloud-app" {
-  source            = "SumoLogic/integrations/sumologic//atlassian/cloud/jira"
+  source            = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/jira"
   version           = "{revision}"\
 
   sumo_access_id    = "<SUMO_ACCESS_ID>"
