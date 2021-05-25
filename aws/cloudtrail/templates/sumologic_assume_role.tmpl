@@ -1,0 +1,17 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "AWS": "arn:aws:iam::${SUMO_LOGIC_ACCOUNT_ID}:root"
+      },
+      "Effect": "Allow",
+      "Condition": {
+        "StringEquals": {
+          "sts:ExternalId": "${ENVIRONMENT}:${SUMO_LOGIC_ORG_ID}"
+        }
+      }
+    }
+  ]
+}
