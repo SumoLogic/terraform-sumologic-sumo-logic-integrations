@@ -1,5 +1,5 @@
 output "aws_s3_bucket" {
-  value       = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket : local.bucket_name
+  value       = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket : {}
   description = "AWS S3 Bucket name created to Store the CloudTrail logs."
 }
 
@@ -20,10 +20,15 @@ output "aws_iam_role" {
 
 output "sumologic_collector" {
   value       = var.create_collector ? sumologic_collector.hosted : {}
-  description = "Sumo Logic hosted collector"
+  description = "Sumo Logic hosted collector."
 }
 
 output "sumologic_source" {
   value       = sumologic_cloudtrail_source.source
   description = "Sumo Logic AWS CloudTrail source."
+}
+
+output "aws_sns_subscription" {
+  value = aws_sns_topic_subscription.subscription
+  description = "AWS SNS subscription to Sumo Logic AWS CloudTrail source."
 }

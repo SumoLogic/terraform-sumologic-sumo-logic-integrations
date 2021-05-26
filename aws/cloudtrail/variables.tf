@@ -47,7 +47,7 @@ variable "source_details" {
       create_bucket        = true
       bucket_name          = "cloudtrail-logs-accountid-region"
       path_expression      = "AWSLogs/<ACCCOUNT-ID>/CloudTrail/<REGION-NAME>/*"
-      force_destroy_bucket = false
+      force_destroy_bucket = true
     }
     paused               = false
     scan_interval        = 300000
