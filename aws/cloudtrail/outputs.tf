@@ -29,6 +29,6 @@ output "sumologic_source" {
 }
 
 output "aws_sns_subscription" {
-  value = aws_sns_topic_subscription.subscription
+  value       = aws_sns_topic_subscription.subscription
   description = "AWS SNS subscription to Sumo Logic AWS CloudTrail source."
 }

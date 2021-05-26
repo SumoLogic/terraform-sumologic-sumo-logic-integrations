@@ -1,0 +1,13 @@
+{
+    "aws_cloudtrail": [
+      {
+        "this": {
+          "name": "SumoLogic-Terraform-CloudTrail",
+          "s3_bucket_name": "",
+          "is_multi_region_trail": false,
+          "is_organization_trail": false,
+          "include_global_service_events": false
+        }
+      }
+    ]
+}
