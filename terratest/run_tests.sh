@@ -55,12 +55,12 @@ function integration_test()
 
 ##################################### START OF THE TEST CASES #####################################
 # 1. Set some Environment variables
-export SUMOLOGIC_ENVIRONMENT=us2
-export SUMOLOGIC_ACCESS_ID=suaKeti3vqsCWG
-export SUMOLOGIC_ACCESS_KEY=JOKAJpkY7LA2sIgn16ClLZVnR4O8qXmCftg40QmcaaEWQOmcuaUCkp5y06BRwM3q
-export SUMOLOGIC_ORG_ID=000000000099B63E
-export AWS_REGION=us-east-2
-export AWS_DEFAULT_PROFILE=personal
+export SUMOLOGIC_ENVIRONMENT=
+export SUMOLOGIC_ACCESS_ID=
+export SUMOLOGIC_ACCESS_KEY=
+export SUMOLOGIC_ORG_ID=
+export AWS_REGION=
+export AWS_DEFAULT_PROFILE=
 
 # 2. Deccalring the modules. Please update the array, if some new modules are added.
 declare -a modules=(
