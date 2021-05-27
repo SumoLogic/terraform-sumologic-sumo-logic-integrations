@@ -107,7 +107,7 @@ func AssertObject(t *testing.T, expectedKey string, expectedValue interface{}, a
 			AssertObject(t, mapExpectedKey, mapExpectedValue, actualOutputValue)
 		}
 	default:
-		fmt.Printf("Compairing Key %v", expectedKey)
+		fmt.Println("**** Compairing Key { " + expectedKey + " } ****")
 		assert.Equal(t, expectedValue, actualValue, fmt.Sprintf("Mismatch between actual value and expected values for key %v.", expectedKey))
 	}
 }
@@ -122,14 +122,19 @@ func FindType(element int, value interface{}) interface{} {
 	}
 }
 
+// AssertAwsResources is used to call methods from AWS based on the AWS Terraform resource types.
+// Methods are in UpperCases to keep them public.
 func AssertAwsResources(t *testing.T, outputs map[string]interface{}) {
 	for key, value := range outputs {
 		if strings.HasPrefix(key, "aws_") {
-			v := reflect.ValueOf(assertaws)
-			method := v.MethodByName(key)
-			if method.IsValid() && !method.IsNil() && !method.IsZero() {
-				method.Call(nil)
-				fmt.Println(value)
+			myClassValue := reflect.ValueOf(awsAssertObject)
+			m := myClassValue.MethodByName(strings.ToUpper(key))
+			in := make([]reflect.Value, 3)
+			in[0] = reflect.ValueOf(t)
+			in[1] = reflect.ValueOf(AwsRegion)
+			in[2] = reflect.ValueOf(value)
+			if m.IsValid() {
+				m.Call(in)
 			}
 		}
 	}

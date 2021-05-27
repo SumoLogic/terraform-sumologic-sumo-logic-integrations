@@ -11,4 +11,4 @@ var AwsRegion = os.Getenv("AWS_REGION")
 var AwsAccountId = "668508221233"
 var SumoAccountId = "926226587429"
 
-var assertaws = AssertAws{}
+var awsAssertObject = &AwsResourcesAssert{}
