@@ -5,7 +5,37 @@ import (
 
 	"github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/terratest/common"
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 )
+
+var replacementMap map[string]interface{}
+var terraformOptions *terraform.Options
+var resourceCount *terraform.ResourceCount
+
+func SetUpTest(t *testing.T, vars map[string]interface{}) {
+
+	awsRegion := common.AwsRegion
+
+	envVars := map[string]string{
+		"AWS_DEFAULT_REGION":    awsRegion,
+		"SUMOLOGIC_ACCESSID":    common.SumologicAccessID,
+		"SUMOLOGIC_ACCESSKEY":   common.SumologicAccessKey,
+		"SUMOLOGIC_ENVIRONMENT": common.SumologicEnvironment,
+	}
+
+	replacementMap = map[string]interface{}{
+		"AccountId":     common.AwsAccountId,
+		"Region":        awsRegion,
+		"SumoAccountId": common.SumoAccountId,
+		"Deployment":    common.SumologicEnvironment,
+		"OrgId":         common.SumologicOrganizationId,
+	}
+
+	terraformOptions, resourceCount = common.ApplyTerraformWithVars(t, vars, envVars)
+	t.Cleanup(func() {
+		common.CleanupTerraform(t, terraformOptions)
+	})
+}
 
 func TestWithDefaultValues(t *testing.T) {
 	t.Parallel()
@@ -15,16 +45,18 @@ func TestWithDefaultValues(t *testing.T) {
 		"create_trail":              true,
 	}
 
-	expectedOutputs := common.ReadJsonFile("defaultoutput.json")
-
-	terraformOptions, count := common.ApplyTerraformWithVars(t, vars)
-	defer terraform.Destroy(t, terraformOptions)
+	SetUpTest(t, vars)
 
 	// Assert count of Expected resources.
-	common.AssertResourceCounts(t, count, 10, 0, 0)
+	test_structure.RunTestStage(t, "AssertCount", func() {
+		common.AssertResourceCounts(t, resourceCount, 10, 0, 0)
+	})
 
 	// Assert if the outputs are actually created in AWS and Sumo Logic
-	common.AssertOutputs(t, terraformOptions, expectedOutputs)
+	expectedOutputs := common.ReadJsonFile("defaultoutput.json", replacementMap)
+	test_structure.RunTestStage(t, "AssertOutputs", func() {
+		common.AssertOutputs(t, terraformOptions, expectedOutputs)
+	})
 
 	// Assert if the logs are sent to Sumo Logic.
 }
