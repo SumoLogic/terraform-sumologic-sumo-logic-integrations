@@ -1,6 +1,8 @@
 package common
 
-import "os"
+import (
+	"os"
+)
 
 var ModuleDirectory = os.Getenv("MODULE_DIRECTORY")
 var SumologicAccessID = os.Getenv("SUMOLOGIC_ACCESS_ID")
@@ -11,4 +13,10 @@ var AwsRegion = os.Getenv("AWS_REGION")
 var AwsAccountId = "668508221233"
 var SumoAccountId = "926226587429"
 
-var awsAssertObject = &AwsResourcesAssert{}
+type ResourcesAssert struct {
+	AwsRegion           string
+	SumoHeaders         map[string]string
+	SumoLogicBaseApiUrl string
+}
+
+var customValidation = func(statusCode int, body string) bool { return statusCode == 200 }

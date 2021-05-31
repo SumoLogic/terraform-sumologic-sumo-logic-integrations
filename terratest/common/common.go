@@ -1,9 +1,11 @@
 package common
 
 import (
+	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"net/url"
 	"os"
 	"reflect"
 	"strings"
@@ -88,8 +90,8 @@ func AssertOutputs(t *testing.T, options *terraform.Options, expectedOutputs map
 	// Assert expected vs actual
 	AssertObject(t, "", expectedOutputs, actualOutputs)
 
-	// Assert / check by calling AWS and Sumo Logic APIs for actual outputs
-	AssertAwsResources(t, actualOutputs)
+	// Assert check by calling AWS and Sumo Logic APIs for actual outputs
+	AssertResources(t, actualOutputs)
 }
 
 // AssertObject is used to assert expected vs actual values based on object type.
@@ -122,20 +124,82 @@ func FindType(element int, value interface{}) interface{} {
 	}
 }
 
-// AssertAwsResources is used to call methods from AWS based on the AWS Terraform resource types.
+// AssertResources is used to call methods based on the Terraform resource types.
 // Methods are in UpperCases to keep them public.
-func AssertAwsResources(t *testing.T, outputs map[string]interface{}) {
+func AssertResources(t *testing.T, outputs map[string]interface{}) {
+	resourcesAssert := getAssertResource()
 	for key, value := range outputs {
-		if strings.HasPrefix(key, "aws_") {
-			myClassValue := reflect.ValueOf(awsAssertObject)
-			m := myClassValue.MethodByName(strings.ToUpper(key))
-			in := make([]reflect.Value, 3)
-			in[0] = reflect.ValueOf(t)
-			in[1] = reflect.ValueOf(AwsRegion)
-			in[2] = reflect.ValueOf(value)
-			if m.IsValid() {
-				m.Call(in)
+		myClassValue := reflect.ValueOf(resourcesAssert)
+		m := myClassValue.MethodByName(strings.ToUpper(key))
+		in := make([]reflect.Value, 2)
+		in[0] = reflect.ValueOf(t)
+		in[1] = reflect.ValueOf(value)
+		if m.IsValid() {
+			m.Call(in)
+		}
+	}
+}
+
+// getAssertResource is to create an AssertResource object
+func getAssertResource() *ResourcesAssert {
+	return &ResourcesAssert{
+		AwsRegion:           AwsRegion,
+		SumoHeaders:         map[string]string{"Authorization": "Basic " + base64.StdEncoding.EncodeToString([]byte(SumologicAccessID+":"+SumologicAccessKey))},
+		SumoLogicBaseApiUrl: getSumologicURL(),
+	}
+}
+
+// getSumologicURL is used to get the sumologic URL based on the Environment .
+func getSumologicURL() string {
+	api_url := ""
+	if SumologicEnvironment == "us1" {
+		api_url = "https://api.sumologic.com/api/"
+	} else {
+		api_url = fmt.Sprintf("https://api.%s.sumologic.com/api/", SumologicEnvironment)
+	}
+	u, _ := url.Parse(api_url)
+	return u.Scheme + "://" + u.Host
+}
+
+// getKeyValuesFromData is used to get values from a particular key by iterating through the given data.
+func getKeyValuesFromData(value interface{}, key string) []string {
+	var values []string
+	mapValue := value.(map[string]interface{})
+	keyValue, found := mapValue[key]
+	if found {
+		values = append(values, keyValue.(string))
+	} else {
+		for currentKey, currentValue := range mapValue {
+			fmt.Println("Searching for KEY { " + key + " } in terraform resource { " + currentKey + " }.")
+			keyValue, found := currentValue.(map[string]interface{})[key]
+			if found {
+				values = append(values, keyValue.(string))
 			}
 		}
 	}
+	return values
+}
+
+// getMultiKeyValuesFromData is used to get values from a multiple key by iterating through the given data.
+func getMultiKeyValuesFromData(value interface{}, keys []string) []map[string]interface{} {
+	var values []map[string]interface{}
+	mapValue := value.(map[string]interface{})
+	_, found := mapValue[keys[0]]
+	if found {
+		data := make(map[string]interface{}, len(keys))
+		for _, currentKey := range keys {
+			data[currentKey] = mapValue[currentKey]
+		}
+		values = append(values, data)
+	} else {
+		for currentKey, currentValue := range mapValue {
+			data := make(map[string]interface{}, len(keys))
+			for _, expectedKey := range keys {
+				fmt.Println("Searching for KEY { " + expectedKey + " } in terraform resource { " + currentKey + " }.")
+				data[expectedKey] = currentValue.(map[string]interface{})[expectedKey]
+			}
+			values = append(values, data)
+		}
+	}
+	return values
 }
