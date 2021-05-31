@@ -8,6 +8,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudtrail"
 	"github.com/aws/aws-sdk-go/service/iam"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/sns"
 	"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/stretchr/testify/assert"
@@ -64,5 +65,19 @@ func (a *ResourcesAssert) AWS_CLOUDTRAIL(t *testing.T, value interface{}) {
 		input := cloudtrail.GetTrailInput{Name: aws_sdk.String(element)}
 		_, err := svc.GetTrail(&input)
 		assert.NoErrorf(t, err, "AWS CLOUDTRAIl :- Error Message %v", err)
+	}
+}
+
+func (a *ResourcesAssert) AWS_S3_BUCKET_NOTIFICATION(t *testing.T, value interface{}) {
+	fmt.Println("******** Asserting AWS S3 BUCKET NOTIFICATION ********")
+	bucket_names := getKeyValuesFromData(value, "bucket")
+
+	s3_client := aws.NewS3Client(t, a.AwsRegion)
+
+	for _, element := range bucket_names {
+		input := s3.GetBucketNotificationConfigurationRequest{Bucket: aws_sdk.String(element)}
+		notificationConfiguration, err := s3_client.GetBucketNotificationConfiguration(&input)
+		assert.NoErrorf(t, err, "AWS S3 Bucket NOTIFICATION :- Error Message %v", err)
+		assert.Greater(t, len(notificationConfiguration.TopicConfigurations), 0, "No topic configuration present in the Bucket.")
 	}
 }

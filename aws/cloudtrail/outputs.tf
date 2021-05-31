@@ -8,6 +8,11 @@ output "aws_sns_topic" {
   description = "AWS SNS topic attached to the AWS S3 bucket."
 }
 
+output "aws_s3_bucket_notification" {
+  value = local.create_sns_topic && var.source_details.bucket_details.create_bucket ? aws_s3_bucket_notification.bucket_notification : {}
+  description = "AWS S3 Bucket Notification attached to the AWS S3 Bucket"
+}
+
 output "aws_cloudtrail" {
   value       = var.create_trail ? aws_cloudtrail.cloudtrail : {}
   description = "AWS Trail created to send CloudTrail logs to AWS S3 bucket."

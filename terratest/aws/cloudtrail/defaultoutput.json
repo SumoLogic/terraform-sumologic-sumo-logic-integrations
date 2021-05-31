@@ -41,6 +41,18 @@
       }
     }
   ],
+  "aws_s3_bucket_notification": [
+    {
+      "this": {
+        "bucket": "cloudtrail-logs-{AccountId}-{Region}",
+        "topic": [
+          {
+            "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{AccountId}"
+          }
+        ]
+      }
+    }
+  ],
   "sumologic_collector": [
     {
       "this": {

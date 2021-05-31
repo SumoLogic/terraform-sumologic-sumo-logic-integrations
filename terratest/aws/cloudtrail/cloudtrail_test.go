@@ -2,6 +2,7 @@ package cloudtrail
 
 import (
 	"testing"
+	"time"
 
 	"github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/terratest/common"
 	"github.com/gruntwork-io/terratest/modules/terraform"
@@ -13,7 +14,6 @@ var terraformOptions *terraform.Options
 var resourceCount *terraform.ResourceCount
 
 func SetUpTest(t *testing.T, vars map[string]interface{}) {
-
 	awsRegion := common.AwsRegion
 
 	envVars := map[string]string{
@@ -49,7 +49,7 @@ func TestWithDefaultValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, resourceCount, 10, 0, 0)
+		common.AssertResourceCounts(t, resourceCount, 11, 0, 0)
 	})
 
 	// Assert if the outputs are actually created in AWS and Sumo Logic
@@ -59,4 +59,6 @@ func TestWithDefaultValues(t *testing.T) {
 	})
 
 	// Assert if the logs are sent to Sumo Logic.
+	outputs := common.FetchAllOutputs(t, terraformOptions)
+	common.GetAssertResource().CheckLogsForPastSixtyMinutes(t, outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 }

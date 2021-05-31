@@ -127,7 +127,7 @@ func FindType(element int, value interface{}) interface{} {
 // AssertResources is used to call methods based on the Terraform resource types.
 // Methods are in UpperCases to keep them public.
 func AssertResources(t *testing.T, outputs map[string]interface{}) {
-	resourcesAssert := getAssertResource()
+	resourcesAssert := GetAssertResource()
 	for key, value := range outputs {
 		myClassValue := reflect.ValueOf(resourcesAssert)
 		m := myClassValue.MethodByName(strings.ToUpper(key))
@@ -141,7 +141,7 @@ func AssertResources(t *testing.T, outputs map[string]interface{}) {
 }
 
 // getAssertResource is to create an AssertResource object
-func getAssertResource() *ResourcesAssert {
+func GetAssertResource() *ResourcesAssert {
 	return &ResourcesAssert{
 		AwsRegion:           AwsRegion,
 		SumoHeaders:         map[string]string{"Authorization": "Basic " + base64.StdEncoding.EncodeToString([]byte(SumologicAccessID+":"+SumologicAccessKey))},

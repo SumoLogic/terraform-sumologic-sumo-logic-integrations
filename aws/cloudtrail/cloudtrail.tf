@@ -23,6 +23,17 @@ resource "aws_sns_topic" "sns_topic" {
   name = "SumoLogic-Terraform-CloudTrail-Module-${local.aws_account_id}"
 }
 
+resource "aws_s3_bucket_notification" "bucket_notification" {
+  for_each = toset(local.create_sns_topic && var.source_details.bucket_details.create_bucket ? ["this"] : [])
+
+  bucket = aws_s3_bucket.s3_bucket["this"].id
+
+  topic {
+    topic_arn = aws_sns_topic.sns_topic["this"].arn
+    events    = ["s3:ObjectCreated:Put"]
+  }
+}
+
 resource "aws_sns_topic_policy" "sns_topic_policy" {
   for_each = toset(local.create_sns_topic ? ["this"] : [])
 
