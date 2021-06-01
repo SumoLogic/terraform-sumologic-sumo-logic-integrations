@@ -1,6 +1,7 @@
 package cloudtrail
 
 import (
+	"fmt"
 	"os"
 	"testing"
 	"time"
@@ -11,17 +12,14 @@ import (
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 )
 
-var replacementMap map[string]interface{}
-var terraformOptions *terraform.Options
-var resourceCount *terraform.ResourceCount
-
 // Env Variables
 var BUCKET_NAME = os.Getenv("BUCKET_NAME")
 var PATH_EXPRESSION = os.Getenv("PATH_EXPRESSION")
+var IAM_ROLE = os.Getenv("IAM_ROLE")
+var SNS_TOPIC = os.Getenv("TOPIC_ARN")
+var COLLECTOR_ID = os.Getenv("COLLECTOR_ID")
 
-func SetUpTest(t *testing.T, vars map[string]interface{}, awsregion string) {
-	AwsAccountId := aws.GetAccountId(t)
-
+func SetUpTest(t *testing.T, vars map[string]interface{}, awsregion string) (*terraform.Options, *terraform.ResourceCount) {
 	envVars := map[string]string{
 		"AWS_DEFAULT_REGION":    awsregion,
 		"SUMOLOGIC_ACCESSID":    common.SumologicAccessID,
@@ -29,9 +27,63 @@ func SetUpTest(t *testing.T, vars map[string]interface{}, awsregion string) {
 		"SUMOLOGIC_ENVIRONMENT": common.SumologicEnvironment,
 	}
 
-	replacementMap = map[string]interface{}{
-		"AccountId":      AwsAccountId,
-		"Region":         awsregion,
+	terraformOptions, resourceCount := common.ApplyTerraformWithVars(t, vars, envVars)
+	t.Cleanup(func() {
+		common.CleanupTerraform(t, terraformOptions)
+	})
+	return terraformOptions, resourceCount
+}
+
+func UpdateTerraform(t *testing.T, vars map[string]interface{}, options *terraform.Options) *terraform.ResourceCount {
+	options.Vars = vars
+	out := terraform.Apply(t, options)
+	return terraform.GetResourceCount(t, out)
+}
+
+// 1. With Default Values - Implemented
+func TestWithDefaultValues(t *testing.T) {
+	t.Parallel()
+	aws_region := "us-east-2"
+	replacementMap := map[string]interface{}{
+		"AccountId":     aws.GetAccountId(t),
+		"Region":        aws_region,
+		"SumoAccountId": common.SumoAccountId,
+		"Deployment":    common.SumologicEnvironment,
+		"OrgId":         common.SumologicOrganizationId,
+	}
+	vars := map[string]interface{}{
+		"create_collector":          true,
+		"sumologic_organization_id": common.SumologicOrganizationId,
+		"create_trail":              true,
+	}
+
+	options, count := SetUpTest(t, vars, aws_region)
+
+	// Assert count of Expected resources.
+	test_structure.RunTestStage(t, "AssertCount", func() {
+		common.AssertResourceCounts(t, count, 10, 0, 0)
+	})
+
+	// Assert if the outputs are actually created in AWS and Sumo Logic.
+	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
+	expectedOutputs := common.ReadJsonFile("TestWithDefaultValues.json", replacementMap)
+	test_structure.RunTestStage(t, "AssertOutputs", func() {
+		common.AssertOutputs(t, options, expectedOutputs)
+	})
+
+	// Assert if the logs are sent to Sumo Logic.
+	outputs := common.FetchAllOutputs(t, options)
+	common.GetAssertResource(options).CheckLogsForPastSixtyMinutes(t, "_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
+}
+
+// 2. With Existing Bucket, Existing Trail, new Collector, New SNS Topic, New IAM Role
+func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
+	t.Parallel()
+	aws_region := "us-west-1"
+	PATH_EXPRESSION = fmt.Sprintf("AWSLogs/%s/CloudTrail/%s/*", aws.GetAccountId(t), aws_region)
+	replacementMap := map[string]interface{}{
+		"AccountId":      aws.GetAccountId(t),
+		"Region":         aws_region,
 		"SumoAccountId":  common.SumoAccountId,
 		"Deployment":     common.SumologicEnvironment,
 		"OrgId":          common.SumologicOrganizationId,
@@ -39,53 +91,6 @@ func SetUpTest(t *testing.T, vars map[string]interface{}, awsregion string) {
 		"PathExpression": PATH_EXPRESSION,
 	}
 
-	terraformOptions, resourceCount = common.ApplyTerraformWithVars(t, vars, envVars)
-	t.Cleanup(func() {
-		common.CleanupTerraform(t, terraformOptions)
-	})
-}
-
-func UpdateTerraform(t *testing.T, vars map[string]interface{}) *terraform.ResourceCount {
-	terraformOptions.Vars = vars
-	out := terraform.Apply(t, terraformOptions)
-	return terraform.GetResourceCount(t, out)
-}
-
-// Test Cases
-
-// 4. With Existing Bucket, Existing Trail, Existing Collector, Old SNS Topic, Old IAM Role (All Existing)
-// 5. With New Bucket, Existing Trail (we will create a new trail), new Collector, New SNS Topic, New IAM Role
-// 6. Check for updates by changing variables. Assert only resources - Implemented
-
-// 1. With Default Values - Implemented
-func TestWithDefaultValues(t *testing.T) {
-	vars := map[string]interface{}{
-		"create_collector":          true,
-		"sumologic_organization_id": common.SumologicOrganizationId,
-		"create_trail":              true,
-	}
-
-	SetUpTest(t, vars, "us-east-2")
-
-	// Assert count of Expected resources.
-	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, resourceCount, 10, 0, 0)
-	})
-
-	// Assert if the outputs are actually created in AWS and Sumo Logic.
-	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
-	expectedOutputs := common.ReadJsonFile("defaultoutput.json", replacementMap)
-	test_structure.RunTestStage(t, "AssertOutputs", func() {
-		common.AssertOutputs(t, terraformOptions, expectedOutputs)
-	})
-
-	// Assert if the logs are sent to Sumo Logic.
-	outputs := common.FetchAllOutputs(t, terraformOptions)
-	common.GetAssertResource(terraformOptions).CheckLogsForPastSixtyMinutes(t, "_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
-}
-
-// 2. With Existing Bucket, Existing Trail, new Collector, New SNS Topic, New IAM Role
-func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
 	vars := map[string]interface{}{
 		"create_collector": true,
 		"collector_details": map[string]interface{}{
@@ -121,21 +126,225 @@ func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
 		},
 	}
 
-	SetUpTest(t, vars, "us-east-1")
+	options, count := SetUpTest(t, vars, aws_region)
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, resourceCount, 7, 0, 0)
+		common.AssertResourceCounts(t, count, 7, 0, 0)
 	})
 
 	// Assert if the outputs are actually created in AWS and Sumo Logic.
 	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
 	expectedOutputs := common.ReadJsonFile("TestWithExistingBucketTrailNewCollectorSNSIAM.json", replacementMap)
 	test_structure.RunTestStage(t, "AssertOutputs", func() {
-		common.AssertOutputs(t, terraformOptions, expectedOutputs)
+		common.AssertOutputs(t, options, expectedOutputs)
 	})
 
 	// Assert if the logs are sent to Sumo Logic.
-	outputs := common.FetchAllOutputs(t, terraformOptions)
-	common.GetAssertResource(terraformOptions).CheckLogsForPastSixtyMinutes(t, "_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
+	outputs := common.FetchAllOutputs(t, options)
+	common.GetAssertResource(options).CheckLogsForPastSixtyMinutes(t, "_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
+}
+
+// 3. With Existing Bucket, Existing Trail, Existing Collector, Old SNS Topic, Old IAM Role (All Existing)
+func TestWithExistingBucketTrailCollectorSNSIAM(t *testing.T) {
+	t.Parallel()
+	aws_region := "us-east-1"
+	PATH_EXPRESSION = fmt.Sprintf("AWSLogs/%s/CloudTrail/%s/*", aws.GetAccountId(t), aws_region)
+	replacementMap := map[string]interface{}{
+		"AccountId":      aws.GetAccountId(t),
+		"Region":         aws_region,
+		"SumoAccountId":  common.SumoAccountId,
+		"Deployment":     common.SumologicEnvironment,
+		"OrgId":          common.SumologicOrganizationId,
+		"BucketName":     BUCKET_NAME,
+		"PathExpression": PATH_EXPRESSION,
+		"SNS_TOPIC_ARN":  SNS_TOPIC,
+	}
+	vars := map[string]interface{}{
+		"create_collector":          false,
+		"sumologic_organization_id": common.SumologicOrganizationId,
+		"create_trail":              false,
+		"source_details": map[string]interface{}{
+			"source_name":     "My Test Source",
+			"source_category": "Labs/test/cloudtrail",
+			"description":     "This source is ceated a.",
+			"bucket_details": map[string]interface{}{
+				"create_bucket":   false,
+				"bucket_name":     BUCKET_NAME,
+				"path_expression": PATH_EXPRESSION,
+				// This does not have any impact as terraform does not manage existing bucket.
+				"force_destroy_bucket": true,
+			},
+			"paused":               false,
+			"scan_interval":        60000,
+			"cutoff_relative_time": "-1d",
+			"fields": map[string]interface{}{
+				"MySource": "TestSourceTerraform",
+			},
+			"sumo_account_id": "926226587429",
+			"collector_id":    COLLECTOR_ID,
+			"iam_role_arn":    IAM_ROLE,
+			"sns_topic_arn":   SNS_TOPIC,
+		},
+	}
+
+	options, count := SetUpTest(t, vars, aws_region)
+
+	// Assert count of Expected resources.
+	test_structure.RunTestStage(t, "AssertCount", func() {
+		common.AssertResourceCounts(t, count, 3, 0, 0)
+	})
+
+	// Assert if the outputs are actually created in AWS and Sumo Logic.
+	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
+	expectedOutputs := common.ReadJsonFile("TestWithExistingBucketTrailCollectorSNSIAM.json", replacementMap)
+	test_structure.RunTestStage(t, "AssertOutputs", func() {
+		common.AssertOutputs(t, options, expectedOutputs)
+	})
+
+	// Assert if the logs are sent to Sumo Logic.
+	outputs := common.FetchAllOutputs(t, options)
+	common.GetAssertResource(options).CheckLogsForPastSixtyMinutes(t, "_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
+}
+
+// 4. With New Bucket, Existing Trail (we will create a new trail), new Collector, New SNS Topic, New IAM Role
+func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
+	t.Parallel()
+	aws_region := "us-west-2"
+	PATH_EXPRESSION = fmt.Sprintf("AWSLogs/%s/CloudTrail/%s/*", aws.GetAccountId(t), aws_region)
+	replacementMap := map[string]interface{}{
+		"AccountId":      aws.GetAccountId(t),
+		"Region":         aws_region,
+		"SumoAccountId":  common.SumoAccountId,
+		"Deployment":     common.SumologicEnvironment,
+		"OrgId":          common.SumologicOrganizationId,
+		"BucketName":     BUCKET_NAME,
+		"PathExpression": PATH_EXPRESSION,
+	}
+	vars := map[string]interface{}{
+		"create_collector": true,
+		"collector_details": map[string]interface{}{
+			"collector_name": "Test With Existing Trail New Bucket Collector SNS IAM",
+			"description":    "thsisia",
+			"fields":         map[string]interface{}{},
+		},
+		"sumologic_organization_id": common.SumologicOrganizationId,
+		"create_trail":              false,
+		"source_details": map[string]interface{}{
+			"source_name":     "My Test Source",
+			"source_category": "Labs/test/cloudtrail",
+			"description":     "This source is ceated a.",
+			"bucket_details": map[string]interface{}{
+				"create_bucket":   true,
+				"bucket_name":     "my-test-tf-mod-us-west-2",
+				"path_expression": PATH_EXPRESSION,
+				// This does not have any impact as terraform does not manage existing bucket.
+				"force_destroy_bucket": true,
+			},
+			"paused":               false,
+			"scan_interval":        60000,
+			"cutoff_relative_time": "-1d",
+			"fields": map[string]interface{}{
+				"MySource": "TestSourceTerraform",
+			},
+			"sumo_account_id": "926226587429",
+			"collector_id":    "",
+			"iam_role_arn":    "",
+			"sns_topic_arn":   "",
+		},
+	}
+
+	options, count := SetUpTest(t, vars, aws_region)
+
+	// Assert count of Expected resources.
+	test_structure.RunTestStage(t, "AssertCount", func() {
+		common.AssertResourceCounts(t, count, 10, 0, 0)
+	})
+
+	// Assert if the outputs are actually created in AWS and Sumo Logic.
+	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
+	expectedOutputs := common.ReadJsonFile("TestWithExistingTrailNewBucketCollectorSNSIAM.json", replacementMap)
+	test_structure.RunTestStage(t, "AssertOutputs", func() {
+		common.AssertOutputs(t, options, expectedOutputs)
+	})
+
+	// Assert if the logs are sent to Sumo Logic.
+	outputs := common.FetchAllOutputs(t, options)
+	common.GetAssertResource(options).CheckLogsForPastSixtyMinutes(t, "_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
+}
+
+// 5. Check for updates by changing variables. Assert only resources - Implemented
+func TestUpdates(t *testing.T) {
+	t.Parallel()
+	aws_region := "ap-south-1"
+	vars := map[string]interface{}{
+		"create_collector":          true,
+		"sumologic_organization_id": common.SumologicOrganizationId,
+		"create_trail":              true,
+		"collector_details": map[string]interface{}{
+			"collector_name": "Test Updates Cloudtrail Module",
+			"description":    "thsisia",
+			"fields":         map[string]interface{}{},
+		},
+	}
+
+	options, count := SetUpTest(t, vars, aws_region)
+
+	// Assert count of Expected resources.
+	test_structure.RunTestStage(t, "AssertCount", func() {
+		common.AssertResourceCounts(t, count, 10, 0, 0)
+	})
+
+	vars = map[string]interface{}{
+		"create_collector":          true,
+		"sumologic_organization_id": common.SumologicOrganizationId,
+		"create_trail":              true,
+		"collector_details": map[string]interface{}{
+			"collector_name": "Test Updates Cloudtrail Module",
+			"description":    "asjfblasblfjbasljfbajsb",
+			"fields":         map[string]interface{}{},
+		},
+	}
+
+	count = UpdateTerraform(t, vars, options)
+
+	// Assert count of Expected resources.
+	test_structure.RunTestStage(t, "UpdateFirst", func() {
+		common.AssertResourceCounts(t, count, 0, 2, 0)
+	})
+
+	vars = map[string]interface{}{
+		"create_collector":          false,
+		"sumologic_organization_id": common.SumologicOrganizationId,
+		"create_trail":              false,
+		"source_details": map[string]interface{}{
+			"source_name":     "My Test Source Another",
+			"source_category": "Labs/test/cloudtrail",
+			"description":     "This source is ceated a.",
+			"bucket_details": map[string]interface{}{
+				"create_bucket":   false,
+				"bucket_name":     BUCKET_NAME,
+				"path_expression": PATH_EXPRESSION,
+				// This does not have any impact as terraform does not manage existing bucket.
+				"force_destroy_bucket": true,
+			},
+			"paused":               false,
+			"scan_interval":        60000,
+			"cutoff_relative_time": "-1d",
+			"fields": map[string]interface{}{
+				"MySource": "TestSourceTerraform",
+			},
+			"sumo_account_id": "926226587429",
+			"collector_id":    COLLECTOR_ID,
+			"iam_role_arn":    "",
+			"sns_topic_arn":   "",
+		},
+	}
+
+	count = UpdateTerraform(t, vars, options)
+
+	// Assert count of Expected resources.
+	test_structure.RunTestStage(t, "UpdateFirst", func() {
+		common.AssertResourceCounts(t, count, 2, 2, 6)
+	})
 }

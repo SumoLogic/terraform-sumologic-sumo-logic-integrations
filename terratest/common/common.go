@@ -12,6 +12,7 @@ import (
 	"testing"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
+	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -47,8 +48,9 @@ func log33(format []byte, replacementMap map[string]interface{}) string {
 // with custom input variables.
 func ApplyTerraformWithVars(t *testing.T, vars map[string]interface{}, envVars map[string]string) (*terraform.Options, *terraform.ResourceCount) {
 
+	directory := test_structure.CopyTerraformFolderToTemp(t, "../../../", ModuleDirectory)
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
-		TerraformDir: "../../../" + ModuleDirectory,
+		TerraformDir: directory,
 		EnvVars:      envVars,
 	})
 
@@ -104,9 +106,13 @@ func AssertObject(t *testing.T, expectedKey string, expectedValue interface{}, a
 		}
 	case map[string]interface{}:
 		for mapExpectedKey, mapExpectedValue := range expectedValue {
-			actualOutputValue, found := actualValue.(map[string]interface{})[mapExpectedKey]
-			assert.Equal(t, found, true, fmt.Sprintf("Expected output %v not found / created using terraform.", mapExpectedKey))
-			AssertObject(t, mapExpectedKey, mapExpectedValue, actualOutputValue)
+			if actualValue != nil {
+				actualOutputValue, found := actualValue.(map[string]interface{})[mapExpectedKey]
+				assert.Equal(t, found, true, fmt.Sprintf("Expected output %v not found / created using terraform.", mapExpectedKey))
+				AssertObject(t, mapExpectedKey, mapExpectedValue, actualOutputValue)
+			} else {
+				assert.Equal(t, mapExpectedValue, actualValue, fmt.Sprintf("Expected output %v not found / created using terraform.", mapExpectedKey))
+			}
 		}
 	default:
 		fmt.Println("**** Compairing Key { " + expectedKey + " } ****")
@@ -143,7 +149,7 @@ func AssertResources(t *testing.T, outputs map[string]interface{}, options *terr
 // getAssertResource is to create an AssertResource object
 func GetAssertResource(options *terraform.Options) *ResourcesAssert {
 	return &ResourcesAssert{
-		AwsRegion:           options.EnvVars["Region"],
+		AwsRegion:           options.EnvVars["AWS_DEFAULT_REGION"],
 		SumoHeaders:         map[string]string{"Authorization": "Basic " + base64.StdEncoding.EncodeToString([]byte(SumologicAccessID+":"+SumologicAccessKey))},
 		SumoLogicBaseApiUrl: getSumologicURL(),
 	}

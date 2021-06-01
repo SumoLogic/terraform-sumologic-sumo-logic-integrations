@@ -14,7 +14,7 @@ output "aws_s3_bucket_notification" {
 }
 
 output "aws_cloudtrail" {
-  value       = var.create_trail ? aws_cloudtrail.cloudtrail : {}
+  value       = local.create_trail ? aws_cloudtrail.cloudtrail : {}
   description = "AWS Trail created to send CloudTrail logs to AWS S3 bucket."
 }
 
