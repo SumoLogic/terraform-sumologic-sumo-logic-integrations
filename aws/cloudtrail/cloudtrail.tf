@@ -21,6 +21,12 @@ resource "aws_sns_topic" "sns_topic" {
   for_each = toset(local.create_sns_topic ? ["this"] : [])
 
   name = "SumoLogic-Terraform-CloudTrail-Module-${local.aws_account_id}"
+  policy = templatefile("${path.module}/templates/sns_topic_policy.tmpl", {
+    BUCKET_NAME    = local.bucket_name,
+    AWS_REGION     = local.aws_region,
+    SNS_TOPIC_NAME = "SumoLogic-Terraform-CloudTrail-Module-${local.aws_account_id}",
+    AWS_ACCOUNT    = local.aws_account_id
+  })
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
@@ -32,17 +38,6 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
     topic_arn = aws_sns_topic.sns_topic["this"].arn
     events    = ["s3:ObjectCreated:Put"]
   }
-}
-
-resource "aws_sns_topic_policy" "sns_topic_policy" {
-  for_each = toset(local.create_sns_topic ? ["this"] : [])
-
-  arn = aws_sns_topic.sns_topic["this"].arn
-  policy = templatefile("${path.module}/templates/sns_topic_policy.tmpl", {
-    BUCKET_NAME   = local.bucket_name,
-    SNS_TOPIC_ARN = aws_sns_topic.sns_topic["this"].arn,
-    AWS_ACCOUNT   = local.aws_account_id
-  })
 }
 
 resource "aws_cloudtrail" "cloudtrail" {
@@ -66,6 +61,8 @@ resource "aws_iam_role" "source_iam_role" {
     ENVIRONMENT           = data.sumologic_caller_identity.current.environment,
     SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id
   })
+
+  managed_policy_arns = [aws_iam_policy.iam_policy["this"].arn]
 }
 
 resource "aws_iam_policy" "iam_policy" {
@@ -77,13 +74,6 @@ resource "aws_iam_policy" "iam_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "policy_attachment" {
-  for_each = toset(local.create_iam_role ? ["this"] : [])
-
-  role       = aws_iam_role.source_iam_role["this"].name
-  policy_arn = aws_iam_policy.iam_policy["this"].arn
-}
-
 resource "sumologic_collector" "hosted" {
   for_each    = toset(var.create_collector ? ["this"] : [])
   name        = local.collector_name
@@ -92,7 +82,15 @@ resource "sumologic_collector" "hosted" {
   timezone    = "UTC"
 }
 
+resource "time_sleep" "wait_3_minutes" {
+  create_duration = "180s"
+}
+
 resource "sumologic_cloudtrail_source" "source" {
+  depends_on = [
+    time_sleep.wait_3_minutes
+  ]
+
   lifecycle {
     ignore_changes = [cutoff_timestamp, cutoff_relative_time]
   }

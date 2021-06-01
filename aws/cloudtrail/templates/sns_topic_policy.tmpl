@@ -14,7 +14,7 @@
       "Principal": {
         "Service": "s3.amazonaws.com"
       },
-      "Resource": "${SNS_TOPIC_ARN}"
+      "Resource": "arn:aws:sns:${AWS_REGION}:${AWS_ACCOUNT}:${SNS_TOPIC_NAME}"
     }
   ],
   "Version": "2008-10-17"

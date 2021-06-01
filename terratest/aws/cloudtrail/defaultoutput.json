@@ -37,7 +37,7 @@
     {
       "this": {
         "name": "SumoLogic-Terraform-CloudTrail-Module-{AccountId}",
-        "policy": "{\"Version\":\"2008-10-17\",\"Id\":\"__default_policy_ID\",\"Statement\":[{\"Sid\":\"__default_statement_ID\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Action\":[\"SNS:GetTopicAttributes\",\"SNS:SetTopicAttributes\",\"SNS:AddPermission\",\"SNS:RemovePermission\",\"SNS:DeleteTopic\",\"SNS:Subscribe\",\"SNS:ListSubscriptionsByTopic\",\"SNS:Publish\",\"SNS:Receive\"],\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{AccountId}\",\"Condition\":{\"StringEquals\":{\"AWS:SourceOwner\":\"{AccountId}\"}}}]}"
+        "policy": "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":\"sns:Publish\",\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{AccountId}\",\"Condition\":{\"StringEquals\":{\"aws:SourceAccount\":\"{AccountId}\"},\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::cloudtrail-logs-{AccountId}-{Region}\"}}}]}"
       }
     }
   ],

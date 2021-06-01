@@ -91,7 +91,7 @@ func AssertOutputs(t *testing.T, options *terraform.Options, expectedOutputs map
 	AssertObject(t, "", expectedOutputs, actualOutputs)
 
 	// Assert check by calling AWS and Sumo Logic APIs for actual outputs
-	AssertResources(t, actualOutputs)
+	AssertResources(t, actualOutputs, options)
 }
 
 // AssertObject is used to assert expected vs actual values based on object type.
@@ -126,8 +126,8 @@ func FindType(element int, value interface{}) interface{} {
 
 // AssertResources is used to call methods based on the Terraform resource types.
 // Methods are in UpperCases to keep them public.
-func AssertResources(t *testing.T, outputs map[string]interface{}) {
-	resourcesAssert := GetAssertResource()
+func AssertResources(t *testing.T, outputs map[string]interface{}, options *terraform.Options) {
+	resourcesAssert := GetAssertResource(options)
 	for key, value := range outputs {
 		myClassValue := reflect.ValueOf(resourcesAssert)
 		m := myClassValue.MethodByName(strings.ToUpper(key))
@@ -141,9 +141,9 @@ func AssertResources(t *testing.T, outputs map[string]interface{}) {
 }
 
 // getAssertResource is to create an AssertResource object
-func GetAssertResource() *ResourcesAssert {
+func GetAssertResource(options *terraform.Options) *ResourcesAssert {
 	return &ResourcesAssert{
-		AwsRegion:           AwsRegion,
+		AwsRegion:           options.EnvVars["Region"],
 		SumoHeaders:         map[string]string{"Authorization": "Basic " + base64.StdEncoding.EncodeToString([]byte(SumologicAccessID+":"+SumologicAccessKey))},
 		SumoLogicBaseApiUrl: getSumologicURL(),
 	}
