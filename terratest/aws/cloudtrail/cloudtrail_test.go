@@ -295,14 +295,17 @@ func TestUpdates(t *testing.T) {
 		common.AssertResourceCounts(t, count, 10, 0, 0)
 	})
 
+	// Updating the Collector Name, description and fields only
 	vars = map[string]interface{}{
 		"create_collector":          true,
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"create_trail":              true,
 		"collector_details": map[string]interface{}{
-			"collector_name": "Test Updates Cloudtrail Module",
-			"description":    "asjfblasblfjbasljfbajsb",
-			"fields":         map[string]interface{}{},
+			"collector_name": "Test Updated Cloudtrail Module One",
+			"description":    "This is a new description.",
+			"fields": map[string]interface{}{
+				"TestCollector": "MyValue",
+			},
 		},
 	}
 
@@ -313,14 +316,37 @@ func TestUpdates(t *testing.T) {
 		common.AssertResourceCounts(t, count, 0, 2, 0)
 	})
 
+	// use existing cloudtrail and bucket with existing IAM iam_role_arn
 	vars = map[string]interface{}{
 		"create_collector":          true,
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"create_trail":              false,
 		"collector_details": map[string]interface{}{
-			"collector_name": "Test Updates Cloudtrail Module",
-			"description":    "asjfblasblfjbasljfbajsb",
-			"fields":         map[string]interface{}{},
+			"collector_name": "Test Updated Cloudtrail Module One",
+			"description":    "This is a new description.",
+			"fields": map[string]interface{}{
+				"TestCollector": "MyValue",
+			},
+		},
+		"source_details": map[string]interface{}{
+			"source_name":     "My Test Source Another",
+			"source_category": "Labs/test/cloudtrail",
+			"description":     "This source is ceated a.",
+			"bucket_details": map[string]interface{}{
+				"create_bucket":   false,
+				"bucket_name":     BUCKET_NAME,
+				"path_expression": PATH_EXPRESSION,
+				// This does not have any impact as terraform does not manage existing bucket.
+				"force_destroy_bucket": true,
+			},
+			"paused":               false,
+			"scan_interval":        60000,
+			"cutoff_relative_time": "-1d",
+			"fields":               map[string]interface{}{},
+			"sumo_account_id":      "926226587429",
+			"collector_id":         "",
+			"iam_role_arn":         IAM_ROLE,
+			"sns_topic_arn":        "",
 		},
 	}
 
@@ -328,6 +354,49 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 1, 0)
+		common.AssertResourceCounts(t, count, 0, 3, 5)
+	})
+
+	// update fields to source
+	vars = map[string]interface{}{
+		"create_collector":          true,
+		"sumologic_organization_id": common.SumologicOrganizationId,
+		"create_trail":              false,
+		"collector_details": map[string]interface{}{
+			"collector_name": "Test Updated Cloudtrail Module One",
+			"description":    "This is a new description.",
+			"fields": map[string]interface{}{
+				"TestCollector": "MyValue",
+			},
+		},
+		"source_details": map[string]interface{}{
+			"source_name":     "My Test Source Another",
+			"source_category": "Labs/test/cloudtrail",
+			"description":     "This source is ceated a.",
+			"bucket_details": map[string]interface{}{
+				"create_bucket":   false,
+				"bucket_name":     BUCKET_NAME,
+				"path_expression": PATH_EXPRESSION,
+				// This does not have any impact as terraform does not manage existing bucket.
+				"force_destroy_bucket": true,
+			},
+			"paused":               false,
+			"scan_interval":        60000,
+			"cutoff_relative_time": "-1d",
+			"fields": map[string]interface{}{
+				"TestCollector": "MyValue",
+			},
+			"sumo_account_id": "926226587429",
+			"collector_id":    "",
+			"iam_role_arn":    IAM_ROLE,
+			"sns_topic_arn":   "",
+		},
+	}
+
+	count = UpdateTerraform(t, vars, options)
+
+	// Assert count of Expected resources.
+	test_structure.RunTestStage(t, "UpdateFirst", func() {
+		common.AssertResourceCounts(t, count, 0, 2, 0)
 	})
 }
