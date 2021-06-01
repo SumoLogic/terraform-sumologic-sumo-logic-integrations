@@ -314,30 +314,13 @@ func TestUpdates(t *testing.T) {
 	})
 
 	vars = map[string]interface{}{
-		"create_collector":          false,
+		"create_collector":          true,
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"create_trail":              false,
-		"source_details": map[string]interface{}{
-			"source_name":     "My Test Source Another",
-			"source_category": "Labs/test/cloudtrail",
-			"description":     "This source is ceated a.",
-			"bucket_details": map[string]interface{}{
-				"create_bucket":   false,
-				"bucket_name":     BUCKET_NAME,
-				"path_expression": PATH_EXPRESSION,
-				// This does not have any impact as terraform does not manage existing bucket.
-				"force_destroy_bucket": true,
-			},
-			"paused":               false,
-			"scan_interval":        60000,
-			"cutoff_relative_time": "-1d",
-			"fields": map[string]interface{}{
-				"MySource": "TestSourceTerraform",
-			},
-			"sumo_account_id": "926226587429",
-			"collector_id":    COLLECTOR_ID,
-			"iam_role_arn":    "",
-			"sns_topic_arn":   "",
+		"collector_details": map[string]interface{}{
+			"collector_name": "Test Updates Cloudtrail Module",
+			"description":    "asjfblasblfjbasljfbajsb",
+			"fields":         map[string]interface{}{},
 		},
 	}
 
@@ -345,6 +328,6 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 2, 2, 6)
+		common.AssertResourceCounts(t, count, 0, 1, 0)
 	})
 }
