@@ -46,7 +46,7 @@ variable "source_details" {
     bucket_details = {
       create_bucket        = true
       bucket_name          = "cloudtrail-logs-accountid-region"
-      path_expression      = "AWSLogs/<ACCCOUNT-ID>/CloudTrail/<REGION-NAME>/*"
+      path_expression      = "AWSLogs/<ACCOUNT-ID>/CloudTrail/<REGION-NAME>/*"
       force_destroy_bucket = true
     }
     paused               = false

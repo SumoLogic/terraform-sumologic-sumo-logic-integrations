@@ -1,7 +1,7 @@
 {
     "aws_cloudtrail": [
       {
-        "this": {
+        "cloudtrail": {
           "name": "SumoLogic-Terraform-CloudTrail",
           "s3_bucket_name": "my-test-tf-mod-{Region}",
           "is_multi_region_trail": false,
@@ -12,7 +12,7 @@
     ],
     "aws_iam_role": [
       {
-        "this": {
+        "source_iam_role": {
           "name": "SumoLogic-Terraform-CloudTrail-Module-{AccountId}-{Region}",
           "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::{SumoAccountId}:root\"},\"Action\":\"sts:AssumeRole\",\"Condition\":{\"StringEquals\":{\"sts:ExternalId\":\"{Deployment}:{OrgId}\"}}}]}"
         }
@@ -20,7 +20,7 @@
     ],
     "aws_s3_bucket": [
       {
-        "this": {
+        "s3_bucket": {
           "acl": "private",
           "bucket": "my-test-tf-mod-{Region}",
           "policy": "{\"Statement\":[{\"Action\":\"s3:GetBucketAcl\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}\",\"Sid\":\"AWSCloudTrailAclCheck\"},{\"Action\":\"s3:PutObject\",\"Condition\":{\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}},\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}/*\",\"Sid\":\"AWSCloudTrailWrite\"},{\"Action\":\"s3:ListBucket\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}\",\"Sid\":\"AWSBucketExistenceCheck\"}],\"Version\":\"2008-10-17\"}",
@@ -35,7 +35,7 @@
     },
     "aws_sns_topic": [
       {
-        "this": {
+        "sns_topic": {
           "name": "SumoLogic-Terraform-CloudTrail-Module-{AccountId}",
           "policy": "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":\"sns:Publish\",\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{AccountId}\",\"Condition\":{\"StringEquals\":{\"aws:SourceAccount\":\"{AccountId}\"},\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::my-test-tf-mod-{Region}\"}}}]}"
         }
@@ -43,7 +43,7 @@
     ],
     "aws_s3_bucket_notification": [
       {
-        "this": {
+        "bucket_notification": {
           "bucket": "my-test-tf-mod-{Region}",
           "topic": [
             {
@@ -55,7 +55,7 @@
     ],
     "sumologic_collector": [
       {
-        "this": {
+        "collector": {
           "description": "thsisia",
           "name": "Test With Existing Trail New Bucket Collector SNS IAM"
         }

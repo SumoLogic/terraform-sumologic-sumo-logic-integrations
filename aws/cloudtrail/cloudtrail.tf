@@ -7,7 +7,7 @@
 # 6. Create SNS Subscription to be attached to the source and SNS Topic.
 
 resource "aws_s3_bucket" "s3_bucket" {
-  for_each = toset(var.source_details.bucket_details.create_bucket ? ["this"] : [])
+  for_each = toset(var.source_details.bucket_details.create_bucket ? ["s3_bucket"] : [])
 
   bucket        = local.bucket_name
   force_destroy = var.source_details.bucket_details.force_destroy_bucket
@@ -18,7 +18,7 @@ resource "aws_s3_bucket" "s3_bucket" {
 }
 
 resource "aws_sns_topic" "sns_topic" {
-  for_each = toset(local.create_sns_topic ? ["this"] : [])
+  for_each = toset(local.create_sns_topic ? ["sns_topic"] : [])
 
   name = "SumoLogic-Terraform-CloudTrail-Module-${local.aws_account_id}"
   policy = templatefile("${path.module}/templates/sns_topic_policy.tmpl", {
@@ -30,28 +30,28 @@ resource "aws_sns_topic" "sns_topic" {
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
-  for_each = toset(local.create_sns_topic && var.source_details.bucket_details.create_bucket ? ["this"] : [])
+  for_each = toset(local.create_sns_topic && var.source_details.bucket_details.create_bucket ? ["bucket_notification"] : [])
 
-  bucket = aws_s3_bucket.s3_bucket["this"].id
+  bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
 
   topic {
-    topic_arn = aws_sns_topic.sns_topic["this"].arn
+    topic_arn = aws_sns_topic.sns_topic["sns_topic"].arn
     events    = ["s3:ObjectCreated:Put"]
   }
 }
 
 resource "aws_cloudtrail" "cloudtrail" {
-  for_each = toset(local.create_trail ? ["this"] : [])
+  for_each = toset(local.create_trail ? ["cloudtrail"] : [])
 
   name                          = var.cloudtrail_details.name
   include_global_service_events = var.cloudtrail_details.include_global_service_events
-  s3_bucket_name                = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket["this"].id : local.bucket_name
+  s3_bucket_name                = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket["s3_bucket"].id : local.bucket_name
   is_multi_region_trail         = var.cloudtrail_details.is_multi_region_trail
   is_organization_trail         = var.cloudtrail_details.is_organization_trail
 }
 
 resource "aws_iam_role" "source_iam_role" {
-  for_each = toset(local.create_iam_role ? ["this"] : [])
+  for_each = toset(local.create_iam_role ? ["source_iam_role"] : [])
 
   name = "SumoLogic-Terraform-CloudTrail-Module-${local.aws_account_id}-${local.aws_region}"
   path = "/"
@@ -62,11 +62,11 @@ resource "aws_iam_role" "source_iam_role" {
     SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id
   })
 
-  managed_policy_arns = [aws_iam_policy.iam_policy["this"].arn]
+  managed_policy_arns = [aws_iam_policy.iam_policy["iam_policy"].arn]
 }
 
 resource "aws_iam_policy" "iam_policy" {
-  for_each = toset(local.create_iam_role ? ["this"] : [])
+  for_each = toset(local.create_iam_role ? ["iam_policy"] : [])
 
   name = "SumoLogicCloudTrailSource-${local.aws_account_id}-${local.aws_region}"
   policy = templatefile("${path.module}/templates/sumologic_source_policy.tmpl", {
@@ -74,8 +74,8 @@ resource "aws_iam_policy" "iam_policy" {
   })
 }
 
-resource "sumologic_collector" "hosted" {
-  for_each    = toset(var.create_collector ? ["this"] : [])
+resource "sumologic_collector" "collector" {
+  for_each    = toset(var.create_collector ? ["collector"] : [])
   name        = local.collector_name
   description = var.collector_details.description
   fields      = var.collector_details.fields
@@ -95,7 +95,7 @@ resource "sumologic_cloudtrail_source" "source" {
     ignore_changes = [cutoff_timestamp, cutoff_relative_time]
   }
   category             = var.source_details.source_category
-  collector_id         = var.create_collector ? sumologic_collector.hosted["this"].id : var.source_details.collector_id
+  collector_id         = var.create_collector ? sumologic_collector.collector["collector"].id : var.source_details.collector_id
   content_type         = "AwsCloudTrailBucket"
   cutoff_relative_time = var.source_details.cutoff_relative_time
   description          = var.source_details.description
@@ -105,12 +105,12 @@ resource "sumologic_cloudtrail_source" "source" {
   scan_interval        = var.source_details.scan_interval
   authentication {
     type     = "AWSRoleBasedAuthentication"
-    role_arn = local.create_iam_role ? aws_iam_role.source_iam_role["this"].arn : var.source_details.iam_role_arn
+    role_arn = local.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"].arn : var.source_details.iam_role_arn
   }
 
   path {
     type            = "S3BucketPathExpression"
-    bucket_name     = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket["this"].id : local.bucket_name
+    bucket_name     = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket["s3_bucket"].id : local.bucket_name
     path_expression = local.logs_path_expression
   }
 }
@@ -133,5 +133,5 @@ resource "aws_sns_topic_subscription" "subscription" {
   endpoint               = sumologic_cloudtrail_source.source.url
   endpoint_auto_confirms = true
   protocol               = "https"
-  topic_arn              = local.create_sns_topic ? aws_sns_topic.sns_topic["this"].arn : var.source_details.sns_topic_arn
+  topic_arn              = local.create_sns_topic ? aws_sns_topic.sns_topic["sns_topic"].arn : var.source_details.sns_topic_arn
 }

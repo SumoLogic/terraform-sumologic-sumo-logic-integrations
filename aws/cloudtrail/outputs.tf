@@ -24,7 +24,7 @@ output "aws_iam_role" {
 }
 
 output "sumologic_collector" {
-  value       = var.create_collector ? sumologic_collector.hosted : {}
+  value       = var.create_collector ? sumologic_collector.collector : {}
   description = "Sumo Logic hosted collector."
 }
 
