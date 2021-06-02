@@ -28,9 +28,7 @@ func SetUpTest(t *testing.T, vars map[string]interface{}, awsregion string) (*te
 	}
 
 	terraformOptions, resourceCount := common.ApplyTerraformWithVars(t, vars, envVars)
-	t.Cleanup(func() {
-		common.CleanupTerraform(t, terraformOptions)
-	})
+
 	return terraformOptions, resourceCount
 }
 
@@ -73,7 +71,7 @@ func TestWithDefaultValues(t *testing.T) {
 
 	// Assert if the logs are sent to Sumo Logic.
 	outputs := common.FetchAllOutputs(t, options)
-	common.GetAssertResource(options).CheckLogsForPastSixtyMinutes(t, "_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
+	common.GetAssertResource(t, options).CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 }
 
 // 2. With Existing Bucket, Existing Trail, new Collector, New SNS Topic, New IAM Role
@@ -142,7 +140,7 @@ func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
 
 	// Assert if the logs are sent to Sumo Logic.
 	outputs := common.FetchAllOutputs(t, options)
-	common.GetAssertResource(options).CheckLogsForPastSixtyMinutes(t, "_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
+	common.GetAssertResource(t, options).CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 }
 
 // 3. With Existing Bucket, Existing Trail, Existing Collector, Old SNS Topic, Old IAM Role (All Existing)
@@ -204,7 +202,7 @@ func TestWithExistingBucketTrailCollectorSNSIAM(t *testing.T) {
 
 	// Assert if the logs are sent to Sumo Logic.
 	outputs := common.FetchAllOutputs(t, options)
-	common.GetAssertResource(options).CheckLogsForPastSixtyMinutes(t, "_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
+	common.GetAssertResource(t, options).CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 }
 
 // 4. With New Bucket, Existing Trail (we will create a new trail), new Collector, New SNS Topic, New IAM Role
@@ -270,7 +268,7 @@ func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
 
 	// Assert if the logs are sent to Sumo Logic.
 	outputs := common.FetchAllOutputs(t, options)
-	common.GetAssertResource(options).CheckLogsForPastSixtyMinutes(t, "_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
+	common.GetAssertResource(t, options).CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 }
 
 // 5. Check for updates by changing variables. Assert only resources - Implemented

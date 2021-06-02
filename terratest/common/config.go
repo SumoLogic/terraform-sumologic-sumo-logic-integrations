@@ -2,6 +2,7 @@ package common
 
 import (
 	"os"
+	"testing"
 )
 
 var ModuleDirectory = os.Getenv("MODULE_DIRECTORY")
@@ -13,6 +14,7 @@ var SumologicOrganizationId = os.Getenv("SUMOLOGIC_ORG_ID")
 var SumoAccountId = "926226587429"
 
 type ResourcesAssert struct {
+	t                   *testing.T
 	AwsRegion           string
 	SumoHeaders         map[string]string
 	SumoLogicBaseApiUrl string

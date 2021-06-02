@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"net/url"
 	"os"
+	"path/filepath"
 	"reflect"
 	"strings"
 	"testing"
@@ -47,16 +48,20 @@ func log33(format []byte, replacementMap map[string]interface{}) string {
 // ApplyTerraformWithVars is used to Intialize, validate and apply the terraform module
 // with custom input variables.
 func ApplyTerraformWithVars(t *testing.T, vars map[string]interface{}, envVars map[string]string) (*terraform.Options, *terraform.ResourceCount) {
-
-	directory := test_structure.CopyTerraformFolderToTemp(t, "../../../", ModuleDirectory)
+	dir, _ := os.Getwd()
+	dir = filepath.Dir(strings.ReplaceAll(dir, "/"+ModuleDirectory, ""))
+	directory := test_structure.CopyTerraformFolderToTemp(t, dir, ModuleDirectory)
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: directory,
 		EnvVars:      envVars,
+		Vars:         vars,
+	})
+
+	t.Cleanup(func() {
+		CleanupTerraform(t, terraformOptions)
 	})
 
 	terraform.InitAndValidate(t, terraformOptions)
-
-	terraformOptions.Vars = vars
 
 	out := terraform.Apply(t, terraformOptions)
 
@@ -133,13 +138,12 @@ func FindType(element int, value interface{}) interface{} {
 // AssertResources is used to call methods based on the Terraform resource types.
 // Methods are in UpperCases to keep them public.
 func AssertResources(t *testing.T, outputs map[string]interface{}, options *terraform.Options) {
-	resourcesAssert := GetAssertResource(options)
+	resourcesAssert := GetAssertResource(t, options)
 	for key, value := range outputs {
 		myClassValue := reflect.ValueOf(resourcesAssert)
 		m := myClassValue.MethodByName(strings.ToUpper(key))
-		in := make([]reflect.Value, 2)
-		in[0] = reflect.ValueOf(t)
-		in[1] = reflect.ValueOf(value)
+		in := make([]reflect.Value, 1)
+		in[0] = reflect.ValueOf(value)
 		if m.IsValid() {
 			m.Call(in)
 		}
@@ -147,10 +151,18 @@ func AssertResources(t *testing.T, outputs map[string]interface{}, options *terr
 }
 
 // getAssertResource is to create an AssertResource object
-func GetAssertResource(options *terraform.Options) *ResourcesAssert {
+func GetAssertResource(t *testing.T, options *terraform.Options) *ResourcesAssert {
+	var awsRegion string
+	if options != nil && options.EnvVars != nil {
+		awsRegion = options.EnvVars["AWS_DEFAULT_REGION"]
+	}
 	return &ResourcesAssert{
-		AwsRegion:           options.EnvVars["AWS_DEFAULT_REGION"],
-		SumoHeaders:         map[string]string{"Authorization": "Basic " + base64.StdEncoding.EncodeToString([]byte(SumologicAccessID+":"+SumologicAccessKey))},
+		t:         t,
+		AwsRegion: awsRegion,
+		SumoHeaders: map[string]string{
+			"Authorization": "Basic " + base64.StdEncoding.EncodeToString([]byte(SumologicAccessID+":"+SumologicAccessKey)),
+			"Content-Type":  "application/json",
+		},
 		SumoLogicBaseApiUrl: getSumologicURL(),
 	}
 }
