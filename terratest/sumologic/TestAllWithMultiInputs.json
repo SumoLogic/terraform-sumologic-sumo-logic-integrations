@@ -1,0 +1,68 @@
+{
+    "sumologic_content":[
+        {
+            "AppOne": {
+                "parent_id": "{Parent_App_Id_One}"
+            }
+        },
+        {
+            "AppTwo": {
+                "parent_id": "{Parent_App_Id_Two}"
+            }
+        }
+    ],
+    "sumologic_field":[
+        {
+            "FieldOne": {
+                "data_type": "String",
+                "field_name": "fieldallinputsone",
+                "state": "Enabled"
+            }
+        },
+        {
+            "FieldTwo": {
+                "data_type": "String",
+                "field_name": "fieldallinputstwo",
+                "state": "Enabled"
+            }
+        }
+    ],
+    "sumologic_field_extraction_rule":[
+        {
+            "FieldExtractionRuleOne": {
+                "enabled": true,
+                "name": "FieldExtractionRuleAllInputsOne",
+                "parse_expression": "csv _raw extract 1 as user2, 2 as id, 3 as name | fields name",
+                "scope": "account=* eventname eventsource AllInputsOne "
+            }
+        },
+        {
+            "FieldExtractionRuleTwo": {
+                "enabled": true,
+                "name": "FieldExtractionRuleAllInputsTwo",
+                "parse_expression": "csv _raw extract 1 as user2, 2 as id, 3 as name | fields name",
+                "scope": "account=* eventname eventsource AllInputsTwo "
+            }
+        }
+    ],
+    "sumologic_metric_rules":[
+        {
+            "MetricRuleOne": {
+                "triggers":{
+                    "matchExpression": "AllInputsOne=AWS/RDS DBClusterIdentifier=*",
+                    "name": "MetricRuleAllInputsOne",
+                    "variablesToExtract": "[{\"name\":\"AllInputsOne\",\"tagSequence\":\"$DBClusterIdentifier._1\"}]"
+                }
+            }
+        },
+        {
+            "MetricRuleTwo": {
+                "triggers":{
+                    "matchExpression": "AllInputsTwo=AWS/RDS DBClusterIdentifier=*",
+                    "name": "MetricRuleAllInputsTwo",
+                    "variablesToExtract": "[{\"name\":\"AllInputsTwo\",\"tagSequence\":\"$DBClusterIdentifier._1\"}]"
+                }
+            }
+        }
+    ]
+}

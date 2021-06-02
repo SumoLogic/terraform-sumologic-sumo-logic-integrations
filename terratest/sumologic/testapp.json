@@ -1,0 +1,561 @@
+{
+    "type": "FolderSyncDefinition",
+    "name": "AWS Application Load Balancer",
+    "description": "The Sumo Logic App for AWS Application Load Balancer is a unified logs and metrics (ULM) App that gives you visibility into the health of your Application Load Balancer and target groups. Use the preconfigured dashboards to understand the latency, request and host status, threat intel, and HTTP backend codes by availability zone and target group.",
+    "children": [
+      {
+        "type": "DashboardV2SyncDefinition",
+        "name": "1. AWS Application Load Balancer - Overview",
+        "description": "See the overview of Application load balancer including the requests, healthy and unhealthy host count, target response time, active connections, and client TLS error.",
+        "title": "1. AWS Application Load Balancer - Overview",
+        "rootPanel": null,
+        "theme": "Light",
+        "topologyLabelMap": {
+          "data": {
+            "namespace": [
+              "aws/applicationelb"
+            ],
+            "region": [
+              "*"
+            ],
+            "account": [
+              "*"
+            ]
+          }
+        },
+        "refreshInterval": 0,
+        "timeRange": {
+          "type": "BeginBoundedTimeRange",
+          "from": {
+            "type": "RelativeTimeRangeBoundary",
+            "relativeTime": "-1d"
+          },
+          "to": null
+        },
+        "layout": {
+          "layoutType": "Grid",
+          "layoutStructures": [
+            {
+              "key": "panelpane-1b6c3f98bd2fa94a",
+              "structure": "{\"height\":5,\"width\":4,\"x\":16,\"y\":12}"
+            },
+            {
+              "key": "panelpane-b28e428595aa7841",
+              "structure": "{\"height\":5,\"width\":4,\"x\":20,\"y\":12}"
+            },
+            {
+              "key": "panelpane-3c5686918c144a48",
+              "structure": "{\"height\":5,\"width\":4,\"x\":12,\"y\":12}"
+            },
+            {
+              "key": "panelpane-01a4cebc9d796a44",
+              "structure": "{\"height\":5,\"width\":4,\"x\":0,\"y\":12}"
+            },
+            {
+              "key": "panelpane-5d596c23a60d9b43",
+              "structure": "{\"height\":5,\"width\":4,\"x\":4,\"y\":12}"
+            },
+            {
+              "key": "panelpane-5711200884094842",
+              "structure": "{\"height\":5,\"width\":4,\"x\":8,\"y\":12}"
+            },
+            {
+              "key": "panelpane-f8e1e750b651c843",
+              "structure": "{\"height\":6,\"width\":24,\"x\":0,\"y\":30}"
+            },
+            {
+              "key": "panelpane-3919c994a29d9b4a",
+              "structure": "{\"height\":6,\"width\":24,\"x\":0,\"y\":36}"
+            },
+            {
+              "key": "panelpane-ed2772e08225f840",
+              "structure": "{\"height\":7,\"width\":24,\"x\":0,\"y\":17}"
+            },
+            {
+              "key": "panelpane-97c80ce1b96ed948",
+              "structure": "{\"height\":6,\"width\":12,\"x\":0,\"y\":24}"
+            },
+            {
+              "key": "panelPANE-84EA9744A2C6BB47",
+              "structure": "{\"height\":12,\"width\":12,\"x\":0,\"y\":0}"
+            },
+            {
+              "key": "panelPANE-AEBA84C2BE464B40",
+              "structure": "{\"height\":6,\"width\":6,\"x\":12,\"y\":0}"
+            },
+            {
+              "key": "panelPANE-BFCE029B9E625B46",
+              "structure": "{\"height\":6,\"width\":6,\"x\":12,\"y\":6}"
+            },
+            {
+              "key": "panelPANE-C44F0671A5AFEA41",
+              "structure": "{\"height\":6,\"width\":6,\"x\":18,\"y\":6}"
+            },
+            {
+              "key": "panel4A7F28558036BA4D",
+              "structure": "{\"height\":6,\"width\":12,\"x\":12,\"y\":24}"
+            },
+            {
+              "key": "panelPANE-5AE57A6E80107B44",
+              "structure": "{\"height\":6,\"width\":6,\"x\":18,\"y\":0}"
+            }
+          ]
+        },
+        "panels": [
+          {
+            "id": null,
+            "key": "panelpane-1b6c3f98bd2fa94a",
+            "title": "Healthy Hosts",
+            "visualSettings": "{\"general\":{\"type\":\"svp\"},\"svp\":{\"option\":\"Latest\",\"valueFontSize\":24,\"thresholds\":[{\"from\":null,\"to\":null,\"color\":\"#16943E\"},{\"from\":null,\"to\":null,\"color\":\"#DFBE2E\"},{\"from\":null,\"to\":null,\"color\":\"#BF2121\"}],\"labelFontSize\":16,\"label\":\"Hosts\",\"rounding\":0,\"sparkline\":{\"show\":true,\"color\":\"\"}}}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric=HealthyHostCount Statistic=Average | sum",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelpane-b28e428595aa7841",
+            "title": "Unhealthy Hosts",
+            "visualSettings": "{\"general\":{\"type\":\"svp\"},\"svp\":{\"option\":\"Latest\",\"thresholds\":[{\"from\":null,\"to\":null,\"color\":\"#16943E\"},{\"from\":null,\"to\":null,\"color\":\"#DFBE2E\"},{\"from\":null,\"to\":null,\"color\":\"#BF2121\"}],\"label\":\"Hosts\",\"valueFontSize\":24,\"labelFontSize\":16,\"sparkline\":{\"show\":true,\"color\":\"\"},\"rounding\":0}}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric=UnHealthyHostCount Statistic=Average | sum",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelpane-3c5686918c144a48",
+            "title": "Target Connection Errors",
+            "visualSettings": "{\"general\":{\"type\":\"svp\"},\"svp\":{\"option\":\"Sum\",\"label\":\"Errors\",\"thresholds\":[{\"from\":0,\"to\":10,\"color\":\"#527b01\"},{\"from\":10,\"to\":20,\"color\":\"#b18209\"},{\"from\":20,\"to\":null,\"color\":\"#b63010\"}],\"valueFontSize\":24,\"labelFontSize\":16,\"noDataString\":\"0\",\"rounding\":0,\"sparkline\":{\"show\":true,\"color\":\"\"}}}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric= TargetConnectionErrorCount Statistic=Sum | sum",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelpane-01a4cebc9d796a44",
+            "title": "New Connections",
+            "visualSettings": "{\"general\":{\"type\":\"svp\"},\"svp\":{\"option\":\"Sum\",\"label\":\"Connections\",\"thresholds\":[{\"from\":null,\"to\":null,\"color\":\"#16943E\"},{\"from\":null,\"to\":null,\"color\":\"#DFBE2E\"},{\"from\":null,\"to\":null,\"color\":\"#BF2121\"}],\"valueFontSize\":24,\"labelFontSize\":16,\"noDataString\":\"0\",\"sparkline\":{\"show\":true,\"color\":\"\"},\"rounding\":0}}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric= NewConnectionCount Statistic=Sum | sum",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelpane-5d596c23a60d9b43",
+            "title": "Active Connections",
+            "visualSettings": "{\"general\":{\"type\":\"svp\"},\"svp\":{\"option\":\"Sum\",\"label\":\"Connections\",\"thresholds\":[{\"from\":null,\"to\":null,\"color\":\"#16943E\"},{\"from\":null,\"to\":null,\"color\":\"#DFBE2E\"},{\"from\":null,\"to\":null,\"color\":\"#BF2121\"}],\"valueFontSize\":24,\"labelFontSize\":16,\"noDataString\":\"0\",\"sparkline\":{\"show\":true,\"color\":\"\"},\"rounding\":0}}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric= ActiveConnectionCount Statistic=Sum | sum",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelpane-5711200884094842",
+            "title": "Rejected Connections",
+            "visualSettings": "{\"general\":{\"type\":\"svp\"},\"svp\":{\"option\":\"Sum\",\"label\":\"Connections\",\"thresholds\":[{\"from\":null,\"to\":null,\"color\":\"#16943E\"},{\"from\":null,\"to\":null,\"color\":\"#DFBE2E\"},{\"from\":null,\"to\":null,\"color\":\"#BF2121\"}],\"valueFontSize\":24,\"labelFontSize\":16,\"noDataString\":\"0\",\"sparkline\":{\"show\":true,\"color\":\"\"},\"rounding\":0}}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric= RejectedConnectionCount Statistic=Sum | sum",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelpane-f8e1e750b651c843",
+            "title": "Client TLS Errors by Load Balancer",
+            "visualSettings": "{\"general\":{\"mode\":\"timeSeries\"},\"axes\":{\"axisY\":{\"title\":\"Errors\"}},\"overrides\":[{\"series\":[],\"queries\":[\"A\"],\"userProvidedChartType\":false,\"properties\":{\"type\":\"line\",\"name\":\"{{loadbalancer}}\"}}]}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric=ClientTLSNegotiationErrorCount  Statistic=sum | sum by account, region, namespace, loadbalancer",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelpane-3919c994a29d9b4a",
+            "title": "Overall Healthy vs Unhealthy Host Count",
+            "visualSettings": "{\"general\":{\"mode\":\"timeSeries\"},\"axes\":{\"axisY\":{\"title\":\"Host Count\"}},\"overrides\":[{\"series\":[],\"queries\":[\"A\"],\"userProvidedChartType\":false,\"properties\":{\"type\":\"line\",\"name\":\"Healthy Host - {{loadbalancer}}\"}},{\"series\":[],\"queries\":[\"B\"],\"userProvidedChartType\":false,\"properties\":{\"type\":\"line\",\"name\":\"UnHealthy Host - {{loadbalancer}}\"}}],\"color\":{\"family\":\"scheme7\"}}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric=HealthyHostCount Statistic=Average | avg by account, region, namespace, loadbalancer",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              },
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric=UnHealthyHostCount Statistic=Average | avg by account, region, namespace, loadbalancer",
+                "queryType": "Metrics",
+                "queryKey": "B",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelpane-ed2772e08225f840",
+            "title": "Requests Served by Load Balancer",
+            "visualSettings": "{\"title\":{\"fontSize\":16},\"general\":{\"type\":\"column\",\"displayType\":\"stacked\",\"outlierBandColor\":\"#FDECF5\",\"outlierBandMarkerColor\":\"#F032A9\",\"outlierBandFillOpacity\":0.3,\"outlierBandLineThickness\":2,\"outlierBandMarkerSize\":10,\"outlierBandMarkerType\":\"triangle\",\"fillOpacity\":1,\"mode\":\"timeSeries\"},\"axes\":{\"axisX\":{\"title\":\"\",\"titleFontSize\":11,\"labelFontSize\":10},\"axisY\":{\"titleFontSize\":11,\"labelFontSize\":12,\"logarithmic\":false,\"gridColor\":\"#dde4e9\",\"title\":\"Count\"}},\"legend\":{\"enabled\":true,\"verticalAlign\":\"bottom\",\"fontSize\":12,\"maxHeight\":50,\"showAsTable\":false,\"wrap\":true},\"color\":{\"family\":\"scheme9\"},\"overrides\":[{\"series\":[],\"queries\":[\"A\"],\"userProvidedChartType\":false,\"properties\":{\"type\":\"column\",\"name\":\"{{loadbalancer}}\"}}]}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric=RequestCount Statistic=Sum | sum by account, region, namespace, loadbalancer",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelpane-97c80ce1b96ed948",
+            "title": "4XX by Load Balancer",
+            "visualSettings": "{\"general\":{\"mode\":\"timeSeries\",\"type\":\"line\",\"displayType\":\"default\",\"outlierBandColor\":\"#FDECF5\",\"outlierBandMarkerColor\":\"#ED3CPE\",\"outlierBandFillOpacity\":0.15,\"outlierBandLineThickness\":2,\"outlierBandMarkerSize\":10,\"outlierBandMarkerType\":\"triangle\",\"markerSize\":0,\"lineDashType\":\"solid\",\"markerType\":\"none\",\"lineThickness\":3},\"title\":{\"fontSize\":16},\"axes\":{\"axisX\":{\"title\":\"\",\"titleFontSize\":11,\"labelFontSize\":10},\"axisY\":{\"titleFontSize\":11,\"labelFontSize\":12,\"logarithmic\":false,\"gridColor\":\"#dde4e9\",\"title\":\"Count\"}},\"legend\":{\"enabled\":true,\"verticalAlign\":\"bottom\",\"fontSize\":12,\"maxHeight\":50,\"showAsTable\":false,\"wrap\":true},\"color\":{\"family\":\"scheme9\"},\"overrides\":[{\"series\":[],\"queries\":[\"A\"],\"userProvidedChartType\":false,\"properties\":{\"type\":\"line\",\"name\":\"{{loadbalancer}}\"}}]}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric=HTTPCode_ELB_4XX_Count Statistic=Sum | sum by account, region, namespace, loadbalancer",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelPANE-84EA9744A2C6BB47",
+            "title": "Request Locations",
+            "visualSettings": "{\"general\":{\"mode\":\"map\",\"type\":\"map\",\"displayType\":\"default\",\"outlierBandColor\":\"#FDECF5\",\"outlierBandMarkerColor\":\"#ED3CPE\",\"outlierBandFillOpacity\":0.15,\"outlierBandLineThickness\":2,\"outlierBandMarkerSize\":10,\"outlierBandMarkerType\":\"triangle\"},\"title\":{\"fontSize\":16},\"series\":{}}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} namespace={{namespace}}\n| parse \"* * * * * * * * * * * * \\\"*\\\" \\\"*\\\" * * * \\\"*\\\"\" as Type, DateTime, loadbalancer, Client, Target, RequestProcessingTime, TargetProcessingTime, ResponseProcessingTime, ElbStatusCode, TargetStatusCode, ReceivedBytes, SentBytes, Request, UserAgent, SslCipher, SslProtocol, TargetGroupArn, TraceId\n| where tolowercase(loadbalancer) matches tolowercase(\"{{loadbalancer}}\")\n| parse field=Client \"*:*\" as ClientIP, ClientPort nodrop \n| count by ClientIP\n| lookup latitude, longitude, country_code, country_name, region, city, postal_code from geo://location on ip = ClientIP\n| count by latitude, longitude, country_code, country_name, region, city, postal_code\n| where !isnull(latitude)",
+                "queryType": "Logs",
+                "queryKey": "A",
+                "metricsQueryMode": null,
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelPANE-AEBA84C2BE464B40",
+            "title": "Load Balancer Latency (ms)",
+            "visualSettings": "{\"general\":{\"mode\":\"honeyComb\",\"type\":\"honeyComb\",\"displayType\":\"default\"},\"title\":{\"fontSize\":16},\"honeyComb\":{\"thresholds\":[{\"from\":0,\"to\":1001,\"color\":\"#75bf00\"},{\"from\":1001,\"to\":3001,\"color\":\"#f6c851\"},{\"from\":3001,\"to\":null,\"color\":\"#f36644\"}],\"shape\":\"hexagon\",\"groupBy\":[],\"aggregationType\":\"avg\"}}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric=TargetResponseTime Statistic=Average | eval(_value*1000) | sum by account, region, namespace, loadbalancer",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelPANE-BFCE029B9E625B46",
+            "title": "5xx Error Codes by Load Balancer",
+            "visualSettings": "{\"general\":{\"mode\":\"honeyComb\",\"type\":\"honeyComb\",\"displayType\":\"default\",\"outlierBandColor\":\"#FDECF5\",\"outlierBandMarkerColor\":\"#F032A9\",\"outlierBandFillOpacity\":0.3,\"outlierBandLineThickness\":2,\"outlierBandMarkerSize\":10,\"outlierBandMarkerType\":\"triangle\"},\"title\":{\"fontSize\":16},\"honeyComb\":{\"thresholds\":[{\"from\":0,\"to\":5,\"color\":\"#75bf00\"},{\"from\":5,\"to\":50,\"color\":\"#f6c851\"},{\"from\":50,\"to\":null,\"color\":\"#f36644\"}],\"shape\":\"hexagon\",\"groupBy\":[],\"aggregationType\":\"avg\"},\"series\":{}}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric=HTTPCode_ELB_5XX_Count  Statistic=Sum | sum by account, region, namespace, loadbalancer",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelPANE-C44F0671A5AFEA41",
+            "title": "4xx Error Codes by Load Balancer",
+            "visualSettings": "{\"general\":{\"mode\":\"honeyComb\",\"type\":\"honeyComb\",\"displayType\":\"default\",\"outlierBandColor\":\"#FDECF5\",\"outlierBandMarkerColor\":\"#F032A9\",\"outlierBandFillOpacity\":0.3,\"outlierBandLineThickness\":2,\"outlierBandMarkerSize\":10,\"outlierBandMarkerType\":\"triangle\"},\"title\":{\"fontSize\":16},\"honeyComb\":{\"thresholds\":[{\"from\":0,\"to\":10,\"color\":\"#75bf00\"},{\"from\":10,\"to\":50,\"color\":\"#f6c851\"},{\"from\":50,\"to\":null,\"color\":\"#f36644\"}],\"shape\":\"hexagon\",\"groupBy\":[],\"aggregationType\":\"avg\"}}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric=HTTPCode_ELB_4XX_Count  Statistic=Sum | sum by account, region, namespace, loadbalancer",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panel4A7F28558036BA4D",
+            "title": "5XX by Load Balancer",
+            "visualSettings": "{\"general\":{\"mode\":\"timeSeries\",\"type\":\"line\",\"displayType\":\"default\",\"outlierBandColor\":\"#FDECF5\",\"outlierBandMarkerColor\":\"#ED3CPE\",\"outlierBandFillOpacity\":0.15,\"outlierBandLineThickness\":2,\"outlierBandMarkerSize\":10,\"outlierBandMarkerType\":\"triangle\",\"markerSize\":0,\"lineDashType\":\"solid\",\"markerType\":\"none\",\"lineThickness\":3},\"title\":{\"fontSize\":16},\"axes\":{\"axisX\":{\"title\":\"\",\"titleFontSize\":11,\"labelFontSize\":10},\"axisY\":{\"titleFontSize\":11,\"labelFontSize\":12,\"logarithmic\":false,\"gridColor\":\"#dde4e9\",\"title\":\"Count\"}},\"legend\":{\"enabled\":true,\"verticalAlign\":\"bottom\",\"fontSize\":12,\"maxHeight\":50,\"showAsTable\":false,\"wrap\":true},\"color\":{\"family\":\"scheme9\"},\"overrides\":[{\"series\":[],\"queries\":[\"A\"],\"userProvidedChartType\":false,\"properties\":{\"type\":\"line\",\"name\":\"{{loadbalancer}}\"}}]}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} Namespace={{namespace}} loadbalancer={{loadbalancer}} metric=HTTPCode_ELB_5XX_Count Statistic=Sum | sum by account, region, namespace, loadbalancer",
+                "queryType": "Metrics",
+                "queryKey": "A",
+                "metricsQueryMode": "Advanced",
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          },
+          {
+            "id": null,
+            "key": "panelPANE-5AE57A6E80107B44",
+            "title": "Threat Intel Count",
+            "visualSettings": "{\"general\":{\"mode\":\"honeyComb\",\"type\":\"honeyComb\",\"displayType\":\"default\",\"outlierBandColor\":\"#FDECF5\",\"outlierBandMarkerColor\":\"#F032A9\",\"outlierBandFillOpacity\":0.3,\"outlierBandLineThickness\":2,\"outlierBandMarkerSize\":10,\"outlierBandMarkerType\":\"triangle\"},\"title\":{\"fontSize\":16},\"honeyComb\":{\"thresholds\":[{\"from\":0,\"to\":1,\"color\":\"#8ecc1b\"},{\"from\":1,\"to\":5,\"color\":\"#f6c851\"},{\"from\":5,\"to\":null,\"color\":\"#f36644\"}],\"shape\":\"hexagon\",\"groupBy\":[],\"aggregationType\":\"avg\"},\"series\":{}}",
+            "keepVisualSettingsConsistentWithParent": true,
+            "panelType": "SumoSearchPanel",
+            "queries": [
+              {
+                "queryString": "account={{account}} region={{region}} namespace={{namespace}}\n| parse \"* * * * * * * * * * * * \\\"*\\\" \\\"*\\\" * * * \\\"*\\\"\" as Type, DateTime, loadbalancer, Client, Target, RequestProcessingTime, TargetProcessingTime, ResponseProcessingTime, ElbStatusCode, TargetStatusCode, ReceivedBytes, SentBytes, Request, UserAgent, SslCipher, SslProtocol, TargetGroupArn, TraceId\n| where tolowercase(loadbalancer) matches tolowercase(\"{{loadbalancer}}\")\n| parse regex \"(?<ClientIp>\\b\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})\" multi\n| where ClientIp != \"0.0.0.0\" and ClientIp != \"127.0.0.1\"\n| timeslice 5m\n| count as ip_count by ClientIp, loadbalancer\n| lookup type, actor, raw, threatlevel as MaliciousConfidence from sumo://threat/cs on threat=ClientIp \n| json field=raw \"labels[*].name\" as LabelName \n| replace(LabelName, \"\\\\/\",\"->\") as LabelName\n| replace(LabelName, \"\\\"\",\" \") as LabelName\n| where type=\"ip_address\" and MaliciousConfidence=\"high\"\n| if (isEmpty(actor), \"Unassigned\", actor) as Actor\n| sum (ip_count) as ThreatCount by loadbalancer\n| sort by ThreatCount",
+                "queryType": "Logs",
+                "queryKey": "A",
+                "metricsQueryMode": null,
+                "metricsQueryData": null,
+                "tracesQueryData": null,
+                "parseMode": "Manual",
+                "timeSource": "Message"
+              }
+            ],
+            "description": "",
+            "timeRange": null,
+            "coloringRules": null,
+            "linkedDashboards": []
+          }
+        ],
+        "variables": [
+          {
+            "id": "453C28238F1A65E7",
+            "name": "account",
+            "displayName": null,
+            "defaultValue": "*",
+            "sourceDefinition": {
+              "variableSourceType": "MetadataVariableSourceDefinition",
+              "filter": "",
+              "key": "account"
+            },
+            "allowMultiSelect": false,
+            "includeAllOption": true,
+            "hideFromUI": false
+          },
+          {
+            "id": "D62C93C4AB071882",
+            "name": "region",
+            "displayName": null,
+            "defaultValue": "*",
+            "sourceDefinition": {
+              "variableSourceType": "MetadataVariableSourceDefinition",
+              "filter": "account={{account}}",
+              "key": "region"
+            },
+            "allowMultiSelect": false,
+            "includeAllOption": true,
+            "hideFromUI": false
+          },
+          {
+            "id": "0507C897AA712CCB",
+            "name": "namespace",
+            "displayName": null,
+            "defaultValue": "aws/applicationelb",
+            "sourceDefinition": {
+              "variableSourceType": "MetadataVariableSourceDefinition",
+              "filter": "account={{account}} region={{region}}",
+              "key": "namespace"
+            },
+            "allowMultiSelect": false,
+            "includeAllOption": true,
+            "hideFromUI": false
+          },
+          {
+            "id": "6B00199BE0DC829A",
+            "name": "loadbalancer",
+            "displayName": null,
+            "defaultValue": "*",
+            "sourceDefinition": {
+              "variableSourceType": "MetadataVariableSourceDefinition",
+              "filter": "account={{account}} region={{region}} namespace={{namespace}}",
+              "key": "loadbalancer"
+            },
+            "allowMultiSelect": false,
+            "includeAllOption": true,
+            "hideFromUI": false
+          }
+        ],
+        "coloringRules": []
+      }
+    ]
+  }

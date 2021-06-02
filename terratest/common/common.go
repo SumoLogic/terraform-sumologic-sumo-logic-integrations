@@ -92,7 +92,7 @@ func AssertOutputs(t *testing.T, options *terraform.Options, expectedOutputs map
 	actualOutputs := FetchAllOutputs(t, options)
 
 	// Assert length of outputs
-	assert.Equal(t, len(actualOutputs), len(expectedOutputs), "Mismatch in number of outputs.")
+	assert.Equal(t, len(expectedOutputs), len(actualOutputs), "Mismatch in number of outputs.")
 
 	// Assert expected vs actual
 	AssertObject(t, "", expectedOutputs, actualOutputs)
