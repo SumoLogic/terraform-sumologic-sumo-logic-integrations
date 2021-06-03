@@ -10,5 +10,9 @@ terraform {
       version = "~> 2.6.0"
       source  = "SumoLogic/sumologic"
     }
+    time = {
+      source  = "hashicorp/time"
+      version = "0.7.1"
+    }
   }
 }

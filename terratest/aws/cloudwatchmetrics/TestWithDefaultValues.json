@@ -1,0 +1,37 @@
+{
+  "aws_iam_role": [
+    {
+      "source_iam_role": {
+        "name": "SumoLogic-CloudWatch-Metrics-Module-{AccountId}-{Region}",
+        "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::{SumoAccountId}:root\"},\"Action\":\"sts:AssumeRole\",\"Condition\":{\"StringEquals\":{\"sts:ExternalId\":\"{Deployment}:{OrgId}\"}}}]}"
+      }
+    }
+  ],
+  "sumologic_collector": [
+    {
+      "collector": {
+        "description": "This collector is created using Sumo Logic terraform AWS Cloudwatch metrics module to collect AWS cloudwatch metrics.",
+        "name": "SumoLogic CloudWatch Metrics Collector {AccountId}"
+      }
+    }
+  ],
+  "sumologic_source": {
+    "category": "Labs/aws/cloudwatch/metrics",
+    "content_type": "AwsCloudWatch",
+    "description": "This source is created using Sumo Logic terraform AWS CloudWatch Metrics module to collect AWS Cloudwatch metrics.",
+    "path": [
+      {
+        "limit_to_regions": [
+          "us-east-1"
+        ],
+        "limit_to_namespaces": []
+      }
+    ],
+    "fields": {
+      "MySource": "TestSourceTerraform"
+    },
+    "paused": false,
+    "scan_interval": 60000,
+    "name": "CloudWatch Metrics Source"
+  }
+}

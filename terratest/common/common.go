@@ -129,7 +129,11 @@ func AssertObject(t *testing.T, expectedKey string, expectedValue interface{}, a
 func FindType(element int, value interface{}) interface{} {
 	switch value := value.(type) {
 	case []interface{}:
-		return value[element]
+		if len(value) > 0 {
+			return value[element]
+		} else {
+			return value
+		}
 	default:
 		return value
 	}

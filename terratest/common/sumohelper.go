@@ -45,6 +45,28 @@ func (a *ResourcesAssert) CheckLogsWithCustomFromAndToTime(query, from, to, time
 	assert.Greater(a.t, len(body), 0, fmt.Sprintf("No messages found in the provided query {%s}", query))
 }
 
+func (a *ResourcesAssert) CheckMetricsForPastSixtyMinutes(query string, retries int, sleep time.Duration) {
+	var body map[string]interface{}
+	count := 0
+	tz, _ := time.Now().Zone()
+	for i := 1; i <= retries; i++ {
+		from := time.Now().Add(-60 * time.Minute).UnixNano()
+		to := time.Now().UnixNano()
+		request, _ := json.Marshal(map[string]interface{}{"query": []map[string]interface{}{{"query": query, "rowId": "A", "timezone": tz}}, "startTime": from, "endTime": to, "desiredQuantizationInSecs": 5})
+		out := http_helper.HTTPDoWithRetry(a.t, "POST", a.getMetricResultsURL(), request, a.SumoHeaders, 200, 1, 1*time.Second, nil)
+		json.Unmarshal([]byte(out), &body)
+		response := body["response"]
+		if len(response.([]interface{})) <= 0 {
+			fmt.Printf("Sleeping for %v and will retry with current counter as %v.", sleep.String(), i)
+			time.Sleep(sleep)
+		} else {
+			count = len(response.([]interface{}))
+			break
+		}
+	}
+	assert.Greater(a.t, count, 0, fmt.Sprintf("No messages found in the provided query {%s}", query))
+}
+
 func (a *ResourcesAssert) CreateAndGetFolderIdFromPersonal(folder_name string) string {
 	personal_folder_id := a.GetPersonalFolder()
 	requestBody, _ := json.Marshal(map[string]interface{}{"name": folder_name, "description": "This is a folder.", "parentId": personal_folder_id})
@@ -93,4 +115,8 @@ func (a *ResourcesAssert) getMonitorsFoldersURL() string {
 
 func (a *ResourcesAssert) getSearchJobsURL(query, from, to, timezone string) string {
 	return fmt.Sprintf("%s/api/v1/logs/search?q=%s&from=%v&to=%v&tz=%v", a.SumoLogicBaseApiUrl, query, from, to, timezone)
+}
+
+func (a *ResourcesAssert) getMetricResultsURL() string {
+	return fmt.Sprintf("%s/api/v1/metrics/results", a.SumoLogicBaseApiUrl)
 }
