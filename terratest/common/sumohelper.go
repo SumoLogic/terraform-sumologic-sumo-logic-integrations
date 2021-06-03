@@ -50,8 +50,8 @@ func (a *ResourcesAssert) CheckMetricsForPastSixtyMinutes(query string, retries 
 	count := 0
 	tz, _ := time.Now().Zone()
 	for i := 1; i <= retries; i++ {
-		from := time.Now().Add(-60 * time.Minute).UnixNano()
-		to := time.Now().UnixNano()
+		from := time.Now().Add(-60 * time.Minute).Sub(time.Unix(0, 0)).Milliseconds()
+		to := time.Now().Add(1 * time.Second).Sub(time.Unix(0, 0)).Milliseconds()
 		request, _ := json.Marshal(map[string]interface{}{"query": []map[string]interface{}{{"query": query, "rowId": "A", "timezone": tz}}, "startTime": from, "endTime": to, "desiredQuantizationInSecs": 5})
 		out := http_helper.HTTPDoWithRetry(a.t, "POST", a.getMetricResultsURL(), request, a.SumoHeaders, 200, 1, 1*time.Second, nil)
 		json.Unmarshal([]byte(out), &body)

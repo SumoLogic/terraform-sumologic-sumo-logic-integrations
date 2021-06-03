@@ -33,13 +33,13 @@ resource "sumologic_collector" "collector" {
   timezone    = "UTC"
 }
 
-resource "time_sleep" "wait_1_minutes" {
-  create_duration = "60s"
+resource "time_sleep" "wait_3_minutes" {
+  create_duration = "180s"
 }
 
 resource "sumologic_cloudwatch_source" "cloudwatch_metrics_sources" {
   depends_on = [
-    time_sleep.wait_1_minutes
+    time_sleep.wait_3_minutes
   ]
   category      = var.source_details.source_category
   collector_id  = var.create_collector ? sumologic_collector.collector["collector"].id : var.source_details.collector_id
