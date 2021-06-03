@@ -2,7 +2,7 @@ module "cloudwatchmetrics" {
 	source = "../aws/cloudwatchmetrics"
 	
 	create_collector = true
-	sumologic_organization_id = "00000000004F8319"
+	sumologic_organization_id = "0000000000123456"
 	collector_details = {
 		"collector_name": "Test CloudWatch metrics Module One",
 		"description":    "This is a new description.",
