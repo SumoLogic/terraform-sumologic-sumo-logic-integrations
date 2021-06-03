@@ -2,6 +2,8 @@ package sumologic
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"strings"
 	"testing"
 
@@ -121,6 +123,12 @@ func getContent(contentPath, folderId string) map[string]interface{} {
 	}
 }
 
+func getContentPath() string {
+	dir, _ := os.Getwd()
+	dir = filepath.Dir(strings.ReplaceAll(dir, "/"+common.ModuleDirectory, ""))
+	return dir + CONTENT_PATH
+}
+
 func SetUpTest(t *testing.T, vars map[string]interface{}) (*terraform.Options, *terraform.ResourceCount) {
 	envVars := map[string]string{
 		"SUMOLOGIC_ACCESSID":    common.SumologicAccessID,
@@ -134,7 +142,6 @@ func SetUpTest(t *testing.T, vars map[string]interface{}) (*terraform.Options, *
 }
 
 func TestAllWithMultiInputs(t *testing.T) {
-	t.Parallel()
 	assertResource := common.GetAssertResource(t, nil)
 	prefixOne := "AllInputsOne"
 	prefixTwo := "AllInputsTwo"
@@ -168,8 +175,8 @@ func TestAllWithMultiInputs(t *testing.T) {
 			"FieldExtractionRuleTwo": getFieldExtractionRule(prefixTwo),
 		},
 		"managed_apps": map[string]interface{}{
-			"AppOne": getContent(CONTENT_PATH, app_folder_id_one),
-			"AppTwo": getContent(CONTENT_PATH, app_folder_id_two),
+			"AppOne": getContent(getContentPath(), app_folder_id_one),
+			"AppTwo": getContent(getContentPath(), app_folder_id_two),
 		},
 		"managed_monitors": map[string]interface{}{
 			"MonitorOne": getLogsMonitor(prefixOne, monitor_folder_id),
@@ -240,7 +247,6 @@ func TestFieldsOnly(t *testing.T) {
 }
 
 func TestFieldExtractionRuleOnly(t *testing.T) {
-	t.Parallel()
 
 	vars := map[string]interface{}{
 		"access_id":   common.SumologicAccessID,
@@ -265,7 +271,6 @@ func TestFieldExtractionRuleOnly(t *testing.T) {
 }
 
 func TestContentOnly(t *testing.T) {
-	t.Parallel()
 
 	assertResource := common.GetAssertResource(t, nil)
 	prefixOne := "TestContentOnly"
@@ -279,7 +284,7 @@ func TestContentOnly(t *testing.T) {
 		"access_key":  common.SumologicAccessKey,
 		"environment": common.SumologicEnvironment,
 		"managed_apps": map[string]interface{}{
-			"AppOne": getContent(CONTENT_PATH, app_folder_id_one),
+			"AppOne": getContent(getContentPath(), app_folder_id_one),
 		},
 	}
 
