@@ -64,7 +64,7 @@ resource "sumologic_field_extraction_rule" "SumoLogicFieldExtractionRules" {
 resource "sumologic_content" "SumoLogicApps" {
   for_each = var.managed_apps
 
-  config    = file(join("", [local.folder_path, each.value.content_json]))
+  config    = file(each.value.content_json)
   parent_id = each.value.folder_id
 }
 
