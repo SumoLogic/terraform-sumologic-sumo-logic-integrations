@@ -54,14 +54,15 @@ func ApplyTerraformWithVars(t *testing.T, vars map[string]interface{}, envVars m
 	terraformOptions := terraform.WithDefaultRetryableErrors(t, &terraform.Options{
 		TerraformDir: directory,
 		EnvVars:      envVars,
-		Vars:         vars,
 	})
+
+	terraform.InitAndValidate(t, terraformOptions)
+
+	terraformOptions.Vars = vars
 
 	t.Cleanup(func() {
 		CleanupTerraform(t, terraformOptions)
 	})
-
-	terraform.InitAndValidate(t, terraformOptions)
 
 	out := terraform.Apply(t, terraformOptions)
 
