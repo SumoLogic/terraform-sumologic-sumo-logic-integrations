@@ -13,7 +13,7 @@ resource "aws_s3_bucket" "s3_bucket" {
   force_destroy = var.source_details.bucket_details.force_destroy_bucket
 
   policy = templatefile("${path.module}/templates/elb_bucket_policy.tmpl", {
-    BUCKET_NAME = local.bucket_name
+    BUCKET_NAME     = local.bucket_name
     ELB_ACCCOUNT_ID = local.region_to_elb_account_id[local.aws_region]
   })
 }
@@ -130,20 +130,20 @@ resource "aws_sns_topic_subscription" "subscription" {
 # Reason to use the SAM app, is to have single source of truth for Auto Enable access logs functionality.
 resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_access_logs" {
   for_each = toset(local.auto_enable_access_logs ? ["auto_enable_access_logs"] : [])
-  
-  name           = "Auto-Enable-Access-Logs-Elb"
-  application_id = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable"
+
+  name             = "Auto-Enable-Access-Logs-Elb"
+  application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable"
   semantic_version = "1.0.2"
   capabilities = [
     "CAPABILITY_IAM",
     "CAPABILITY_RESOURCE_POLICY",
   ]
   parameters = {
-    BucketName = local.bucket_name
-    BucketPrefix = "elasticloadbalancing"
-    AutoEnableLogging = "ALB"
+    BucketName                = local.bucket_name
+    BucketPrefix              = "elasticloadbalancing"
+    AutoEnableLogging         = "ALB"
     AutoEnableResourceOptions = var.auto_enable_access_logs
-    FilterExpression = var.auto_enable_access_logs_options.filter
-    RemoveOnDeleteStack = var.auto_enable_access_logs_options.remove_on_delete_stack
+    FilterExpression          = var.auto_enable_access_logs_options.filter
+    RemoveOnDeleteStack       = var.auto_enable_access_logs_options.remove_on_delete_stack
   }
 }

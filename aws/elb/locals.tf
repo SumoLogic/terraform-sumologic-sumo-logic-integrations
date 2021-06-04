@@ -21,7 +21,7 @@ locals {
 
   # If we create the bucket, then get the default PATH expression.
   logs_path_expression = var.source_details.bucket_details.create_bucket ? "*AWSLogs/${local.aws_account_id}/elasticloadbalancing/${local.aws_region}/*" : var.source_details.bucket_details.path_expression
-  
+
   region_to_elb_account_id = {
     "us-east-1"      = "127311923021",
     "us-east-2"      = "033677994240",
