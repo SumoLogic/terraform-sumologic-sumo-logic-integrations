@@ -4,7 +4,7 @@ go 1.15
 
 require (
 	github.com/agext/levenshtein v1.2.3 // indirect
-	github.com/aws/aws-sdk-go v1.38.51
+	github.com/aws/aws-sdk-go v1.38.54
 	github.com/boombuler/barcode v1.0.1 // indirect
 	github.com/go-errors/errors v1.4.0 // indirect
 	github.com/go-sql-driver/mysql v1.6.0 // indirect

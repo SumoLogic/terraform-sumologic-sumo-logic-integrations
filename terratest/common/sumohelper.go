@@ -71,14 +71,22 @@ func (a *ResourcesAssert) CreateAndGetFolderIdFromPersonal(folder_name string) s
 	personal_folder_id := a.GetPersonalFolder()
 	requestBody, _ := json.Marshal(map[string]interface{}{"name": folder_name, "description": "This is a folder.", "parentId": personal_folder_id})
 	out := http_helper.HTTPDoWithRetry(a.t, "POST", a.getContentURL()+"/folders", requestBody, a.SumoHeaders, 200, 1, 1*time.Second, nil)
-	return getId(out)
+	id := getId(out)
+	a.t.Cleanup(func() {
+		a.DeleteFolder(id)
+	})
+	return id
 }
 
 func (a *ResourcesAssert) CreateAndGetMonitorFolderIdFromPersonal(folder_name string) string {
 	root_folder_id := a.GetRootMonitorFolder()
 	requestBody, _ := json.Marshal(map[string]interface{}{"name": folder_name, "description": "This is a folder.", "type": "MonitorsLibraryFolder"})
 	out := http_helper.HTTPDoWithRetry(a.t, "POST", a.getMonitorsFoldersURL()+"?parentId="+root_folder_id, requestBody, a.SumoHeaders, 200, 1, 1*time.Second, nil)
-	return getId(out)
+	id := getId(out)
+	a.t.Cleanup(func() {
+		a.DeleteMonitorFolder(id)
+	})
+	return id
 }
 
 func (a *ResourcesAssert) DeleteFolder(folderId string) {

@@ -148,11 +148,6 @@ func TestAllWithMultiInputs(t *testing.T) {
 	monitor_folder_id := assertResource.CreateAndGetMonitorFolderIdFromPersonal(prefixOne)
 	app_folder_id_one := assertResource.CreateAndGetFolderIdFromPersonal(prefixOne)
 	app_folder_id_two := assertResource.CreateAndGetFolderIdFromPersonal(prefixTwo)
-	t.Cleanup(func() {
-		assertResource.DeleteFolder(app_folder_id_one)
-		assertResource.DeleteFolder(app_folder_id_two)
-		assertResource.DeleteMonitorFolder(monitor_folder_id)
-	})
 
 	replacementMap := map[string]interface{}{
 		"Parent_App_Id_One": app_folder_id_one,
@@ -275,9 +270,6 @@ func TestContentOnly(t *testing.T) {
 	assertResource := common.GetAssertResource(t, nil)
 	prefixOne := "TestContentOnly"
 	app_folder_id_one := assertResource.CreateAndGetFolderIdFromPersonal(prefixOne)
-	t.Cleanup(func() {
-		assertResource.DeleteFolder(app_folder_id_one)
-	})
 
 	vars := map[string]interface{}{
 		"access_id":   common.SumologicAccessID,
@@ -307,9 +299,6 @@ func TestMonitorsOnly(t *testing.T) {
 	assertResource := common.GetAssertResource(t, nil)
 	prefixOne := "TestMonitorsOnly"
 	monitor_folder_id := assertResource.CreateAndGetMonitorFolderIdFromPersonal(prefixOne)
-	t.Cleanup(func() {
-		assertResource.DeleteMonitorFolder(monitor_folder_id)
-	})
 
 	vars := map[string]interface{}{
 		"access_id":   common.SumologicAccessID,
