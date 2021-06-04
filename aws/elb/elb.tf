@@ -134,10 +134,7 @@ resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable
   name             = "Auto-Enable-Access-Logs-Elb"
   application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable"
   semantic_version = "1.0.2"
-  capabilities = [
-    "CAPABILITY_IAM",
-    "CAPABILITY_RESOURCE_POLICY",
-  ]
+  capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
   parameters = {
     BucketName                = local.bucket_name
     BucketPrefix              = "elasticloadbalancing"
