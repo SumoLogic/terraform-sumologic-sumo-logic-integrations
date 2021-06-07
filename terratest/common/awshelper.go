@@ -157,7 +157,7 @@ func (a *ResourcesAssert) ValidateLoadBalancerAccessLogs(lb_id *string, bucketNa
 	if assert.NoError(a.t, error, "Error while fetching load balancer details") {
 		for _, element := range output.Attributes {
 			if strings.Compare("access_logs.s3.enabled", *element.Key) == 0 {
-				assert.Equal(a.t, "true", element.Value, "Access Logs is not enabled")
+				assert.Equal(a.t, aws_sdk.String("true"), element.Value, "Access Logs is not enabled")
 			}
 			if strings.Compare("access_logs.s3.bucket", *element.Key) == 0 {
 				assert.Equal(a.t, &bucketName, element.Value, "Access Logs bucket does not match.")
