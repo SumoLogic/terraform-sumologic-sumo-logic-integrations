@@ -1,0 +1,21 @@
+{
+  "Statement": [
+    {
+      "Action": "sns:Publish",
+      "Condition": {
+        "StringEquals": {
+          "aws:SourceAccount": "${AWS_ACCOUNT}"
+        },
+        "ArnLike": {
+          "aws:SourceArn": "arn:aws:s3:::${BUCKET_NAME}"
+        }
+      },
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "s3.amazonaws.com"
+      },
+      "Resource": "arn:aws:sns:${AWS_REGION}:${AWS_ACCOUNT}:${SNS_TOPIC_NAME}"
+    }
+  ],
+  "Version": "2008-10-17"
+}

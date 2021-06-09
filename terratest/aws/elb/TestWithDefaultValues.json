@@ -1,0 +1,85 @@
+{
+  "aws_serverlessapplicationrepository_cloudformation_stack": [
+    {
+      "auto_enable_access_logs": {
+        "name": "Auto-Enable-Access-Logs-Elb",
+        "application_id": "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable",
+        "capabilities": [
+          "CAPABILITY_IAM",
+          "CAPABILITY_RESOURCE_POLICY"
+        ],
+        "parameters": {
+          "AutoEnableLogging": "ALB",
+          "BucketName": "elb-logs-{AccountId}-{Region}",
+          "BucketPrefix": "elasticloadbalancing"
+        },
+        "semantic_version": "1.0.2"
+      }
+    }
+  ],
+  "aws_iam_role": [
+    {
+      "source_iam_role": {
+        "name": "SumoLogic-Terraform-Elb-Module-{AccountId}-{Region}",
+        "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::{SumoAccountId}:root\"},\"Action\":\"sts:AssumeRole\",\"Condition\":{\"StringEquals\":{\"sts:ExternalId\":\"{Deployment}:{OrgId}\"}}}]}"
+      }
+    }
+  ],
+  "aws_s3_bucket": [
+    {
+      "s3_bucket": {
+        "acl": "private",
+        "bucket": "elb-logs-{AccountId}-{Region}",
+        "policy": "{\"Statement\":[{\"Action\":\"s3:PutObject\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::033677994240:root\"},\"Resource\":\"arn:aws:s3:::elb-logs-{AccountId}-{Region}/*\"},{\"Action\":\"s3:PutObject\",\"Condition\":{\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}},\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"delivery.logs.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::elb-logs-{AccountId}-{Region}/*\"},{\"Action\":\"s3:GetBucketAcl\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"delivery.logs.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::elb-logs-{AccountId}-{Region}\"}],\"Version\":\"2012-10-17\"}",
+        "region": "{Region}"
+      }
+    }
+  ],
+  "aws_sns_subscription": {
+    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
+    "endpoint_auto_confirms": true,
+    "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-{AccountId}"
+  },
+  "aws_sns_topic": [
+    {
+      "sns_topic": {
+        "name": "SumoLogic-Terraform-Elb-Module-{AccountId}",
+        "policy": "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":\"sns:Publish\",\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-{AccountId}\",\"Condition\":{\"StringEquals\":{\"aws:SourceAccount\":\"{AccountId}\"},\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::elb-logs-{AccountId}-{Region}\"}}}]}"
+      }
+    }
+  ],
+  "aws_s3_bucket_notification": [
+    {
+      "bucket_notification": {
+        "bucket": "elb-logs-{AccountId}-{Region}",
+        "topic": [
+          {
+            "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-{AccountId}"
+          }
+        ]
+      }
+    }
+  ],
+  "sumologic_collector": [
+    {
+      "collector": {
+        "description": "This collector is created using Sumo Logic terraform AWS ELB module to collect AWS elb logs.",
+        "name": "SumoLogic Elb Collector {AccountId}"
+      }
+    }
+  ],
+  "sumologic_source": {
+    "category": "Labs/aws/elb",
+    "content_type": "AwsElbBucket",
+    "description": "This source is created using Sumo Logic terraform AWS elb module to collect AWS elb logs.",
+    "path": [
+      {
+        "bucket_name": "elb-logs-{AccountId}-{Region}",
+        "path_expression": "*AWSLogs/{AccountId}/elasticloadbalancing/{Region}/*"
+      }
+    ],
+    "paused": false,
+    "scan_interval": 300000,
+    "name": "Elb Source"
+  }
+}

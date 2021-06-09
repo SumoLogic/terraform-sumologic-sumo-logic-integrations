@@ -1,0 +1,23 @@
+{
+    "aws_iam_role": {},
+    "sumologic_collector": {},
+    "sumologic_source": {
+      "category": "Labs/aws/cloudwatch/metrics",
+      "content_type": "AwsCloudWatch",
+      "description": "This source is created using Sumo Logic terraform AWS CloudWatch Metrics module to collect AWS Cloudwatch metrics.",
+      "path": [
+        {
+          "limit_to_regions": [
+            "ap-south-1", "us-east-1"
+          ],
+          "limit_to_namespaces": []
+        }
+      ],
+      "fields": {
+        "MySource": "TestSourceTerraform"
+      },
+      "paused": false,
+      "scan_interval": 60000,
+      "name": "CloudWatch Metrics Source"
+    }
+  }
