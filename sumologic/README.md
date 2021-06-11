@@ -1,4 +1,4 @@
-# SumoLogic-AWS-CloudTrail
+# SumoLogic
 
 This module is used to create Sumo Logic resource. Features include
 - Metric Rules
