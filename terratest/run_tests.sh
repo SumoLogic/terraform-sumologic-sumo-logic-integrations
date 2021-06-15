@@ -48,9 +48,44 @@ function integration_test()
 {
     echo "2. Running integration tests ........................\n"
 
-    AWS_PROFILE=${AWS_DEFAULT_PROFILE} go test -v -timeout 30m ./${module} | tee ${module}/test.log
+    AWS_PROFILE=${AWS_DEFAULT_PROFILE} go test -v -timeout 60m ./${module} | tee ${module}/test.log
     
     echo "\nIntegration tests Completed.\n" 
+}
+
+# Fucntion to setup env variables specific to module
+function set_env_variables()
+{
+    local type="$1"
+    if [[ "${type}" = *"cloudtrail"* ]];then
+        echo "Setting env variables for ${type}"
+        export BUCKET_NAME="sumologic-aws-observability-templates"
+        export PATH_EXPRESSION="AWSLogs/<AWS_ACCOUNT_ID>/CloudTrail/us-east-1/*"
+        export IAM_ROLE="arn:aws:iam::<AWS_ACCOUNT_ID>:role/TestingTerraformCloudTrailRole"
+        export TOPIC_ARN="arn:aws:sns:us-east-1:<AWS_ACCOUNT_ID>:dynamodb"
+        export COLLECTOR_ID="<COLLECTOR_ID>"
+    elif [[ "${type}" = *"sumologic"* ]];then
+        echo "Setting env variables for ${type}"
+    elif [[ "${type}" = *"cloudwatchmetrics"* ]];then 
+        echo "Setting env variables for ${type}"
+        export IAM_ROLE="arn:aws:iam::<AWS_ACCOUNT_ID>:role/TestingTerraformCloudTrailRole"
+        export COLLECTOR_ID="<COLLECTOR_ID>"
+    elif [[ "${type}" = *"elb"* ]];then
+        echo "Setting env variables for ${type}"
+        export BUCKET_NAME_US_WEST_1="cf-templates-1qpf3unpuo1hw-us-west-1"
+        export PATH_EXPRESSION_US_WEST_1="*AWSLogs/<AWS_ACCOUNT_ID>/elasticloadbalancing/us-west-1/*"
+        export TOPIC_ARN_US_WEST_1="arn:aws:sns:us-west-1:<AWS_ACCOUNT_ID>:dynamodb"
+        export BUCKET_NAME_AP_SOUTH_1="cf-templates-1qpf3unpuo1hw-ap-south-1"
+        export PATH_EXPRESSION_AP_SOUTH_1="*AWSLogs/<AWS_ACCOUNT_ID>/elasticloadbalancing/ap-south-1/*"
+        export IAM_ROLE="arn:aws:iam::<AWS_ACCOUNT_ID>:role/TestingTerraformCloudTrailRole"
+        export COLLECTOR_ID="<COLLECTOR_ID>"
+    elif [[ "${type}" = *"kinesisfirehoseforlogs"* ]];then
+        echo "Setting env variables for ${type}"
+        export BUCKET_NAME_US_WEST_1="cf-templates-1qpf3unpuo1hw-us-west-1"
+        export COLLECTOR_ID="<COLLECTOR_ID>"
+    else
+        echo "No Matching Module found to set up env variables."
+    fi
 }
 
 ##################################### START OF THE TEST CASES #####################################
@@ -59,12 +94,12 @@ export SUMOLOGIC_ENVIRONMENT=
 export SUMOLOGIC_ACCESS_ID=
 export SUMOLOGIC_ACCESS_KEY=
 export SUMOLOGIC_ORG_ID=
-export AWS_REGION=
 export AWS_DEFAULT_PROFILE=
+export AWS_PROFILE=
 
 # 2. Deccalring the modules. Please update the array, if some new modules are added.
 declare -a modules=(
-    "aws/cloudtrail"
+    "aws/cloudtrail" "aws/elb" "aws/cloudwatchmetrics" "aws/kinesisfirehoseforlogs" "sumologic"
 )
 
 # 3. Iterating through the module array to run unit and integration test cases.
@@ -73,6 +108,7 @@ do
     echo "**************************** Running Tests for the \"$module\" module. ****************************\n"
     export MODULE_DIRECTORY=${module}
     unit_test ${module}
+    set_env_variables ${module}
     integration_test ${module}
     echo "**************************** Completed Tests for the \"$module\" module. ****************************\n"
 done
