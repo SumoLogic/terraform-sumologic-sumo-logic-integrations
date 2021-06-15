@@ -37,7 +37,6 @@ func TestWithDefaultValues(t *testing.T) {
 	aws_region := "us-east-1"
 	vars := map[string]interface{}{
 		"create_collector":              true,
-		"sumologic_organization_id":     common.SumologicOrganizationId,
 		"auto_enable_logs_subscription": "Both",
 	}
 
@@ -81,7 +80,6 @@ func TestWithExistingValues(t *testing.T) {
 			"force_destroy_bucket": true,
 		},
 		"create_collector":          false,
-		"sumologic_organization_id": common.SumologicOrganizationId,
 		"source_details": map[string]interface{}{
 			"source_name":     "Test Source For Logs One",
 			"source_category": "My/Test/cvategory",
@@ -139,7 +137,6 @@ func TestUpdates(t *testing.T) {
 				"MyCollector": "TestTerraform",
 			},
 		},
-		"sumologic_organization_id":     common.SumologicOrganizationId,
 		"auto_enable_logs_subscription": "Existing",
 	}
 
@@ -159,7 +156,6 @@ func TestUpdates(t *testing.T) {
 				"MyCollector": "TestTerraform",
 			},
 		},
-		"sumologic_organization_id":     common.SumologicOrganizationId,
 		"auto_enable_logs_subscription": "None",
 	}
 
@@ -171,7 +167,6 @@ func TestUpdates(t *testing.T) {
 
 	vars = map[string]interface{}{
 		"create_collector":              false,
-		"sumologic_organization_id":     common.SumologicOrganizationId,
 		"auto_enable_logs_subscription": "None",
 		"source_details": map[string]interface{}{
 			"source_name":     "Test Source For Logs Two",

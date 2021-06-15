@@ -53,16 +53,6 @@ variable "source_details" {
   }
 }
 
-variable "sumologic_organization_id" {
-  type        = string
-  description = "Appears on the Account Overview page that displays information about your Sumo Logic organization. Used for IAM Role in Sumo Logic AWS Sources."
-
-  validation {
-    condition     = can(regex("\\w+", var.sumologic_organization_id))
-    error_message = "The organization ID must contain valid characters."
-  }
-}
-
 variable "auto_enable_logs_subscription" {
   type        = string
   description = <<EOT
