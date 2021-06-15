@@ -25,7 +25,7 @@ output "sumologic_collector" {
 
 output "sumologic_source" {
   value       = sumologic_http_source.source
-  description = "Sumo Logic AWS ELB source."
+  description = "Sumo Logic AWS Kinesis Firehose for Logs source."
 }
 
 output "aws_kinesis_firehose_delivery_stream" {

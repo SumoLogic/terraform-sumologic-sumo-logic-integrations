@@ -6,7 +6,7 @@ This module is used to create AWS and Sumo Logic resource to collect ELB logs fr
 - Create AWS SNS Topic or use an existing AWS SNS topic.
 - Create Sumo Logic hosted collector or use an existing Sumo Logic hosted collector.
 - Create Sumo Logic ELB source.
-- Auto enable acccess logs for Existing and New load balancer after installing the module.
+- Auto enable access logs for Existing and New load balancer after installing the module.
 
 ## Requirements
 
