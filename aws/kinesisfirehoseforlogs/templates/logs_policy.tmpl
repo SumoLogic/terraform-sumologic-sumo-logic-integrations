@@ -1,0 +1,28 @@
+{
+  "Statement": [
+    {
+      "Sid": "Records",
+      "Effect": "Allow",
+      "Action": [
+        "firehose:PutRecord",
+        "firehose:PutRecordBatch",
+        "kinesis:PutRecord",
+        "kinesis:PutRecordBatch"
+      ],
+      "Resource": [
+        "arn:${ARN}:firehose:${AWS_REGION}:${AWS_ACCOUNT}:*"
+      ]
+    },
+    {
+      "Sid": "PassRole",
+      "Effect": "Allow",
+      "Action": [
+        "iam:PassRole"
+      ],
+      "Resource": [
+        "arn:${ARN}:iam::${AWS_ACCOUNT}:role/${ROLE_NAME}"
+      ]
+    }
+  ],
+  "Version": "2012-10-17"
+}
