@@ -46,5 +46,5 @@ locals {
   auto_enable_logs_subscription = var.auto_enable_logs_subscription != "None" ? true : false
 
   # Existing
-  auto_enable_existing = var.auto_enable_logs_subscription == "Existing" ? true : false
+  auto_enable_existing = var.auto_enable_logs_subscription == "Existing" || var.auto_enable_logs_subscription == "Both" ? true : false
 }

@@ -161,7 +161,7 @@ resource "sumologic_http_source" "source" {
 resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_logs_subscription" {
   for_each = toset(local.auto_enable_logs_subscription ? ["auto_enable_logs_subscription"] : [])
 
-  name             = "Auto-Enable-Access-Logs-Elb"
+  name             = "Auto-Enable-Logs-Subscription-${random_string.aws_random.id}"
   application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector"
   semantic_version = "1.0.5"
   capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
