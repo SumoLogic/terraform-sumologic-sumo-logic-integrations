@@ -54,7 +54,7 @@
     ],
     "s3_configuration": [
       {
-        "bucket_arn": "arn:aws:s3:::sumologic-kinesis-firehose-logs-{AccountId}-{Region}",
+        "bucket_arn": "arn:aws:s3:::sumologic-kinesis-firehose-logs-{RandomString}",
         "compression_format": "UNCOMPRESSED",
         "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-{RandomString}",
         "cloudwatch_logging_options": [
@@ -71,7 +71,7 @@
     {
       "s3_bucket": {
         "acl": "private",
-        "bucket": "sumologic-kinesis-firehose-logs-{AccountId}-{Region}",
+        "bucket": "sumologic-kinesis-firehose-logs-{RandomString}",
         "region": "{Region}"
       }
     }
@@ -100,7 +100,7 @@
     {
       "collector": {
         "description": "This collector is created using Sumo Logic terraform AWS Kinesis Firehose for logs module to collect AWS cloudwatch logs.",
-        "name": "SumoLogic Kinesis Firehose for Logs Collector {AccountId}"
+        "name": "SumoLogic Kinesis Firehose for Logs Collector {RandomString}"
       }
     }
   ],

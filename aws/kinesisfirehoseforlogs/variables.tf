@@ -11,7 +11,7 @@ variable "bucket_details" {
   })
   description = "Provide details for the AWS S3 bucket. If not provided, existing will be used."
   default = {
-    bucket_name          = "sumologic-kinesis-firehose-logs-accountid-region"
+    bucket_name          = "sumologic-kinesis-firehose-logs-random-id"
     force_destroy_bucket = true
   }
 }
@@ -29,7 +29,7 @@ variable "collector_details" {
   })
   description = "Provide details for the Sumo Logic collector. If not provided, then defaults will be used."
   default = {
-    collector_name = "SumoLogic Kinesis Firehose for Logs Collector <AWS Account Id>"
+    collector_name = "SumoLogic Kinesis Firehose for Logs Collector <Random ID>"
     description    = "This collector is created using Sumo Logic terraform AWS Kinesis Firehose for logs module to collect AWS cloudwatch logs."
     fields         = {}
   }
