@@ -6,6 +6,12 @@
 # 5. Create the source either in the collector created or in the collector id provided.
 # 6. Create SNS Subscription to be attached to the source and SNS Topic.
 
+resource "random_string" "aws_random" {
+  length  = 10
+  special = false
+  upper   = false
+}
+
 resource "aws_s3_bucket" "s3_bucket" {
   for_each = toset(var.source_details.bucket_details.create_bucket ? ["s3_bucket"] : [])
 
@@ -20,11 +26,11 @@ resource "aws_s3_bucket" "s3_bucket" {
 resource "aws_sns_topic" "sns_topic" {
   for_each = toset(local.create_sns_topic ? ["sns_topic"] : [])
 
-  name = "SumoLogic-Terraform-CloudTrail-Module-${local.aws_account_id}"
+  name = "SumoLogic-Terraform-CloudTrail-Module-${random_string.aws_random.id}"
   policy = templatefile("${path.module}/templates/sns_topic_policy.tmpl", {
     BUCKET_NAME    = local.bucket_name,
     AWS_REGION     = local.aws_region,
-    SNS_TOPIC_NAME = "SumoLogic-Terraform-CloudTrail-Module-${local.aws_account_id}",
+    SNS_TOPIC_NAME = "SumoLogic-Terraform-CloudTrail-Module-${random_string.aws_random.id}",
     AWS_ACCOUNT    = local.aws_account_id
   })
 }
@@ -43,7 +49,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 resource "aws_cloudtrail" "cloudtrail" {
   for_each = toset(local.create_trail ? ["cloudtrail"] : [])
 
-  name                          = var.cloudtrail_details.name
+  name                          = local.cloudtrail_name
   include_global_service_events = var.cloudtrail_details.include_global_service_events
   s3_bucket_name                = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket["s3_bucket"].id : local.bucket_name
   is_multi_region_trail         = var.cloudtrail_details.is_multi_region_trail
@@ -53,7 +59,7 @@ resource "aws_cloudtrail" "cloudtrail" {
 resource "aws_iam_role" "source_iam_role" {
   for_each = toset(local.create_iam_role ? ["source_iam_role"] : [])
 
-  name = "SumoLogic-Terraform-CloudTrail-Module-${local.aws_account_id}-${local.aws_region}"
+  name = "SumoLogic-Terraform-CloudTrail-Module-${random_string.aws_random.id}"
   path = "/"
 
   assume_role_policy = templatefile("${path.module}/templates/sumologic_assume_role.tmpl", {
@@ -68,7 +74,7 @@ resource "aws_iam_role" "source_iam_role" {
 resource "aws_iam_policy" "iam_policy" {
   for_each = toset(local.create_iam_role ? ["iam_policy"] : [])
 
-  name = "SumoLogicCloudTrailSource-${local.aws_account_id}-${local.aws_region}"
+  name = "SumoLogicCloudTrailSource-${random_string.aws_random.id}"
   policy = templatefile("${path.module}/templates/sumologic_source_policy.tmpl", {
     BUCKET_NAME = local.bucket_name
   })

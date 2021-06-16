@@ -1,25 +1,30 @@
 {
-    "aws_cloudtrail": {},
-    "aws_s3_bucket": {},
-    "aws_s3_bucket_notification": {},
-    "aws_iam_role": {},
-    "aws_sns_subscription": {
-      "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
-      "endpoint_auto_confirms": true,
-      "topic_arn": "{SNS_TOPIC_ARN}"
-    },
-    "aws_sns_topic": {},
-    "sumologic_collector": {},
-    "sumologic_source": {
-      "category": "Labs/test/cloudtrail",
-      "content_type": "AwsCloudTrailBucket",
-      "description": "This source is ceated a.",
-      "path": [{
+  "random_string": {
+    "lower": true
+  },
+  "aws_cloudtrail": {},
+  "aws_s3_bucket": {},
+  "aws_s3_bucket_notification": {},
+  "aws_iam_role": {},
+  "aws_sns_subscription": {
+    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
+    "endpoint_auto_confirms": true,
+    "topic_arn": "{SNS_TOPIC_ARN}"
+  },
+  "aws_sns_topic": {},
+  "sumologic_collector": {},
+  "sumologic_source": {
+    "category": "Labs/test/cloudtrail",
+    "content_type": "AwsCloudTrailBucket",
+    "description": "This source is ceated a.",
+    "path": [
+      {
         "bucket_name": "{BucketName}",
         "path_expression": "{PathExpression}"
-      }],
-      "paused": false,
-      "scan_interval": 60000,
-      "name": "My Test Source"
-    }
+      }
+    ],
+    "paused": false,
+    "scan_interval": 60000,
+    "name": "My Test Source"
   }
+}

@@ -14,7 +14,6 @@ import (
 
 // Env Variables
 var BUCKET_NAME = os.Getenv("BUCKET_NAME")
-var PATH_EXPRESSION = os.Getenv("PATH_EXPRESSION")
 var IAM_ROLE = os.Getenv("IAM_ROLE")
 var SNS_TOPIC = os.Getenv("TOPIC_ARN")
 var COLLECTOR_ID = os.Getenv("COLLECTOR_ID")
@@ -42,13 +41,6 @@ func UpdateTerraform(t *testing.T, vars map[string]interface{}, options *terrafo
 func TestWithDefaultValues(t *testing.T) {
 	t.Parallel()
 	aws_region := "us-east-2"
-	replacementMap := map[string]interface{}{
-		"AccountId":     aws.GetAccountId(t),
-		"Region":        aws_region,
-		"SumoAccountId": common.SumoAccountId,
-		"Deployment":    common.SumologicEnvironment,
-		"OrgId":         common.SumologicOrganizationId,
-	}
 	vars := map[string]interface{}{
 		"create_collector":          true,
 		"sumologic_organization_id": common.SumologicOrganizationId,
@@ -59,8 +51,17 @@ func TestWithDefaultValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 10, 0, 0)
+		common.AssertResourceCounts(t, count, 11, 0, 0)
 	})
+	outputs := common.FetchAllOutputs(t, options)
+	replacementMap := map[string]interface{}{
+		"AccountId":     aws.GetAccountId(t),
+		"Region":        aws_region,
+		"SumoAccountId": common.SumoAccountId,
+		"Deployment":    common.SumologicEnvironment,
+		"OrgId":         common.SumologicOrganizationId,
+		"RandomString":  outputs["random_string"].(map[string]interface{})["id"].(string),
+	}
 
 	// Assert if the outputs are actually created in AWS and Sumo Logic.
 	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
@@ -70,7 +71,6 @@ func TestWithDefaultValues(t *testing.T) {
 	})
 
 	// Assert if the logs are sent to Sumo Logic.
-	outputs := common.FetchAllOutputs(t, options)
 	common.GetAssertResource(t, options.EnvVars).CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 }
 
@@ -78,16 +78,7 @@ func TestWithDefaultValues(t *testing.T) {
 func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
 	t.Parallel()
 	aws_region := "us-west-1"
-	PATH_EXPRESSION = fmt.Sprintf("AWSLogs/%s/CloudTrail/%s/*", aws.GetAccountId(t), aws_region)
-	replacementMap := map[string]interface{}{
-		"AccountId":      aws.GetAccountId(t),
-		"Region":         aws_region,
-		"SumoAccountId":  common.SumoAccountId,
-		"Deployment":     common.SumologicEnvironment,
-		"OrgId":          common.SumologicOrganizationId,
-		"BucketName":     BUCKET_NAME,
-		"PathExpression": PATH_EXPRESSION,
-	}
+	PATH_EXPRESSION := fmt.Sprintf("AWSLogs/%s/CloudTrail/%s/*", aws.GetAccountId(t), aws_region)
 
 	vars := map[string]interface{}{
 		"create_collector": true,
@@ -128,8 +119,20 @@ func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 7, 0, 0)
+		common.AssertResourceCounts(t, count, 8, 0, 0)
 	})
+
+	outputs := common.FetchAllOutputs(t, options)
+	replacementMap := map[string]interface{}{
+		"AccountId":      aws.GetAccountId(t),
+		"Region":         aws_region,
+		"SumoAccountId":  common.SumoAccountId,
+		"Deployment":     common.SumologicEnvironment,
+		"OrgId":          common.SumologicOrganizationId,
+		"BucketName":     BUCKET_NAME,
+		"PathExpression": PATH_EXPRESSION,
+		"RandomString":   outputs["random_string"].(map[string]interface{})["id"].(string),
+	}
 
 	// Assert if the outputs are actually created in AWS and Sumo Logic.
 	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
@@ -139,7 +142,6 @@ func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
 	})
 
 	// Assert if the logs are sent to Sumo Logic.
-	outputs := common.FetchAllOutputs(t, options)
 	common.GetAssertResource(t, options.EnvVars).CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 }
 
@@ -147,17 +149,7 @@ func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
 func TestWithExistingBucketTrailCollectorSNSIAM(t *testing.T) {
 	t.Parallel()
 	aws_region := "us-east-1"
-	PATH_EXPRESSION = fmt.Sprintf("AWSLogs/%s/CloudTrail/%s/*", aws.GetAccountId(t), aws_region)
-	replacementMap := map[string]interface{}{
-		"AccountId":      aws.GetAccountId(t),
-		"Region":         aws_region,
-		"SumoAccountId":  common.SumoAccountId,
-		"Deployment":     common.SumologicEnvironment,
-		"OrgId":          common.SumologicOrganizationId,
-		"BucketName":     BUCKET_NAME,
-		"PathExpression": PATH_EXPRESSION,
-		"SNS_TOPIC_ARN":  SNS_TOPIC,
-	}
+	PATH_EXPRESSION := fmt.Sprintf("AWSLogs/%s/CloudTrail/%s/*", aws.GetAccountId(t), aws_region)
 	vars := map[string]interface{}{
 		"create_collector":          false,
 		"sumologic_organization_id": common.SumologicOrganizationId,
@@ -190,26 +182,10 @@ func TestWithExistingBucketTrailCollectorSNSIAM(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 3, 0, 0)
+		common.AssertResourceCounts(t, count, 4, 0, 0)
 	})
 
-	// Assert if the outputs are actually created in AWS and Sumo Logic.
-	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
-	expectedOutputs := common.ReadJsonFile("TestWithExistingBucketTrailCollectorSNSIAM.json", replacementMap)
-	test_structure.RunTestStage(t, "AssertOutputs", func() {
-		common.AssertOutputs(t, options, expectedOutputs)
-	})
-
-	// Assert if the logs are sent to Sumo Logic.
 	outputs := common.FetchAllOutputs(t, options)
-	common.GetAssertResource(t, options.EnvVars).CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
-}
-
-// 4. With New Bucket, Existing Trail (we will create a new trail), new Collector, New SNS Topic, New IAM Role
-func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
-	t.Parallel()
-	aws_region := "us-west-2"
-	PATH_EXPRESSION = fmt.Sprintf("AWSLogs/%s/CloudTrail/%s/*", aws.GetAccountId(t), aws_region)
 	replacementMap := map[string]interface{}{
 		"AccountId":      aws.GetAccountId(t),
 		"Region":         aws_region,
@@ -218,7 +194,25 @@ func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
 		"OrgId":          common.SumologicOrganizationId,
 		"BucketName":     BUCKET_NAME,
 		"PathExpression": PATH_EXPRESSION,
+		"SNS_TOPIC_ARN":  SNS_TOPIC,
+		"RandomString":   outputs["random_string"].(map[string]interface{})["id"].(string),
 	}
+	// Assert if the outputs are actually created in AWS and Sumo Logic.
+	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
+	expectedOutputs := common.ReadJsonFile("TestWithExistingBucketTrailCollectorSNSIAM.json", replacementMap)
+	test_structure.RunTestStage(t, "AssertOutputs", func() {
+		common.AssertOutputs(t, options, expectedOutputs)
+	})
+
+	// Assert if the logs are sent to Sumo Logic.
+	common.GetAssertResource(t, options.EnvVars).CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
+}
+
+// 4. With New Bucket, Existing Trail (we will create a new trail), new Collector, New SNS Topic, New IAM Role
+func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
+	t.Parallel()
+	aws_region := "us-west-2"
+	PATH_EXPRESSION := fmt.Sprintf("AWSLogs/%s/CloudTrail/%s/*", aws.GetAccountId(t), aws_region)
 	vars := map[string]interface{}{
 		"create_collector": true,
 		"collector_details": map[string]interface{}{
@@ -256,9 +250,19 @@ func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 10, 0, 0)
+		common.AssertResourceCounts(t, count, 11, 0, 0)
 	})
-
+	outputs := common.FetchAllOutputs(t, options)
+	replacementMap := map[string]interface{}{
+		"AccountId":      aws.GetAccountId(t),
+		"Region":         aws_region,
+		"SumoAccountId":  common.SumoAccountId,
+		"Deployment":     common.SumologicEnvironment,
+		"OrgId":          common.SumologicOrganizationId,
+		"BucketName":     BUCKET_NAME,
+		"PathExpression": PATH_EXPRESSION,
+		"RandomString":   outputs["random_string"].(map[string]interface{})["id"].(string),
+	}
 	// Assert if the outputs are actually created in AWS and Sumo Logic.
 	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
 	expectedOutputs := common.ReadJsonFile("TestWithExistingTrailNewBucketCollectorSNSIAM.json", replacementMap)
@@ -267,7 +271,6 @@ func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
 	})
 
 	// Assert if the logs are sent to Sumo Logic.
-	outputs := common.FetchAllOutputs(t, options)
 	common.GetAssertResource(t, options.EnvVars).CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 }
 
@@ -275,6 +278,7 @@ func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
 func TestUpdates(t *testing.T) {
 	t.Parallel()
 	aws_region := "ap-south-1"
+	var PATH_EXPRESSION = os.Getenv("PATH_EXPRESSION")
 	vars := map[string]interface{}{
 		"create_collector":          true,
 		"sumologic_organization_id": common.SumologicOrganizationId,
@@ -290,7 +294,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 10, 0, 0)
+		common.AssertResourceCounts(t, count, 11, 0, 0)
 	})
 
 	// Updating the Collector Name, description and fields only
