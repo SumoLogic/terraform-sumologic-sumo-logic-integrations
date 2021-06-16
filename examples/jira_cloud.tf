@@ -7,8 +7,8 @@ provider "jira" {
 
 # Jira Cloud
 module "sumologic-jira-cloud-app" {
-  source            = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/jira"
-  version           = "{revision}"
+  source  = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/jira"
+  version = "{revision}"
 
   sumo_access_id    = "<SUMO_ACCESS_ID>"
   sumo_access_key   = "<SUMO_ACCESS_KEY>"
@@ -18,5 +18,5 @@ module "sumologic-jira-cloud-app" {
   folder_id         = sumologic_folder.folder.id
   jira_cloud_jql    = ""
   jira_cloud_events = ["jira:issue_created", "jira:issue_updated"] # By default all events are configured.
-  app_version           = "1.0"
+  app_version       = "1.0"
 }

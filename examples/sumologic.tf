@@ -1,19 +1,19 @@
 provider "sumologic" {
-	access_id = "<access_id>"
-	access_key = "<access_key>"
-	environment = "us1"
+  access_id   = "<access_id>"
+  access_key  = "<access_key>"
+  environment = "us1"
 }
 
 data "sumologic_personal_folder" "personal" {}
 
 resource "sumologic_folder" "app_folder" {
-	description = "This is a test folder"
-	name = "Test Folder"
-	parent_id = data.sumologic_personal_folder.personal.id
+  description = "This is a test folder"
+  name        = "Test Folder"
+  parent_id   = data.sumologic_personal_folder.personal.id
 }
 
 resource "sumologic_monitor_folder" "tf_monitor_folder" {
-  name = "Test Folder for Module"
+  name        = "Test Folder for Module"
   description = "Folder for Monitors"
 }
 

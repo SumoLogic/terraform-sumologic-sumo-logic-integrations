@@ -8,8 +8,8 @@ provider "jira" {
 
 # Jira Server
 module "sumologic-jira-server-app" {
-  source             = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/server/jira"
-  version            = "{revision}"
+  source  = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/server/jira"
+  version = "{revision}"
 
   providers = {
     jira = jira.server
@@ -22,5 +22,5 @@ module "sumologic-jira-server-app" {
   folder_id          = sumologic_folder.folder.id
   jira_server_jql    = ""
   jira_server_events = ["jira:issue_created", "jira:issue_updated"] # By default all events are configured.
-  app_version            = "1.0"
+  app_version        = "1.0"
 }

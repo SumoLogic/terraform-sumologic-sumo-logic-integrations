@@ -1,7 +1,7 @@
 # Atlassian App
 module "sumologic-jira-atlassian-app" {
-  source                               = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/atlassian"
-  version                              = "{revision}"
+  source  = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/atlassian"
+  version = "{revision}"
 
   sumo_access_id                       = "<SUMO_ACCESS_ID>"
   sumo_access_key                      = "<SUMO_ACCESS_KEY>"
@@ -11,5 +11,5 @@ module "sumologic-jira-atlassian-app" {
   jira_cloud_source_category           = "Atlassian/Jira/Cloud"
   bitbucket_source_category            = "Atlassian/Bitbucket"
   folder_id                            = sumologic_folder.folder.id
-  app_version                              = "1.0"
+  app_version                          = "1.0"
 }
