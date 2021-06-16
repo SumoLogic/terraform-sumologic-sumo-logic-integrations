@@ -1,8 +1,11 @@
 {
+  "random_string": {
+    "lower": true
+  },
   "aws_serverlessapplicationrepository_cloudformation_stack": [
     {
       "auto_enable_access_logs": {
-        "name": "Auto-Enable-Access-Logs-Elb",
+        "name": "Auto-Enable-Access-Logs-Elb-{RandomString}",
         "application_id": "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable",
         "capabilities": [
           "CAPABILITY_IAM",

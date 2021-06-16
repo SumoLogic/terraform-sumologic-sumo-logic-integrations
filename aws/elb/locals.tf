@@ -5,10 +5,10 @@ locals {
   aws_region = data.aws_region.current.id
 
   # Get the default collector name if no collector name is provided.
-  collector_name = var.collector_details.collector_name == "SumoLogic Elb Collector <AWS Account Id>" ? "SumoLogic Elb Collector ${local.aws_account_id}" : var.collector_details.collector_name
+  collector_name = var.collector_details.collector_name == "SumoLogic Elb Collector <Random ID>" ? "SumoLogic Elb Collector ${random_string.aws_random.id}" : var.collector_details.collector_name
 
   # Get the default bucket name when no bucket is provided and create_bucket is true.
-  bucket_name = var.source_details.bucket_details.create_bucket && var.source_details.bucket_details.bucket_name == "elb-logs-accountid-region" ? "elb-logs-${local.aws_account_id}-${local.aws_region}" : var.source_details.bucket_details.bucket_name
+  bucket_name = var.source_details.bucket_details.create_bucket && var.source_details.bucket_details.bucket_name == "elb-logs-random-id" ? "elb-logs-${random_string.aws_random.id}" : var.source_details.bucket_details.bucket_name
 
   # Create IAM role condition if no IAM ROLE ARN is provided.
   create_iam_role = var.source_details.iam_role_arn != "" ? false : true
