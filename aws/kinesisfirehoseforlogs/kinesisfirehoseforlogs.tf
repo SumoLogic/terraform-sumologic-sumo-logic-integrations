@@ -8,6 +8,7 @@
 resource "random_string" "aws_random" {
   length  = 10
   special = false
+  upper   = false
 }
 
 resource "aws_s3_bucket" "s3_bucket" {
