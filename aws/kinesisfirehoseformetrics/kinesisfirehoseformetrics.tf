@@ -152,7 +152,8 @@ resource "aws_iam_role" "source_iam_role" {
   assume_role_policy = templatefile("${path.module}/templates/sumologic_assume_role.tmpl", {
     SUMO_LOGIC_ACCOUNT_ID = var.source_details.sumo_account_id,
     ENVIRONMENT           = data.sumologic_caller_identity.current.environment,
-    SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id
+    SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id,
+    ARN = local.arn_map[local.aws_region]
   })
 
   managed_policy_arns = [aws_iam_policy.iam_policy["iam_policy"].arn]

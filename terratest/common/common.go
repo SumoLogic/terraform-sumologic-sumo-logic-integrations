@@ -90,6 +90,11 @@ func AssertResourceCounts(t *testing.T, actualCount *terraform.ResourceCount, co
 // ValidateOutputs is used to validate all the outputs. This is an ever growing code which should be expanded
 // to add various types of AWS and Sumo Logic outputs.
 func AssertOutputs(t *testing.T, options *terraform.Options, expectedOutputs map[string]interface{}) {
+	AssertOutputsWithLookup(t, options, expectedOutputs, map[string]string{})
+}
+
+// AssertOutputsWithLookup takes up lookup map to find out the method names based on key and value.
+func AssertOutputsWithLookup(t *testing.T, options *terraform.Options, expectedOutputs map[string]interface{}, lookupmap map[string]string) {
 	actualOutputs := FetchAllOutputs(t, options)
 
 	// Assert length of outputs
@@ -99,7 +104,7 @@ func AssertOutputs(t *testing.T, options *terraform.Options, expectedOutputs map
 	AssertObject(t, "", expectedOutputs, actualOutputs)
 
 	// Assert check by calling AWS and Sumo Logic APIs for actual outputs
-	AssertResources(t, actualOutputs, options)
+	AssertResources(t, actualOutputs, options, lookupmap)
 }
 
 // AssertObject is used to assert expected vs actual values based on object type.
@@ -142,11 +147,17 @@ func FindType(element int, value interface{}) interface{} {
 
 // AssertResources is used to call methods based on the Terraform resource types.
 // Methods are in UpperCases to keep them public.
-func AssertResources(t *testing.T, outputs map[string]interface{}, options *terraform.Options) {
+func AssertResources(t *testing.T, outputs map[string]interface{}, options *terraform.Options, lookupmap map[string]string) {
 	resourcesAssert := GetAssertResource(t, options.EnvVars)
 	for key, value := range outputs {
 		myClassValue := reflect.ValueOf(resourcesAssert)
-		m := myClassValue.MethodByName(strings.ToUpper(key))
+		methodName, found := lookupmap[key]
+		var m reflect.Value
+		if found {
+			m = myClassValue.MethodByName(strings.ToUpper(methodName))
+		} else {
+			m = myClassValue.MethodByName(strings.ToUpper(key))
+		}
 		in := make([]reflect.Value, 1)
 		in[0] = reflect.ValueOf(value)
 		if m.IsValid() {

@@ -19,12 +19,12 @@ output "aws_cloudwatch_log_stream" {
 }
 
 output "source_aws_iam_role" {
-  value       = local.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"] : {}
+  value       = local.create_iam_role ? aws_iam_role.source_iam_role : {}
   description = "AWS IAM role with permission to setup Sumo Logic permissions."
 }
 
 output "aws_iam_role" {
-  value       = tomap({ "logs_role" = aws_iam_role.metrics_role, "firehose_role" = aws_iam_role.firehose_role })
+  value       = tomap({ "metrics_role" = aws_iam_role.metrics_role, "firehose_role" = aws_iam_role.firehose_role })
   description = "AWS IAM role with permission to setup kinesis firehose metrics."
 }
 

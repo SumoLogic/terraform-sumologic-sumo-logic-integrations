@@ -4,7 +4,7 @@
     {
       "Action": "sts:AssumeRole",
       "Principal": {
-        "AWS": "arn:aws:iam::${SUMO_LOGIC_ACCOUNT_ID}:root"
+        "AWS": "arn:${ARN}:iam::${SUMO_LOGIC_ACCOUNT_ID}:root"
       },
       "Effect": "Allow",
       "Condition": {

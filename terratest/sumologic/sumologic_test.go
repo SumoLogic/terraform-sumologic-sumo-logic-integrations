@@ -212,7 +212,7 @@ func TestMetricRuleOnly(t *testing.T) {
 
 	test_structure.RunTestStage(t, "AssertOutputs", func() {
 		actualOutputs := common.FetchAllOutputs(t, options)
-		common.AssertResources(t, actualOutputs, options)
+		common.AssertResources(t, actualOutputs, options, map[string]string{})
 	})
 }
 
@@ -237,7 +237,7 @@ func TestFieldsOnly(t *testing.T) {
 
 	test_structure.RunTestStage(t, "AssertOutputs", func() {
 		actualOutputs := common.FetchAllOutputs(t, options)
-		common.AssertResources(t, actualOutputs, options)
+		common.AssertResources(t, actualOutputs, options, map[string]string{})
 	})
 }
 
@@ -261,7 +261,7 @@ func TestFieldExtractionRuleOnly(t *testing.T) {
 
 	test_structure.RunTestStage(t, "AssertOutputs", func() {
 		actualOutputs := common.FetchAllOutputs(t, options)
-		common.AssertResources(t, actualOutputs, options)
+		common.AssertResources(t, actualOutputs, options, map[string]string{})
 	})
 }
 
@@ -289,7 +289,7 @@ func TestContentOnly(t *testing.T) {
 
 	test_structure.RunTestStage(t, "AssertOutputs", func() {
 		actualOutputs := common.FetchAllOutputs(t, options)
-		common.AssertResources(t, actualOutputs, options)
+		common.AssertResources(t, actualOutputs, options, map[string]string{})
 	})
 }
 
@@ -318,7 +318,7 @@ func TestMonitorsOnly(t *testing.T) {
 
 	test_structure.RunTestStage(t, "AssertOutputs", func() {
 		actualOutputs := common.FetchAllOutputs(t, options)
-		common.AssertResources(t, actualOutputs, options)
+		common.AssertResources(t, actualOutputs, options, map[string]string{})
 	})
 }
 
@@ -348,7 +348,7 @@ func TestUpdatesOnly(t *testing.T) {
 
 	test_structure.RunTestStage(t, "AssertOutputs", func() {
 		actualOutputs := common.FetchAllOutputs(t, options)
-		common.AssertResources(t, actualOutputs, options)
+		common.AssertResources(t, actualOutputs, options, map[string]string{})
 	})
 
 	vars = map[string]interface{}{
