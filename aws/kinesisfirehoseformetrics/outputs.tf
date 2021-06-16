@@ -18,9 +18,14 @@ output "aws_cloudwatch_log_stream" {
   description = "AWS Log stream created to attach to log group."
 }
 
+output "source_aws_iam_role" {
+  value = local.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"] : {}
+  description = "AWS IAM role with permission to setup Sumo Logic permissions."
+}
+
 output "aws_iam_role" {
-  value       = tomap({ "logs_role" = aws_iam_role.metrics_role, "firehose_role" = aws_iam_role.firehose_role, "sumologic_role" = aws_iam_role.source_iam_role })
-  description = "AWS IAM role with permission to setup kinesis firehose metrics and Sumo Logic source."
+  value       = tomap({ "logs_role" = aws_iam_role.metrics_role, "firehose_role" = aws_iam_role.firehose_role })
+  description = "AWS IAM role with permission to setup kinesis firehose metrics."
 }
 
 output "sumologic_collector" {
