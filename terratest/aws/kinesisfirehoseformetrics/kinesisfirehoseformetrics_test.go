@@ -128,7 +128,7 @@ func TestWithExistingValues(t *testing.T) {
 
 	// Assert if the logs are sent to Sumo Logic.
 	sourceId, _ := strconv.ParseInt(outputs["sumologic_source"].(map[string]interface{})["id"].(string), 10, 64)
-	common.GetAssertResource(t, options.EnvVars).CheckMetricsForPastSixtyMinutes(fmt.Sprintf("_sourceid=%v | count by region", fmt.Sprintf("%016x", sourceId)), 5, 2*time.Minute)
+	common.GetAssertResource(t, options.EnvVars).CheckMetricsForPastSixtyMinutes(fmt.Sprintf("_sourceid=%v | count by region", fmt.Sprintf("%016x", sourceId)), 5, 3*time.Minute)
 }
 
 func TestUpdates(t *testing.T) {

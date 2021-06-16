@@ -42,6 +42,9 @@
           "namespace": "AWS/S3"
         },
         {
+          "namespace": "AWS/SNS"
+        },
+        {
           "namespace": "AWS/SQS"
         }
       ]
