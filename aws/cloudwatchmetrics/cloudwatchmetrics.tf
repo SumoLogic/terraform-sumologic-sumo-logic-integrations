@@ -3,10 +3,15 @@
 # 2. Create a Collector. If the Collector ID is provided, do not create a Collector.
 # 3. Create the source either in the collector created or in the collector id provided.
 
+resource "random_string" "aws_random" {
+  length  = 10
+  special = false
+}
+
 resource "aws_iam_role" "source_iam_role" {
   for_each = toset(local.create_iam_role ? ["source_iam_role"] : [])
 
-  name = "SumoLogic-CloudWatch-Metrics-Module-${local.aws_account_id}-${local.aws_region}"
+  name = "SumoLogic-CloudWatch-Metrics-Module-${random_string.aws_random.id}"
   path = "/"
 
   assume_role_policy = templatefile("${path.module}/templates/sumologic_assume_role.tmpl", {
@@ -21,7 +26,7 @@ resource "aws_iam_role" "source_iam_role" {
 resource "aws_iam_policy" "iam_policy" {
   for_each = toset(local.create_iam_role ? ["iam_policy"] : [])
 
-  name   = "SumoLogicCloudWatchMetricsSource-${local.aws_account_id}-${local.aws_region}"
+  name   = "SumoLogicCloudWatchMetricsSource-${random_string.aws_random.id}"
   policy = templatefile("${path.module}/templates/sumologic_source_policy.tmpl", {})
 }
 

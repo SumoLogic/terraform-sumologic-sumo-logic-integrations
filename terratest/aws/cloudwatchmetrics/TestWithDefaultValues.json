@@ -1,8 +1,11 @@
 {
+  "random_string": {
+    "lower": true
+  },
   "aws_iam_role": [
     {
       "source_iam_role": {
-        "name": "SumoLogic-CloudWatch-Metrics-Module-{AccountId}-{Region}",
+        "name": "SumoLogic-CloudWatch-Metrics-Module-{RandomString}",
         "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::{SumoAccountId}:root\"},\"Action\":\"sts:AssumeRole\",\"Condition\":{\"StringEquals\":{\"sts:ExternalId\":\"{Deployment}:{OrgId}\"}}}]}"
       }
     }
@@ -11,7 +14,7 @@
     {
       "collector": {
         "description": "This collector is created using Sumo Logic terraform AWS Cloudwatch metrics module to collect AWS cloudwatch metrics.",
-        "name": "SumoLogic CloudWatch Metrics Collector {AccountId}"
+        "name": "SumoLogic CloudWatch Metrics Collector {RandomString}"
       }
     }
   ],
