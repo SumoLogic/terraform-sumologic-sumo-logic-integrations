@@ -1,4 +1,4 @@
-# SumoLogic-AWS-CloudWatchMetrics
+# SumoLogic-AWS-RootCause
 
 This module is used to create the SumoLogic AWS RootCause sources. Features include
 - Create AWS IAM role or use an existing IAM role.
