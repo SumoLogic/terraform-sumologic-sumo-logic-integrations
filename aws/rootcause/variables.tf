@@ -12,7 +12,7 @@ variable "collector_details" {
   description = "Provide details for the Sumo Logic collector. If not provided, then defaults will be used."
   default = {
     collector_name = "SumoLogic RootCause Collector <Random ID>"
-    description    = "This collector is created using Sumo Logic terraform AWS Cloudwatch metrics module to collect AWS cloudwatch metrics."
+    description    = "This collector is created using Sumo Logic terraform AWS Root Cause module."
     fields         = {}
   }
 }
@@ -34,7 +34,6 @@ variable "inventory_source_details" {
     scan_interval       = number
     sumo_account_id     = number
     fields              = map(string)
-    iam_role_arn        = string
   })
   description = "Provide details for the Sumo Logic AWS Inventory source. If not provided, then defaults will be used."
   default = {
@@ -48,7 +47,6 @@ variable "inventory_source_details" {
     paused              = false
     sumo_account_id     = 926226587429
     fields              = {}
-    iam_role_arn        = ""
   }
 }
 
@@ -68,7 +66,6 @@ variable "xray_source_details" {
     scan_interval    = number
     sumo_account_id  = number
     fields           = map(string)
-    iam_role_arn     = string
   })
   description = "Provide details for the Sumo Logic AWS XRAY source. If not provided, then defaults will be used."
   default = {
@@ -81,7 +78,6 @@ variable "xray_source_details" {
     paused           = false
     sumo_account_id  = 926226587429
     fields           = {}
-    iam_role_arn     = ""
   }
 }
 

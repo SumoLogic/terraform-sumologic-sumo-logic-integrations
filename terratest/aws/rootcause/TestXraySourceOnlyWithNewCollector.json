@@ -1,0 +1,44 @@
+{
+	"random_string": {
+	  "lower": true
+	},
+	"aws_iam_role": [
+	  {
+		"source_iam_role": {
+		  "name": "SumoLogic-RootCause-Module-{RandomString}",
+		  "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::{SumoAccountId}:root\"},\"Action\":\"sts:AssumeRole\",\"Condition\":{\"StringEquals\":{\"sts:ExternalId\":\"{Deployment}:{OrgId}\"}}}]}"
+		}
+	  }
+	],
+	"sumologic_collector": [
+	  {
+		"collector": {
+		  "description": "This collector is created using Sumo Logic terraform AWS Root Cause module.",
+		  "name": "SumoLogic RootCause Collector {RandomString}"
+		}
+	  }
+	],
+	"inventory_sumologic_source": {},
+	"xray_sumologic_source": [
+	  {
+		"aws_xray_source": {
+		  "category": "Labs/xray",
+		  "content_type": "AwsXRay",
+		  "description": "This source is created using Sumo Logic terraform AWS RootCause module to collect AWS Xray metrics.",
+		  "path": [
+			{
+			  "limit_to_regions": []
+			}
+		  ],
+		  "paused": false,
+		  "scan_interval": 300000,
+		  "name": "Xray Source",
+		  "authentication": [
+			{
+			  "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-RootCause-Module-{RandomString}"
+			}
+		  ]
+		}
+	  }
+	]
+  }

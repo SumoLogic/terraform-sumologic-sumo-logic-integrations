@@ -58,7 +58,7 @@ resource "sumologic_aws_inventory_source" "aws_inventory_source" {
 
   authentication {
     type     = "AWSRoleBasedAuthentication"
-    role_arn = local.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"].arn : var.inventory_source_details.iam_role_arn
+    role_arn = local.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"].arn : var.aws_iam_role_arn
   }
 
   path {
@@ -69,7 +69,7 @@ resource "sumologic_aws_inventory_source" "aws_inventory_source" {
 }
 
 resource "sumologic_aws_xray_source" "aws_xray_source" {
-  for_each = toset(var.create_inventory_source ? ["aws_xray_source"] : [])
+  for_each = toset(var.create_xray_source ? ["aws_xray_source"] : [])
   depends_on = [
     time_sleep.wait_3_minutes
   ]
@@ -84,7 +84,7 @@ resource "sumologic_aws_xray_source" "aws_xray_source" {
 
   authentication {
     type     = "AWSRoleBasedAuthentication"
-    role_arn = local.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"].arn : var.xray_source_details.iam_role_arn
+    role_arn = local.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"].arn : var.aws_iam_role_arn
   }
 
   path {

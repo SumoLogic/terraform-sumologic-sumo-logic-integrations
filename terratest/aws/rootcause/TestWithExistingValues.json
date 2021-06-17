@@ -1,0 +1,65 @@
+{
+	"random_string": {
+	  "lower": true
+	},
+	"aws_iam_role": {},
+	"sumologic_collector": {},
+	"inventory_sumologic_source": [
+	  {
+		"aws_inventory_source": {
+		  "category": "My/Test/cvategory",
+		  "content_type": "AwsInventory",
+		  "description": "This is description.",
+		  "path": [
+			{
+			  "limit_to_regions": [
+				"us-east-2"
+			  ],
+			  "limit_to_namespaces": [
+				"AWS/SNS",
+				"AWS/SQS"
+			  ]
+			}
+		  ],
+		  "fields": {
+			"TestCollector": "MyValue"
+		  },
+		  "paused": false,
+		  "scan_interval": 60000,
+		  "name": "My Inventory Source Another",
+		  "authentication": [
+			{
+			  "role_arn": "{ROLE_ARN}"
+			}
+		  ]
+		}
+	  }
+	],
+	"xray_sumologic_source": [
+	  {
+		"aws_xray_source": {
+		  "category": "My/Test/cvategory",
+		  "content_type": "AwsXRay",
+		  "description": "This is description.",
+		  "path": [
+			{
+			  "limit_to_regions": [
+				"ap-south-1"
+			  ]
+			}
+		  ],
+		  "fields": {
+			"TestCollector": "MyValue"
+		  },
+		  "paused": false,
+		  "scan_interval": 60000,
+		  "name": "My Xray Source Another",
+		  "authentication": [
+			{
+			  "role_arn": "{ROLE_ARN}"
+			}
+		  ]
+		}
+	  }
+	]
+  }

@@ -1,0 +1,51 @@
+{
+	"random_string": {
+	  "lower": true
+	},
+	"aws_iam_role": [
+	  {
+		"source_iam_role": {
+		  "name": "SumoLogic-RootCause-Module-{RandomString}",
+		  "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::{SumoAccountId}:root\"},\"Action\":\"sts:AssumeRole\",\"Condition\":{\"StringEquals\":{\"sts:ExternalId\":\"{Deployment}:{OrgId}\"}}}]}"
+		}
+	  }
+	],
+	"sumologic_collector": {},
+	"inventory_sumologic_source": [
+	  {
+		"aws_inventory_source": {
+		  "category": "My/Test/cvategory",
+		  "content_type": "AwsInventory",
+		  "description": "This is description.",
+		  "path": [
+			{
+			  "limit_to_regions": [
+				"us-east-1"
+			  ],
+			  "limit_to_namespaces": [
+				"AWS/SNS",
+				"AWS/SQS",
+				"AWS/Events",
+				"AWS/Lambda",
+				"AWS/Logs",
+				"AWS/S3",
+				"AWS/Firehose"
+			  ]
+			}
+		  ],
+		  "fields": {
+			"TestCollector": "MyValue"
+		  },
+		  "paused": false,
+		  "scan_interval": 60000,
+		  "name": "My Inventory Source",
+		  "authentication": [
+			{
+			  "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-RootCause-Module-{RandomString}"
+			}
+		  ]
+		}
+	  }
+	],
+	"xray_sumologic_source": {}
+  }
