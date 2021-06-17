@@ -9,21 +9,21 @@ module "aws_kinesis_firehose_for_metrics" {
 
   create_collector = true
   collector_details = {
-    "collector_name" : "Test ELB Collector",
-    "description" : "This is a new description.",
-    "fields" : {
-      "TestCollector" : "MyValue"
+    "collector_name" = "Test Kinesis Firehose for Logs Collector",
+    "description"    = "This is a new description.",
+    "fields" = {
+      "TestCollector" = "MyValue"
     }
   }
 
   source_details = {
-    "source_name" : "My ELB Source",
-    "source_category" : "Labs/test/elb",
-    "description" : "This source is created.",
-    "fields" : {
-      "TestCollector" : "MyValue"
+    "source_name"     = "My Kinesis Firehose for Logs Source",
+    "source_category" = "Labs/test/logs",
+    "description"     = "This source is created.",
+    "fields" = {
+      "TestCollector" = "MyValue"
     },
-    "collector_id" : "",
+    "collector_id" = "",
   }
 
   auto_enable_logs_subscription = "Both"

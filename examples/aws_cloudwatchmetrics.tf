@@ -4,10 +4,10 @@ module "cloudwatchmetrics" {
   create_collector          = true
   sumologic_organization_id = "0000000000123456"
   collector_details = {
-		"collector_name": "Test CloudWatch metrics Module One",
-		"description":    "This is a new description.",
-		"fields":         {
-			"TestCollector": "MyValue"
+    "collector_name" = "Test CloudWatch metrics Module One",
+    "description"    = "This is a new description.",
+    "fields" = {
+      "TestCollector" = "MyValue"
     }
   }
   source_details = {

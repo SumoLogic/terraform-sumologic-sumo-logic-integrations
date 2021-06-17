@@ -12,17 +12,17 @@ This module is used to create the SumoLogic AWS Kinesis Firehose for Logs source
 | Name | Version |
 |------|---------|
 | terraform | >= 0.13.0 |
-| aws | ~> 3.42.0 |
-| random | 3.1.0 |
-| sumologic | ~> 2.9.0 |
+| aws | >= 3.42.0 |
+| random | >= 3.1.0 |
+| sumologic | >= 2.9.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | ~> 3.42.0 |
-| random | 3.1.0 |
-| sumologic | ~> 2.9.0 |
+| aws | >= 3.42.0 |
+| random | >= 3.1.0 |
+| sumologic | >= 2.9.0 |
 
 ## Inputs
 

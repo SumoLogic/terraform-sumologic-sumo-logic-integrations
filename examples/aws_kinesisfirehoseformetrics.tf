@@ -1,16 +1,16 @@
 module "kinesisfirehoseformetrics" {
   source = "../aws/kinesisfirehoseformetrics"
 
-  sumologic_organization_id = "00000000004F8319"
+  sumologic_organization_id = "0000000000123456"
   create_bucket             = true
   bucket_details = {
-    bucket_name          = "sumologic-kinesis-firehose-668508221233-us-east-1"
+    bucket_name          = "sumologic-kinesis-firehose-ashdjas"
     force_destroy_bucket = true
   }
 
   create_collector = true
   collector_details = {
-    collector_name = "SumoLogic Kinesis Firehose for Metrics Collector 668508221233"
+    collector_name = "SumoLogic Kinesis Firehose for Metrics Collector"
     description    = "This collector is created using Sumo Logic terraform AWS Kinesis Firehose for metrics module to collect AWS cloudwatch metrics."
     fields         = {}
   }
