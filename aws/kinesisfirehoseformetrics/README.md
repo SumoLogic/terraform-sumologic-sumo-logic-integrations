@@ -1,4 +1,4 @@
-# SumoLogic-AWS-CloudWatchMetrics
+# SumoLogic-AWS-KinesisFirehoseForMetrics
 
 This module is used to create the SumoLogic AWS Kinesis Firehose for Metrics source. Features include
 - Create an AWS S3 bucket for storing failed logs. Existing bucket can also be used.
