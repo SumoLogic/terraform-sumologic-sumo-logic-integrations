@@ -10,18 +10,18 @@ This module is used to create the SumoLogic AWS CloudWatch metrics source. Featu
 | Name | Version |
 |------|---------|
 | terraform | >= 0.13.0 |
-| aws | ~> 3.29.1 |
+| aws | ~> 3.42.0 |
 | random | 3.1.0 |
-| sumologic | ~> 2.6.0 |
+| sumologic | ~> 2.9.0 |
 | time | 0.7.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | ~> 3.29.1 |
+| aws | ~> 3.42.0 |
 | random | 3.1.0 |
-| sumologic | ~> 2.6.0 |
+| sumologic | ~> 2.9.0 |
 | time | 0.7.1 |
 
 ## Inputs

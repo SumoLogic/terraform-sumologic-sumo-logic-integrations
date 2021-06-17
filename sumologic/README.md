@@ -13,14 +13,14 @@ This module is used to create Sumo Logic resource. Features include
 |------|---------|
 | terraform | >= 0.13.0 |
 | null | ~> 2.1 |
-| sumologic | ~> 2.6.2 |
+| sumologic | ~> 2.9.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | null | ~> 2.1 |
-| sumologic | ~> 2.6.2 |
+| sumologic | ~> 2.9.0 |
 
 ## Inputs
 
