@@ -7,11 +7,14 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/cloudformation"
 	"github.com/aws/aws-sdk-go/service/cloudtrail"
+	"github.com/aws/aws-sdk-go/service/cloudwatch"
 	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
 	"github.com/aws/aws-sdk-go/service/firehose"
 	"github.com/aws/aws-sdk-go/service/iam"
+	"github.com/aws/aws-sdk-go/service/lambda"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/sns"
+	"github.com/aws/aws-sdk-go/service/sqs"
 	"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/stretchr/testify/assert"
 )
@@ -143,5 +146,51 @@ func (a *ResourcesAssert) AWS_KINESIS_FIREHOSE_DELIVERY_STREAM(value interface{}
 			DeliveryStreamName: &element,
 		})
 		assert.NoErrorf(a.t, err, "AWS KINESIS FIREHOSE STREAM :- Error Message %v", err)
+	}
+}
+
+func (a *ResourcesAssert) AWS_SQS_QUEUE(value interface{}) {
+	fmt.Println("******** Asserting AWS SQS QUEUE ********")
+	queue_names := getKeyValuesFromData(value, "name")
+
+	sqs_client := aws.NewSqsClient(a.t, a.AwsRegion)
+
+	for _, element := range queue_names {
+		output, err := sqs_client.ListQueues(&sqs.ListQueuesInput{
+			QueueNamePrefix: &element,
+		})
+		assert.NoErrorf(a.t, err, "AWS SQS :- Error Message %v", err)
+		assert.Greater(a.t, len(output.QueueUrls), 0, "No SQS found with the name ."+element)
+	}
+}
+
+func (a *ResourcesAssert) AWS_LAMBDA_FUNCTION(value interface{}) {
+	fmt.Println("******** Asserting AWS LAMBDA FUNCTION ********")
+	fucntion_names := getKeyValuesFromData(value, "function_name")
+
+	mySession := session.Must(session.NewSession())
+	svc := lambda.New(mySession, aws_sdk.NewConfig().WithRegion(a.AwsRegion))
+
+	for _, element := range fucntion_names {
+		_, err := svc.GetFunction(&lambda.GetFunctionInput{
+			FunctionName: &element,
+		})
+		assert.NoErrorf(a.t, err, "AWS Lambda :- Error Message %v", err)
+	}
+}
+
+func (a *ResourcesAssert) AWS_CLOUDWATCH_METRIC_ALARM(value interface{}) {
+	fmt.Println("******** Asserting AWS CLOUDWATCH METRIC ALARM ********")
+	alarm_names := getKeyValuesFromData(value, "alarm_name")
+
+	mySession := session.Must(session.NewSession())
+	svc := cloudwatch.New(mySession, aws_sdk.NewConfig().WithRegion(a.AwsRegion))
+
+	for _, element := range alarm_names {
+		output, err := svc.DescribeAlarms(&cloudwatch.DescribeAlarmsInput{
+			AlarmNamePrefix: &element,
+		})
+		assert.NoErrorf(a.t, err, "AWS CLOUDWATCH ALARM :- Error Message %v", err)
+		assert.Greater(a.t, len(output.MetricAlarms), 0, "No CloudWatch Alarm found with the name ."+element)
 	}
 }
