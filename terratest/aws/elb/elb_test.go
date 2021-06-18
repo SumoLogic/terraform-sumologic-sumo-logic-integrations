@@ -254,6 +254,6 @@ func TestUpdates(t *testing.T) {
 	count = UpdateTerraform(t, vars, options)
 
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 2, 1)
+		common.AssertResourceCounts(t, count, 0, 1, 1)
 	})
 }

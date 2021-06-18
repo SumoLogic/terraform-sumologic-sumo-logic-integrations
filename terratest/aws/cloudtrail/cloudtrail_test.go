@@ -315,7 +315,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 2, 0)
+		common.AssertResourceCounts(t, count, 0, 1, 0)
 	})
 
 	// use existing cloudtrail and bucket with existing IAM iam_role_arn
@@ -356,7 +356,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 3, 5)
+		common.AssertResourceCounts(t, count, 0, 2, 5)
 	})
 
 	// update fields to source
@@ -399,6 +399,6 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 2, 0)
+		common.AssertResourceCounts(t, count, 0, 1, 0)
 	})
 }
