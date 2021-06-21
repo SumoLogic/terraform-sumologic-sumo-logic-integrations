@@ -14,11 +14,11 @@ import (
 
 var CONTENT_PATH = "/terratest/sumologic/testapp.json"
 
-func getMetricRule(suffix string) map[string]interface{} {
+func getMetricRule(suffix string, sleep int) map[string]interface{} {
 	return map[string]interface{}{
 		"metric_rule_name": fmt.Sprintf("MetricRule%s", suffix),
 		"match_expression": fmt.Sprintf("%s=AWS/RDS DBClusterIdentifier=*", suffix),
-		"sleep":            0,
+		"sleep":            sleep,
 		"variables_to_extract": []map[string]interface{}{
 			{
 				"name":        suffix,
@@ -158,8 +158,8 @@ func TestAllWithMultiInputs(t *testing.T) {
 		"access_key":  common.SumologicAccessKey,
 		"environment": common.SumologicEnvironment,
 		"managed_metric_rules": map[string]interface{}{
-			"MetricRuleOne": getMetricRule(prefixOne),
-			"MetricRuleTwo": getMetricRule(prefixTwo),
+			"MetricRuleOne": getMetricRule(prefixOne, 0),
+			"MetricRuleTwo": getMetricRule(prefixTwo, 11),
 		},
 		"managed_fields": map[string]interface{}{
 			"FieldOne": getField(strings.ToLower(prefixOne)),
@@ -199,7 +199,7 @@ func TestMetricRuleOnly(t *testing.T) {
 		"access_key":  common.SumologicAccessKey,
 		"environment": common.SumologicEnvironment,
 		"managed_metric_rules": map[string]interface{}{
-			"MetricRuleOne": getMetricRule("TestMetricRuleOnly"),
+			"MetricRuleOne": getMetricRule("TestMetricRuleOnly", 5),
 		},
 	}
 
@@ -335,7 +335,7 @@ func TestUpdatesOnly(t *testing.T) {
 		"access_key":  common.SumologicAccessKey,
 		"environment": common.SumologicEnvironment,
 		"managed_metric_rules": map[string]interface{}{
-			"MetricRuleOne": getMetricRule("TestMetricRuleUpdateOneOnly"),
+			"MetricRuleOne": getMetricRule("TestMetricRuleUpdateOneOnly", 19),
 		},
 	}
 
@@ -356,7 +356,7 @@ func TestUpdatesOnly(t *testing.T) {
 		"access_key":  common.SumologicAccessKey,
 		"environment": common.SumologicEnvironment,
 		"managed_metric_rules": map[string]interface{}{
-			"MetricRuleOne": getMetricRule("TestMetricRuleUpdayesTwo"),
+			"MetricRuleOne": getMetricRule("TestMetricRuleUpdayesTwo", 28),
 		},
 	}
 
