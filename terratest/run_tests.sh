@@ -93,6 +93,9 @@ function set_env_variables()
         echo "Setting env variables for ${type}"
         export IAM_ROLE="arn:aws:iam::<AWS_ACCOUNT_ID>:role/TestingTerraformCloudTrailRole"
         export COLLECTOR_ID="<COLLECTOR_ID>"
+    elif [[ "${type}" = *"cloudwatchlogsforwarder"* ]];then
+        echo "Setting env variables for ${type}"
+        export COLLECTOR_ID="<COLLECTOR_ID>"
     else
         echo "No Matching Module found to set up env variables."
     fi
@@ -109,7 +112,7 @@ export AWS_PROFILE=
 
 # 2. Deccalring the modules. Please update the array, if some new modules are added.
 declare -a modules=(
-    "aws/cloudtrail" "aws/elb" "aws/cloudwatchmetrics" "aws/kinesisfirehoseforlogs" "aws/kinesisfirehoseformetrics" "aws/rootcause" "sumologic"
+    "aws/cloudtrail" "aws/elb" "aws/cloudwatchmetrics" "aws/kinesisfirehoseforlogs" "aws/kinesisfirehoseformetrics" "aws/rootcause" "aws/cloudwatchlogsforwarder" "sumologic"
 )
 
 # 3. Iterating through the module array to run unit and integration test cases.
