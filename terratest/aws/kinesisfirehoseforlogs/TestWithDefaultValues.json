@@ -1,0 +1,113 @@
+{
+  "random_string": {
+    "lower": true
+  },
+  "aws_cloudwatch_log_group": {
+    "name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
+    "retention_in_days": 7
+  },
+  "aws_cloudwatch_log_stream": [
+    {
+      "http_log_stream": {
+        "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
+        "name": "HttpEndpointDelivery"
+      }
+    },
+    {
+      "s3_log_stream": {
+        "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
+        "name": "S3Delivery"
+      }
+    }
+  ],
+  "aws_iam_role": [
+    {
+      "logs_role": {
+        "name": "SumoLogic-Firehose-Logs-{RandomString}",
+        "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"logs.{Region}.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+      },
+      "firehose_role": {
+        "name": "SumoLogic-Firehose-{RandomString}",
+        "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"firehose.amazonaws.com\"},\"Action\":\"sts:AssumeRole\",\"Condition\":{\"StringEquals\":{\"sts:ExternalId\":\"{AccountId}\"}}}]}"
+      }
+    }
+  ],
+  "aws_kinesis_firehose_delivery_stream": {
+    "destination": "http_endpoint",
+    "http_endpoint_configuration": [
+      {
+        "buffering_interval": 60,
+        "buffering_size": 4,
+        "cloudwatch_logging_options": [
+          {
+            "enabled": true,
+            "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
+            "log_stream_name": "HttpEndpointDelivery"
+          }
+        ],
+        "name": "sumologic-logs-endpoint-{RandomString}",
+        "retry_duration": 60,
+        "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-{RandomString}",
+        "s3_backup_mode": "FailedDataOnly",
+        "url": "{URL}"
+      }
+    ],
+    "s3_configuration": [
+      {
+        "bucket_arn": "arn:aws:s3:::sumologic-kinesis-firehose-logs-{RandomString}",
+        "compression_format": "UNCOMPRESSED",
+        "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-{RandomString}",
+        "cloudwatch_logging_options": [
+          {
+            "enabled": true,
+            "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
+            "log_stream_name": "S3Delivery"
+          }
+        ]
+      }
+    ]
+  },
+  "aws_s3_bucket": [
+    {
+      "s3_bucket": {
+        "acl": "private",
+        "bucket": "sumologic-kinesis-firehose-logs-{RandomString}",
+        "region": "{Region}"
+      }
+    }
+  ],
+  "aws_serverlessapplicationrepository_cloudformation_stack": [
+    {
+      "auto_enable_logs_subscription": {
+        "name": "Auto-Enable-Logs-Subscription-{RandomString}",
+        "application_id": "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector",
+        "capabilities": [
+          "CAPABILITY_IAM",
+          "CAPABILITY_RESOURCE_POLICY"
+        ],
+        "parameters": {
+          "DestinationArnType": "Kinesis",
+          "DestinationArnValue": "arn:aws:firehose:{Region}:{AccountId}:deliverystream/Kinesis-Logs-{RandomString}",
+          "LogGroupPattern": "lambda",
+          "RoleArn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-Logs-{RandomString}",
+          "UseExistingLogs": "true"
+        },
+        "semantic_version": "1.0.5"
+      }
+    }
+  ],
+  "sumologic_collector": [
+    {
+      "collector": {
+        "description": "This collector is created using Sumo Logic terraform AWS Kinesis Firehose for logs module to collect AWS cloudwatch logs.",
+        "name": "SumoLogic Kinesis Firehose for Logs Collector {RandomString}"
+      }
+    }
+  ],
+  "sumologic_source": {
+    "category": "Labs/aws/cloudwatch/logs",
+    "content_type": "KinesisLog",
+    "description": "This source is created using Sumo Logic terraform AWS Kinesis Firehose for logs module to collect AWS Cloudwatch logs.",
+    "name": "Kinesis Firehose for Logs Source"
+  }
+}

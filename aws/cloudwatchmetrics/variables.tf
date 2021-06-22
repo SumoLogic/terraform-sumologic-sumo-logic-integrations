@@ -11,7 +11,7 @@ variable "collector_details" {
   })
   description = "Provide details for the Sumo Logic collector. If not provided, then defaults will be used."
   default = {
-    collector_name = "SumoLogic CloudWatch Metrics Collector <AWS Account Id>"
+    collector_name = "SumoLogic CloudWatch Metrics Collector <Random ID>"
     description    = "This collector is created using Sumo Logic terraform AWS Cloudwatch metrics module to collect AWS cloudwatch metrics."
     fields         = {}
   }

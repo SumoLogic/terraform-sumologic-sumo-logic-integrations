@@ -1,3 +1,8 @@
+output "random_string" {
+  value       = random_string.aws_random
+  description = "Random String value created."
+}
+
 output "aws_s3_bucket" {
   value       = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket : {}
   description = "AWS S3 Bucket name created to Store the CloudTrail logs."

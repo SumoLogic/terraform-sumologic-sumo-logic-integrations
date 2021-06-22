@@ -1,0 +1,89 @@
+{
+  "random_string": {
+    "lower": true
+  },
+  "aws_sqs_queue": {
+    "name": "SumoCWDeadLetterQueue-{RandomString}"
+  },
+  "aws_cloudwatch_log_group": {
+    "name": "SumoCWLogGroup-{RandomString}",
+    "retention_in_days": 7
+  },
+  "aws_cloudwatch_metric_alarm": {
+    "actions_enabled": true,
+    "alarm_actions": [
+      "arn:aws:sns:{Region}:{AccountId}:SumoCWEmailSNSTopic-{RandomString}"
+    ],
+    "alarm_description": "Notify via email if number of messages in DeadLetterQueue exceeds threshold",
+    "alarm_name": "SumoCWSpilloverAlarm-{RandomString}",
+    "comparison_operator": "GreaterThanThreshold",
+    "dimensions": {
+      "QueueName": "SumoCWDeadLetterQueue-{RandomString}"
+    },
+    "evaluation_periods": 1,
+    "metric_name": "ApproximateNumberOfMessagesVisible",
+    "namespace": "AWS/SQS",
+    "period": 3600,
+    "statistic": "Sum",
+    "threshold": 100000
+  },
+  "aws_cw_lambda_function": {
+    "dead_letter_config": [
+      {
+        "target_arn": "arn:aws:sqs:{Region}:{AccountId}:SumoCWDeadLetterQueue-{RandomString}"
+      }
+    ],
+    "environment": [
+      {
+        "variables": {
+          "INCLUDE_LOG_INFO": "true",
+          "LOG_FORMAT": "Others",
+          "LOG_STREAM_PREFIX": "",
+          "SUMO_ENDPOINT": "{URL}"
+        }
+      }
+    ],
+    "function_name": "SumoCWLogsLambda-{RandomString}",
+    "handler": "cloudwatchlogs_lambda.handler",
+    "s3_bucket": "appdevzipfiles-{Region}",
+    "s3_key": "cloudwatchlogs-with-dlq.zip"
+  },
+  "aws_iam_role": [
+    {
+      "name": "SumoCWLambdaExecutionRole-{RandomString}",
+      "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"lambda.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
+    }
+  ],
+  "aws_serverlessapplicationrepository_cloudformation_stack": [
+    {
+      "auto_enable_logs_subscription": {
+        "name": "Auto-Enable-Logs-Subscription-{RandomString}",
+        "application_id": "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector",
+        "capabilities": [
+          "CAPABILITY_IAM",
+          "CAPABILITY_RESOURCE_POLICY"
+        ],
+        "parameters": {
+          "DestinationArnValue": "arn:aws:lambda:{Region}:{AccountId}:function:SumoCWLogsLambda-{RandomString}",
+          "LogGroupPattern": "lambda",
+          "UseExistingLogs": "true"
+        },
+        "semantic_version": "1.0.5"
+      }
+    }
+  ],
+  "aws_sns_topic": {
+    "name": "SumoCWEmailSNSTopic-{RandomString}",
+    "policy": "{\"Version\":\"2008-10-17\",\"Id\":\"__default_policy_ID\",\"Statement\":[{\"Sid\":\"__default_statement_ID\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Action\":[\"SNS:GetTopicAttributes\",\"SNS:SetTopicAttributes\",\"SNS:AddPermission\",\"SNS:RemovePermission\",\"SNS:DeleteTopic\",\"SNS:Subscribe\",\"SNS:ListSubscriptionsByTopic\",\"SNS:Publish\",\"SNS:Receive\"],\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoCWEmailSNSTopic-{RandomString}\",\"Condition\":{\"StringEquals\":{\"AWS:SourceOwner\":\"{AccountId}\"}}}]}"
+  },
+  "sumologic_collector": {},
+  "sumologic_source": {
+    "category": "Labs/cloudwatch/logs",
+    "content_type": "",
+    "description": "This is an description.",
+    "name": "Cloudwatch source",
+    "fields": {
+      "account": "MyValue"
+    }
+  }
+}

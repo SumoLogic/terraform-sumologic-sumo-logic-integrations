@@ -6,6 +6,12 @@
 # 5. Create SNS Subscription to be attached to the source and SNS Topic.
 # 6. Add SAM app for auto enable of access logs for ELBs.
 
+resource "random_string" "aws_random" {
+  length  = 10
+  special = false
+  upper   = false
+}
+
 resource "aws_s3_bucket" "s3_bucket" {
   for_each = toset(var.source_details.bucket_details.create_bucket ? ["s3_bucket"] : [])
 
@@ -21,11 +27,11 @@ resource "aws_s3_bucket" "s3_bucket" {
 resource "aws_sns_topic" "sns_topic" {
   for_each = toset(local.create_sns_topic ? ["sns_topic"] : [])
 
-  name = "SumoLogic-Terraform-Elb-Module-${local.aws_account_id}"
+  name = "SumoLogic-Terraform-Elb-Module-${random_string.aws_random.id}"
   policy = templatefile("${path.module}/templates/sns_topic_policy.tmpl", {
     BUCKET_NAME    = local.bucket_name,
     AWS_REGION     = local.aws_region,
-    SNS_TOPIC_NAME = "SumoLogic-Terraform-Elb-Module-${local.aws_account_id}",
+    SNS_TOPIC_NAME = "SumoLogic-Terraform-Elb-Module-${random_string.aws_random.id}",
     AWS_ACCOUNT    = local.aws_account_id
   })
 }
@@ -44,7 +50,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 resource "aws_iam_role" "source_iam_role" {
   for_each = toset(local.create_iam_role ? ["source_iam_role"] : [])
 
-  name = "SumoLogic-Terraform-Elb-Module-${local.aws_account_id}-${local.aws_region}"
+  name = "SumoLogic-Terraform-Elb-Module-${random_string.aws_random.id}"
   path = "/"
 
   assume_role_policy = templatefile("${path.module}/templates/sumologic_assume_role.tmpl", {
@@ -59,7 +65,7 @@ resource "aws_iam_role" "source_iam_role" {
 resource "aws_iam_policy" "iam_policy" {
   for_each = toset(local.create_iam_role ? ["iam_policy"] : [])
 
-  name = "SumoLogicElbSource-${local.aws_account_id}-${local.aws_region}"
+  name = "SumoLogicElbSource-${random_string.aws_random.id}"
   policy = templatefile("${path.module}/templates/sumologic_source_policy.tmpl", {
     BUCKET_NAME = local.bucket_name
   })
@@ -131,7 +137,7 @@ resource "aws_sns_topic_subscription" "subscription" {
 resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_access_logs" {
   for_each = toset(local.auto_enable_access_logs ? ["auto_enable_access_logs"] : [])
 
-  name             = "Auto-Enable-Access-Logs-Elb"
+  name             = "Auto-Enable-Access-Logs-Elb-${random_string.aws_random.id}"
   application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable"
   semantic_version = "1.0.2"
   capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities

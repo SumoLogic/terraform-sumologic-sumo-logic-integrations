@@ -1,0 +1,29 @@
+{
+  "Statement": [
+    {
+      "Sid": "LogEvents",
+      "Effect": "Allow",
+      "Action": [
+        "logs:PutLogEvents"
+      ],
+      "Resource": [
+        "${KINESIS_LOG_GROUP_ARN}",
+        "${KINESIS_LOG_GROUP_ARN}:log-stream:*"
+      ]
+    },
+    {
+      "Sid": "S3UploadPolicy",
+      "Effect": "Allow",
+      "Action": [
+        "kinesis:DescribeStream",
+        "kinesis:GetShardIterator",
+        "kinesis:GetRecords",
+        "kinesis:ListShards"
+      ],
+      "Resource": [
+        "${KINESIS_FIREHOSE_ARN}"
+      ]
+    }
+  ],
+  "Version": "2012-10-17"
+}

@@ -6,8 +6,8 @@ provider "sumologic" {
 
 # Sumo Logic to Jira Cloud Webhook
 module "sumologic-jira-cloud-webhook" {
-  source                = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/webhooks/sumologic_jira_cloud"
-  version               = "{revision}"
+  source  = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/webhooks/sumologic_jira_cloud"
+  version = "{revision}"
 
   jira_cloud_url        = "<JIRA_CLOUD_URL>"
   jira_cloud_issuetype  = "Bug"

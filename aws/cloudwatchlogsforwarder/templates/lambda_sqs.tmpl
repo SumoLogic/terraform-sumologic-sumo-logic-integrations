@@ -1,0 +1,27 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "sqs:DeleteMessage",
+        "sqs:GetQueueUrl",
+        "sqs:ListQueues",
+        "sqs:ChangeMessageVisibility",
+        "sqs:SendMessageBatch",
+        "sqs:ReceiveMessage",
+        "sqs:SendMessage",
+        "sqs:GetQueueAttributes",
+        "sqs:ListQueueTags",
+        "sqs:ListDeadLetterSourceQueues",
+        "sqs:DeleteMessageBatch",
+        "sqs:PurgeQueue",
+        "sqs:DeleteQueue",
+        "sqs:CreateQueue",
+        "sqs:ChangeMessageVisibilityBatch",
+        "sqs:SetQueueAttributes"
+      ],
+      "Resource": "${DEAD_LETTER_QUEUE_ARN}"
+    }
+  ]
+}

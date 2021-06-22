@@ -11,7 +11,7 @@ variable "collector_details" {
   })
   description = "Provide details for the Sumo Logic collector. If not provided, then defaults will be used."
   default = {
-    collector_name = "SumoLogic CloudTrail Collector <AWS Account Id>"
+    collector_name = "SumoLogic CloudTrail Collector <Random ID>"
     description    = "This collector is created using Sumo Logic terraform AWS cloudtrail module to collect AWS cloudtrail logs."
     fields         = {}
   }
@@ -45,7 +45,7 @@ variable "source_details" {
     collector_id    = ""
     bucket_details = {
       create_bucket        = true
-      bucket_name          = "cloudtrail-logs-accountid-region"
+      bucket_name          = "cloudtrail-logs-random-id"
       path_expression      = "AWSLogs/<ACCOUNT-ID>/CloudTrail/<REGION-NAME>/*"
       force_destroy_bucket = true
     }
@@ -91,7 +91,7 @@ variable "cloudtrail_details" {
   })
   description = "Provide details for the AWS CloudTrail. If not provided, then defaults will be used."
   default = {
-    name                          = "SumoLogic-Terraform-CloudTrail"
+    name                          = "SumoLogic-Terraform-CloudTrail-random-id"
     is_multi_region_trail         = false
     is_organization_trail         = false
     include_global_service_events = false

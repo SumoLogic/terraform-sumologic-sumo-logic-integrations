@@ -38,13 +38,6 @@ func UpdateTerraform(t *testing.T, vars map[string]interface{}, options *terrafo
 func TestWithDefaultValues(t *testing.T) {
 	t.Parallel()
 	aws_region := "us-east-2"
-	replacementMap := map[string]interface{}{
-		"AccountId":     aws.GetAccountId(t),
-		"Region":        aws_region,
-		"SumoAccountId": common.SumoAccountId,
-		"Deployment":    common.SumologicEnvironment,
-		"OrgId":         common.SumologicOrganizationId,
-	}
 	vars := map[string]interface{}{
 		"create_collector":          true,
 		"sumologic_organization_id": common.SumologicOrganizationId,
@@ -70,9 +63,18 @@ func TestWithDefaultValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 5, 0, 0)
+		common.AssertResourceCounts(t, count, 6, 0, 0)
 	})
 
+	outputs := common.FetchAllOutputs(t, options)
+	replacementMap := map[string]interface{}{
+		"AccountId":     aws.GetAccountId(t),
+		"Region":        aws_region,
+		"SumoAccountId": common.SumoAccountId,
+		"Deployment":    common.SumologicEnvironment,
+		"OrgId":         common.SumologicOrganizationId,
+		"RandomString":  outputs["random_string"].(map[string]interface{})["id"].(string),
+	}
 	// Assert if the outputs are actually created in AWS and Sumo Logic.
 	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
 	expectedOutputs := common.ReadJsonFile("TestWithDefaultValues.json", replacementMap)
@@ -81,7 +83,6 @@ func TestWithDefaultValues(t *testing.T) {
 	})
 
 	// Assert if the logs are sent to Sumo Logic.
-	outputs := common.FetchAllOutputs(t, options)
 	sourceId, _ := strconv.ParseInt(outputs["sumologic_source"].(map[string]interface{})["id"].(string), 10, 64)
 	common.GetAssertResource(t, options.EnvVars).CheckMetricsForPastSixtyMinutes(fmt.Sprintf("_sourceid=%v | count by region", fmt.Sprintf("%016x", sourceId)),
 		5, 2*time.Minute)
@@ -122,7 +123,7 @@ func TestWithExistingValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 2, 0, 0)
+		common.AssertResourceCounts(t, count, 3, 0, 0)
 	})
 
 	// Assert if the outputs are actually created in AWS and Sumo Logic.
@@ -174,7 +175,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 5, 0, 0)
+		common.AssertResourceCounts(t, count, 6, 0, 0)
 	})
 
 	vars = map[string]interface{}{

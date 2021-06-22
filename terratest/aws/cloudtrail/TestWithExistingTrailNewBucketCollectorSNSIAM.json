@@ -1,76 +1,81 @@
 {
-    "aws_cloudtrail": [
-      {
-        "cloudtrail": {
-          "name": "SumoLogic-Terraform-CloudTrail",
-          "s3_bucket_name": "my-test-tf-mod-{Region}",
-          "is_multi_region_trail": false,
-          "is_organization_trail": false,
-          "include_global_service_events": false
-        }
+  "random_string": {
+    "lower": true
+  },
+  "aws_cloudtrail": [
+    {
+      "cloudtrail": {
+        "name": "SumoLogic-Terraform-CloudTrail-{RandomString}",
+        "s3_bucket_name": "my-test-tf-mod-{Region}",
+        "is_multi_region_trail": false,
+        "is_organization_trail": false,
+        "include_global_service_events": false
       }
-    ],
-    "aws_iam_role": [
-      {
-        "source_iam_role": {
-          "name": "SumoLogic-Terraform-CloudTrail-Module-{AccountId}-{Region}",
-          "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::{SumoAccountId}:root\"},\"Action\":\"sts:AssumeRole\",\"Condition\":{\"StringEquals\":{\"sts:ExternalId\":\"{Deployment}:{OrgId}\"}}}]}"
-        }
+    }
+  ],
+  "aws_iam_role": [
+    {
+      "source_iam_role": {
+        "name": "SumoLogic-Terraform-CloudTrail-Module-{RandomString}",
+        "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::{SumoAccountId}:root\"},\"Action\":\"sts:AssumeRole\",\"Condition\":{\"StringEquals\":{\"sts:ExternalId\":\"{Deployment}:{OrgId}\"}}}]}"
       }
-    ],
-    "aws_s3_bucket": [
-      {
-        "s3_bucket": {
-          "acl": "private",
-          "bucket": "my-test-tf-mod-{Region}",
-          "policy": "{\"Statement\":[{\"Action\":\"s3:GetBucketAcl\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}\",\"Sid\":\"AWSCloudTrailAclCheck\"},{\"Action\":\"s3:PutObject\",\"Condition\":{\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}},\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}/*\",\"Sid\":\"AWSCloudTrailWrite\"},{\"Action\":\"s3:ListBucket\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}\",\"Sid\":\"AWSBucketExistenceCheck\"}],\"Version\":\"2008-10-17\"}",
-          "region": "{Region}"
-        }
+    }
+  ],
+  "aws_s3_bucket": [
+    {
+      "s3_bucket": {
+        "acl": "private",
+        "bucket": "my-test-tf-mod-{Region}",
+        "policy": "{\"Statement\":[{\"Action\":\"s3:GetBucketAcl\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}\",\"Sid\":\"AWSCloudTrailAclCheck\"},{\"Action\":\"s3:PutObject\",\"Condition\":{\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}},\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}/*\",\"Sid\":\"AWSCloudTrailWrite\"},{\"Action\":\"s3:ListBucket\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}\",\"Sid\":\"AWSBucketExistenceCheck\"}],\"Version\":\"2008-10-17\"}",
+        "region": "{Region}"
       }
-    ],
-    "aws_sns_subscription": {
-      "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
-      "endpoint_auto_confirms": true,
-      "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{AccountId}"
-    },
-    "aws_sns_topic": [
-      {
-        "sns_topic": {
-          "name": "SumoLogic-Terraform-CloudTrail-Module-{AccountId}",
-          "policy": "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":\"sns:Publish\",\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{AccountId}\",\"Condition\":{\"StringEquals\":{\"aws:SourceAccount\":\"{AccountId}\"},\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::my-test-tf-mod-{Region}\"}}}]}"
-        }
+    }
+  ],
+  "aws_sns_subscription": {
+    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
+    "endpoint_auto_confirms": true,
+    "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{RandomString}"
+  },
+  "aws_sns_topic": [
+    {
+      "sns_topic": {
+        "name": "SumoLogic-Terraform-CloudTrail-Module-{RandomString}",
+        "policy": "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":\"sns:Publish\",\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{RandomString}\",\"Condition\":{\"StringEquals\":{\"aws:SourceAccount\":\"{AccountId}\"},\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::my-test-tf-mod-{Region}\"}}}]}"
       }
-    ],
-    "aws_s3_bucket_notification": [
-      {
-        "bucket_notification": {
-          "bucket": "my-test-tf-mod-{Region}",
-          "topic": [
-            {
-              "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{AccountId}"
-            }
-          ]
-        }
+    }
+  ],
+  "aws_s3_bucket_notification": [
+    {
+      "bucket_notification": {
+        "bucket": "my-test-tf-mod-{Region}",
+        "topic": [
+          {
+            "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{RandomString}"
+          }
+        ]
       }
-    ],
-    "sumologic_collector": [
-      {
-        "collector": {
-          "description": "thsisia",
-          "name": "Test With Existing Trail New Bucket Collector SNS IAM"
-        }
+    }
+  ],
+  "sumologic_collector": [
+    {
+      "collector": {
+        "description": "thsisia",
+        "name": "Test With Existing Trail New Bucket Collector SNS IAM"
       }
-    ],
-    "sumologic_source": {
-      "category": "Labs/test/cloudtrail",
-      "content_type": "AwsCloudTrailBucket",
-      "description": "This source is ceated a.",
-      "path": [{
+    }
+  ],
+  "sumologic_source": {
+    "category": "Labs/test/cloudtrail",
+    "content_type": "AwsCloudTrailBucket",
+    "description": "This source is ceated a.",
+    "path": [
+      {
         "bucket_name": "my-test-tf-mod-{Region}",
         "path_expression": "AWSLogs/{AccountId}/CloudTrail/{Region}/*"
-      }],
-      "paused": false,
-      "scan_interval": 60000,
-      "name": "My Test Source"
-    }
+      }
+    ],
+    "paused": false,
+    "scan_interval": 60000,
+    "name": "My Test Source"
   }
+}

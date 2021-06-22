@@ -6,8 +6,8 @@ provider "bitbucket" {
 
 # Bitbucket
 module "sumologic-jira-bitbucket-app" {
-  source                 = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/bitbucket"
-  version                = "{revision}"
+  source  = "SumoLogic/sumo-logic-integrations/sumologic//atlassian/cloud/bitbucket"
+  version = "{revision}"
 
   sumo_access_id         = "<SUMO_ACCESS_ID>"
   sumo_access_key        = "<SUMO_ACCESS_KEY>"
@@ -19,5 +19,5 @@ module "sumologic-jira-bitbucket-app" {
   bitbucket_cloud_desc   = "Send events to Sumo Logic" # Default configured
   bitbucket_cloud_repos  = ["<BITBUCKET_REPOSITORY_NAME1>", "<BITBUCKET_REPOSITORY_NAME2>"]
   bitbucket_cloud_events = ["repo:push", "repo:fork", "repo:updated", "repo:commit_comment_created"] # By default all events are configured.
-  app_version                = "1.0"
+  app_version            = "1.0"
 }

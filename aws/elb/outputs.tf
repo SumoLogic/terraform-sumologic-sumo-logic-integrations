@@ -1,3 +1,8 @@
+output "random_string" {
+  value       = random_string.aws_random
+  description = "Random String value created."
+}
+
 output "aws_s3_bucket" {
   value       = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket : {}
   description = "AWS S3 Bucket name created to Store the ELB logs."
@@ -34,6 +39,6 @@ output "aws_sns_subscription" {
 }
 
 output "aws_serverlessapplicationrepository_cloudformation_stack" {
-  value       = aws_serverlessapplicationrepository_cloudformation_stack.auto_enable_access_logs
+  value       = local.auto_enable_access_logs ? aws_serverlessapplicationrepository_cloudformation_stack.auto_enable_access_logs : {}
   description = "AWS CloudFormation stack for ALB Auto Enable access logs."
 }

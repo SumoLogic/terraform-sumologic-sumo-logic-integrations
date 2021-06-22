@@ -38,13 +38,6 @@ func UpdateTerraform(t *testing.T, vars map[string]interface{}, options *terrafo
 func TestWithDefaultValues(t *testing.T) {
 	t.Parallel()
 	aws_region := "us-east-2"
-	replacementMap := map[string]interface{}{
-		"AccountId":     aws.GetAccountId(t),
-		"Region":        aws_region,
-		"SumoAccountId": common.SumoAccountId,
-		"Deployment":    common.SumologicEnvironment,
-		"OrgId":         common.SumologicOrganizationId,
-	}
 	vars := map[string]interface{}{
 		"create_collector":          true,
 		"sumologic_organization_id": common.SumologicOrganizationId,
@@ -55,9 +48,18 @@ func TestWithDefaultValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 10, 0, 0)
+		common.AssertResourceCounts(t, count, 11, 0, 0)
 	})
 
+	outputs := common.FetchAllOutputs(t, options)
+	replacementMap := map[string]interface{}{
+		"AccountId":     aws.GetAccountId(t),
+		"Region":        aws_region,
+		"SumoAccountId": common.SumoAccountId,
+		"Deployment":    common.SumologicEnvironment,
+		"OrgId":         common.SumologicOrganizationId,
+		"RandomString":  outputs["random_string"].(map[string]interface{})["id"].(string),
+	}
 	// Assert if the outputs are actually created in AWS and Sumo Logic.
 	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
 	expectedOutputs := common.ReadJsonFile("TestWithDefaultValues.json", replacementMap)
@@ -72,7 +74,6 @@ func TestWithDefaultValues(t *testing.T) {
 	http.Get(fmt.Sprintf("http://%s", *dns))
 
 	// Assert if the logs are sent to Sumo Logic.
-	outputs := common.FetchAllOutputs(t, options)
 	assertResource.CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 	assertResource.ValidateLoadBalancerAccessLogs(lb_id, outputs["aws_s3_bucket"].(map[string]interface{})["s3_bucket"].(map[string]interface{})["bucket"].(string))
 }
@@ -86,15 +87,6 @@ func TestWithExistingResourcesValues(t *testing.T) {
 	aws_region := "us-west-1"
 	assertResource := common.GetAssertResource(t, map[string]string{"AWS_DEFAULT_REGION": aws_region})
 	lb_id, dns := assertResource.CreateELB("TestWithDefaultValuesLB", "TestWithDefaultValuesTG")
-	replacementMap := map[string]interface{}{
-		"AccountId":      aws.GetAccountId(t),
-		"Region":         aws_region,
-		"SumoAccountId":  common.SumoAccountId,
-		"Deployment":     common.SumologicEnvironment,
-		"OrgId":          common.SumologicOrganizationId,
-		"BucketName":     BUCKET_NAME,
-		"PathExpression": PATH_EXPRESSION,
-	}
 	vars := map[string]interface{}{
 		"create_collector":          false,
 		"sumologic_organization_id": common.SumologicOrganizationId,
@@ -126,9 +118,20 @@ func TestWithExistingResourcesValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 4, 0, 0)
+		common.AssertResourceCounts(t, count, 5, 0, 0)
 	})
 
+	outputs := common.FetchAllOutputs(t, options)
+	replacementMap := map[string]interface{}{
+		"AccountId":      aws.GetAccountId(t),
+		"Region":         aws_region,
+		"SumoAccountId":  common.SumoAccountId,
+		"Deployment":     common.SumologicEnvironment,
+		"OrgId":          common.SumologicOrganizationId,
+		"BucketName":     BUCKET_NAME,
+		"PathExpression": PATH_EXPRESSION,
+		"RandomString":  outputs["random_string"].(map[string]interface{})["id"].(string),
+	}
 	// Assert if the outputs are actually created in AWS and Sumo Logic.
 	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
 	expectedOutputs := common.ReadJsonFile("TestWithExistingResourcesValues.json", replacementMap)
@@ -140,7 +143,6 @@ func TestWithExistingResourcesValues(t *testing.T) {
 	http.Get(fmt.Sprintf("http://%s", *dns))
 
 	// Assert if the logs are sent to Sumo Logic.
-	outputs := common.FetchAllOutputs(t, options)
 	assertResource.ValidateLoadBalancerAccessLogs(lb_id, BUCKET_NAME)
 	assertResource.CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 }
@@ -153,15 +155,6 @@ func TestWithExistingCollectorIAMNewSNSResources(t *testing.T) {
 	aws_region := "ap-south-1"
 	assertResource := common.GetAssertResource(t, map[string]string{"AWS_DEFAULT_REGION": aws_region})
 	lb_id, dns := assertResource.CreateELB("TestWithDefaultValuesLB", "TestWithDefaultValuesTG")
-	replacementMap := map[string]interface{}{
-		"AccountId":      aws.GetAccountId(t),
-		"Region":         aws_region,
-		"SumoAccountId":  common.SumoAccountId,
-		"Deployment":     common.SumologicEnvironment,
-		"OrgId":          common.SumologicOrganizationId,
-		"BucketName":     BUCKET_NAME,
-		"PathExpression": PATH_EXPRESSION,
-	}
 	vars := map[string]interface{}{
 		"create_collector":          false,
 		"sumologic_organization_id": common.SumologicOrganizationId,
@@ -193,9 +186,20 @@ func TestWithExistingCollectorIAMNewSNSResources(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 5, 0, 0)
+		common.AssertResourceCounts(t, count, 6, 0, 0)
 	})
 
+	outputs := common.FetchAllOutputs(t, options)
+	replacementMap := map[string]interface{}{
+		"AccountId":      aws.GetAccountId(t),
+		"Region":         aws_region,
+		"SumoAccountId":  common.SumoAccountId,
+		"Deployment":     common.SumologicEnvironment,
+		"OrgId":          common.SumologicOrganizationId,
+		"BucketName":     BUCKET_NAME,
+		"PathExpression": PATH_EXPRESSION,
+		"RandomString":  outputs["random_string"].(map[string]interface{})["id"].(string),
+	}
 	// Assert if the outputs are actually created in AWS and Sumo Logic.
 	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
 	expectedOutputs := common.ReadJsonFile("TestWithExistingCollectorIAMNewSNSResources.json", replacementMap)
@@ -207,7 +211,6 @@ func TestWithExistingCollectorIAMNewSNSResources(t *testing.T) {
 	http.Get(fmt.Sprintf("http://%s", *dns))
 
 	// Assert if the logs are sent to Sumo Logic.
-	outputs := common.FetchAllOutputs(t, options)
 	assertResource.ValidateLoadBalancerAccessLogs(lb_id, BUCKET_NAME)
 	assertResource.CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 }
@@ -232,7 +235,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 10, 0, 0)
+		common.AssertResourceCounts(t, count, 11, 0, 0)
 	})
 
 	vars = map[string]interface{}{
@@ -251,6 +254,6 @@ func TestUpdates(t *testing.T) {
 	count = UpdateTerraform(t, vars, options)
 
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 2, 1)
+		common.AssertResourceCounts(t, count, 0, 1, 1)
 	})
 }

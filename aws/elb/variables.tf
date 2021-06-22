@@ -11,7 +11,7 @@ variable "collector_details" {
   })
   description = "Provide details for the Sumo Logic collector. If not provided, then defaults will be used."
   default = {
-    collector_name = "SumoLogic Elb Collector <AWS Account Id>"
+    collector_name = "SumoLogic Elb Collector <Random ID>"
     description    = "This collector is created using Sumo Logic terraform AWS ELB module to collect AWS elb logs."
     fields         = {}
   }
@@ -45,7 +45,7 @@ variable "source_details" {
     collector_id    = ""
     bucket_details = {
       create_bucket        = true
-      bucket_name          = "elb-logs-accountid-region"
+      bucket_name          = "elb-logs-random-id"
       path_expression      = "*AWSLogs/<ACCOUNT-ID>/elasticloadbalancing/<REGION-NAME>/*"
       force_destroy_bucket = true
     }
