@@ -1,5 +1,5 @@
 module "sumologic-elb" {
-  source = "../aws/elb"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/elb"
 
   create_collector          = true
   sumologic_organization_id = "0000000000123456"

@@ -1,5 +1,5 @@
 module "kinesisfirehoseformetrics" {
-  source = "../aws/kinesisfirehoseformetrics"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/kinesisfirehoseformetrics"
 
   sumologic_organization_id = "0000000000123456"
   create_bucket             = true

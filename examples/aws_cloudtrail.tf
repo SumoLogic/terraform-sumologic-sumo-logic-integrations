@@ -1,6 +1,6 @@
 # CloudTrail Apps
 module "sumologic-cloudtrail-apps" {
-  source = "../aws/cloudtrail"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudtrail"
 
   create_collector          = true
   create_trail              = true

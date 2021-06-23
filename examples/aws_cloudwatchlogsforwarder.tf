@@ -1,5 +1,5 @@
 module "cloudwatchlogsforwarder" {
-  source = "../aws/cloudwatchlogsforwarder"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudwatchlogsforwarder"
 
   create_collector = true
   collector_details = {

@@ -1,5 +1,5 @@
 module "rootcause" {
-  source = "../aws/rootcause"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/rootcause"
 
   create_collector = true
   collector_details = {

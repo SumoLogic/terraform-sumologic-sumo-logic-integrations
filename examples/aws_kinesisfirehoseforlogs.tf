@@ -1,5 +1,5 @@
 module "aws_kinesis_firehose_for_metrics" {
-  source = "../aws/kinesisfirehoseforlogs"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/kinesisfirehoseforlogs"
 
   create_bucket = true
   bucket_details = {

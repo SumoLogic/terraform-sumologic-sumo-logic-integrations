@@ -1,5 +1,5 @@
 module "cloudwatchmetrics" {
-  source = "../aws/cloudwatchmetrics"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudwatchmetrics"
 
   create_collector          = true
   sumologic_organization_id = "0000000000123456"
