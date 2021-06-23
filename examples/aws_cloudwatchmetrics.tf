@@ -23,6 +23,9 @@ module "cloudwatchmetrics" {
     paused          = false
     sumo_account_id = 926226587429
     fields          = {}
-    iam_role_arn    = ""
+    "iam_details" = {
+      "create_iam_role" = true,
+      "iam_role_arn"    = ""
+    }
   }
 }
