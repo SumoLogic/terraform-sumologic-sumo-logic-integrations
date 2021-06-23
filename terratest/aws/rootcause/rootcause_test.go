@@ -185,7 +185,10 @@ func TestWithExistingValues(t *testing.T) {
 			"paused":           false,
 			"scan_interval":    60000,
 		},
-		"aws_iam_role_arn": IAM_ROLE,
+		"iam_details": map[string]interface{}{
+			"create_iam_role": false,
+			"iam_role_arn":    IAM_ROLE,
+		},
 	}
 
 	options, count := SetUpTest(t, vars, aws_region)

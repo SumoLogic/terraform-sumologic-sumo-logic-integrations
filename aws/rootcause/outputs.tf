@@ -4,7 +4,7 @@ output "random_string" {
 }
 
 output "aws_iam_role" {
-  value       = local.create_iam_role ? aws_iam_role.source_iam_role : {}
+  value       = var.iam_details.create_iam_role ? aws_iam_role.source_iam_role : {}
   description = "AWS IAM role with permission to allow Sumo Logic to read logs from S3 Bucket."
 }
 

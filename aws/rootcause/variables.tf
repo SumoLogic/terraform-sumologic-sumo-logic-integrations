@@ -91,8 +91,14 @@ variable "sumologic_organization_id" {
   }
 }
 
-variable "aws_iam_role_arn" {
-  type        = string
+variable "iam_details" {
+  type = object({
+    create_iam_role = bool
+    iam_role_arn    = string
+  })
   description = "Provide an existing AWS IAM role ARN value to attach to Sumo Logic sources. If this is kept empty, a new IAM role will be created."
-  default     = ""
+  default = {
+    create_iam_role = true
+    iam_role_arn    = null
+  }
 }

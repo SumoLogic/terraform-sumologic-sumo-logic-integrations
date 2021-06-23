@@ -9,7 +9,7 @@ resource "random_string" "aws_random" {
 }
 
 resource "aws_iam_role" "source_iam_role" {
-  for_each = toset(local.create_iam_role ? ["source_iam_role"] : [])
+  for_each = toset(var.iam_details.create_iam_role ? ["source_iam_role"] : [])
 
   name = "SumoLogic-RootCause-Module-${random_string.aws_random.id}"
   path = "/"
@@ -24,7 +24,7 @@ resource "aws_iam_role" "source_iam_role" {
 }
 
 resource "aws_iam_policy" "iam_policy" {
-  for_each = toset(local.create_iam_role ? ["iam_policy"] : [])
+  for_each = toset(var.iam_details.create_iam_role ? ["iam_policy"] : [])
 
   name   = "SumoLogicCloudWatchMetricsSource-${random_string.aws_random.id}"
   policy = templatefile("${path.module}/templates/sumologic_source_policy.tmpl", {})
@@ -58,7 +58,7 @@ resource "sumologic_aws_inventory_source" "aws_inventory_source" {
 
   authentication {
     type     = "AWSRoleBasedAuthentication"
-    role_arn = local.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"].arn : var.aws_iam_role_arn
+    role_arn = var.iam_details.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"].arn : var.iam_details.iam_role_arn
   }
 
   path {
@@ -84,7 +84,7 @@ resource "sumologic_aws_xray_source" "aws_xray_source" {
 
   authentication {
     type     = "AWSRoleBasedAuthentication"
-    role_arn = local.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"].arn : var.aws_iam_role_arn
+    role_arn = var.iam_details.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"].arn : var.iam_details.iam_role_arn
   }
 
   path {
