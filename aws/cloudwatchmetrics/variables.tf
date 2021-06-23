@@ -29,7 +29,10 @@ variable "source_details" {
     scan_interval       = number
     sumo_account_id     = number
     fields              = map(string)
-    iam_role_arn        = string
+    iam_details = object({
+      create_iam_role = bool
+      iam_role_arn    = string
+    })
   })
   description = "Provide details for the Sumo Logic Cloudwatch Metrics source. If not provided, then defaults will be used."
   default = {
@@ -43,7 +46,10 @@ variable "source_details" {
     paused              = false
     sumo_account_id     = 926226587429
     fields              = {}
-    iam_role_arn        = ""
+    iam_details = {
+      create_iam_role = true
+      iam_role_arn    = null
+    }
   }
 }
 

@@ -55,7 +55,10 @@ func TestWithDefaultValues(t *testing.T) {
 			},
 			"sumo_account_id": "926226587429",
 			"collector_id":    "",
-			"iam_role_arn":    "",
+			"iam_details": map[string]interface{}{
+				"create_iam_role": true,
+				"iam_role_arn":    nil,
+			},
 		},
 	}
 
@@ -115,7 +118,10 @@ func TestWithExistingValues(t *testing.T) {
 			},
 			"sumo_account_id": "926226587429",
 			"collector_id":    COLLECTOR_ID,
-			"iam_role_arn":    IAM_ROLE,
+			"iam_details": map[string]interface{}{
+				"create_iam_role": false,
+				"iam_role_arn":    IAM_ROLE,
+			},
 		},
 	}
 
@@ -167,7 +173,10 @@ func TestUpdates(t *testing.T) {
 			},
 			"sumo_account_id": "926226587429",
 			"collector_id":    "",
-			"iam_role_arn":    "",
+			"iam_details": map[string]interface{}{
+				"create_iam_role": false,
+				"iam_role_arn":    nil,
+			},
 		},
 	}
 
@@ -202,7 +211,10 @@ func TestUpdates(t *testing.T) {
 			},
 			"sumo_account_id": "926226587429",
 			"collector_id":    "",
-			"iam_role_arn":    "",
+			"iam_details": map[string]interface{}{
+				"create_iam_role": false,
+				"iam_role_arn":    nil,
+			},
 		},
 	}
 
@@ -230,7 +242,10 @@ func TestUpdates(t *testing.T) {
 			},
 			"sumo_account_id": "926226587429",
 			"collector_id":    COLLECTOR_ID,
-			"iam_role_arn":    "",
+			"iam_details": map[string]interface{}{
+				"create_iam_role": false,
+				"iam_role_arn":    nil,
+			},
 		},
 	}
 
