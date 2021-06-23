@@ -44,7 +44,10 @@ variable "source_details" {
     sumo_account_id     = number
     limit_to_namespaces = list(string)
     fields              = map(string)
-    iam_role_arn        = string
+    iam_details = object({
+      create_iam_role = bool
+      iam_role_arn    = string
+    })
   })
   description = "Provide details for the Sumo Logic Kinesis Firehose for Metrics source. If not provided, then defaults will be used."
   default = {
@@ -55,7 +58,10 @@ variable "source_details" {
     sumo_account_id     = 926226587429
     limit_to_namespaces = []
     fields              = {}
-    iam_role_arn        = ""
+    iam_details = {
+      create_iam_role = true
+      iam_role_arn    = null
+    }
   }
 }
 
