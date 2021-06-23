@@ -1,6 +1,6 @@
 # CloudTrail Apps
 module "sumologic-cloudtrail-apps" {
-  source = "../aws/cloudtrail"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudtrail"
 
   create_collector          = true
   create_trail              = true
@@ -30,7 +30,13 @@ module "sumologic-cloudtrail-apps" {
     },
     "sumo_account_id" = "926226587429",
     "collector_id"    = "",
-    "iam_role_arn"    = "",
-    "sns_topic_arn"   = ""
+    "iam_details" = {
+      "create_iam_role" = true,
+      "iam_role_arn"    = ""
+    }
+    "sns_topic_details" = {
+      "create_sns_topic" = true,
+      "sns_topic_arn"    = ""
+    }
   }
 }

@@ -18,7 +18,7 @@ resource "sumologic_monitor_folder" "tf_monitor_folder" {
 }
 
 module "rds_module" {
-  source = "../sumologic"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//sumologic"
 
   access_id   = "<access_id>"
   access_key  = "<access_key>"

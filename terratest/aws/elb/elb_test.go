@@ -109,8 +109,14 @@ func TestWithExistingResourcesValues(t *testing.T) {
 			},
 			"sumo_account_id": "926226587429",
 			"collector_id":    COLLECTOR_ID,
-			"iam_role_arn":    IAM_ROLE,
-			"sns_topic_arn":   SNS_TOPIC,
+			"iam_details": map[string]interface{}{
+				"create_iam_role": false,
+				"iam_role_arn":    IAM_ROLE,
+			},
+			"sns_topic_details": map[string]interface{}{
+				"create_sns_topic": false,
+				"sns_topic_arn":    SNS_TOPIC,
+			},
 		},
 	}
 
@@ -130,7 +136,7 @@ func TestWithExistingResourcesValues(t *testing.T) {
 		"OrgId":          common.SumologicOrganizationId,
 		"BucketName":     BUCKET_NAME,
 		"PathExpression": PATH_EXPRESSION,
-		"RandomString":  outputs["random_string"].(map[string]interface{})["id"].(string),
+		"RandomString":   outputs["random_string"].(map[string]interface{})["id"].(string),
 	}
 	// Assert if the outputs are actually created in AWS and Sumo Logic.
 	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.
@@ -177,8 +183,14 @@ func TestWithExistingCollectorIAMNewSNSResources(t *testing.T) {
 			},
 			"sumo_account_id": "926226587429",
 			"collector_id":    COLLECTOR_ID,
-			"iam_role_arn":    IAM_ROLE,
-			"sns_topic_arn":   "",
+			"iam_details": map[string]interface{}{
+				"create_iam_role": false,
+				"iam_role_arn":    IAM_ROLE,
+			},
+			"sns_topic_details": map[string]interface{}{
+				"create_sns_topic": true,
+				"sns_topic_arn":    nil,
+			},
 		},
 	}
 
@@ -198,7 +210,7 @@ func TestWithExistingCollectorIAMNewSNSResources(t *testing.T) {
 		"OrgId":          common.SumologicOrganizationId,
 		"BucketName":     BUCKET_NAME,
 		"PathExpression": PATH_EXPRESSION,
-		"RandomString":  outputs["random_string"].(map[string]interface{})["id"].(string),
+		"RandomString":   outputs["random_string"].(map[string]interface{})["id"].(string),
 	}
 	// Assert if the outputs are actually created in AWS and Sumo Logic.
 	// This also checks if your expectation are matched with the outputs, so provide an JSON with expected outputs.

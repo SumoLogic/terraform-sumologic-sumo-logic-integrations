@@ -34,8 +34,14 @@ variable "source_details" {
     sumo_account_id      = number
     cutoff_relative_time = string
     fields               = map(string)
-    iam_role_arn         = string
-    sns_topic_arn        = string
+    iam_details = object({
+      create_iam_role = bool
+      iam_role_arn    = string
+    })
+    sns_topic_details = object({
+      create_sns_topic = bool
+      sns_topic_arn    = string
+    })
   })
   description = "Provide details for the Sumo Logic ELB source. If not provided, then defaults will be used."
   default = {
@@ -54,8 +60,14 @@ variable "source_details" {
     sumo_account_id      = 926226587429
     cutoff_relative_time = "-1d"
     fields               = {}
-    iam_role_arn         = ""
-    sns_topic_arn        = ""
+    iam_details = {
+      create_iam_role = true
+      iam_role_arn    = null
+    }
+    sns_topic_details = {
+      create_sns_topic = true
+      sns_topic_arn    = null
+    }
   }
   validation {
     condition     = can(regex("[a-z0-9-.]{3,63}$", var.source_details.bucket_details.bucket_name))

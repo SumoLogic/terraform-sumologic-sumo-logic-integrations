@@ -10,12 +10,6 @@ locals {
   # Get the default bucket name when no bucket is provided and create_bucket is true.
   bucket_name = var.source_details.bucket_details.create_bucket && var.source_details.bucket_details.bucket_name == "elb-logs-random-id" ? "elb-logs-${random_string.aws_random.id}" : var.source_details.bucket_details.bucket_name
 
-  # Create IAM role condition if no IAM ROLE ARN is provided.
-  create_iam_role = var.source_details.iam_role_arn != "" ? false : true
-
-  # Create SNS topic condition if no SNS topic arn is provided.
-  create_sns_topic = var.source_details.sns_topic_arn != "" ? false : true
-
   # Auto enable should be called if input is anything other than None.
   auto_enable_access_logs = var.auto_enable_access_logs != "None" ? true : false
 

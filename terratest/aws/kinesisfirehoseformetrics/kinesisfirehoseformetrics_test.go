@@ -95,7 +95,10 @@ func TestWithExistingValues(t *testing.T) {
 			},
 			"sumo_account_id":     "926226587429",
 			"limit_to_namespaces": []string{"AWS/SNS", "AWS/SQS", "AWS/Events", "AWS/Lambda", "AWS/Logs", "AWS/S3", "AWS/Firehose"},
-			"iam_role_arn":        IAM_ROLE,
+			"iam_details": map[string]interface{}{
+				"create_iam_role": false,
+				"iam_role_arn":    IAM_ROLE,
+			},
 		},
 		"sumologic_organization_id": common.SumologicOrganizationId,
 	}
@@ -194,7 +197,10 @@ func TestUpdates(t *testing.T) {
 			},
 			"sumo_account_id":     "926226587429",
 			"limit_to_namespaces": []string{"AWS/SNS", "AWS/SQS", "AWS/Events"},
-			"iam_role_arn":        "",
+			"iam_details": map[string]interface{}{
+				"create_iam_role": true,
+				"iam_role_arn":    nil,
+			},
 		},
 		"sumologic_organization_id": common.SumologicOrganizationId,
 	}

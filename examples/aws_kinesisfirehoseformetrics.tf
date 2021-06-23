@@ -1,5 +1,5 @@
 module "kinesisfirehoseformetrics" {
-  source = "../aws/kinesisfirehoseformetrics"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/kinesisfirehoseformetrics"
 
   sumologic_organization_id = "0000000000123456"
   create_bucket             = true
@@ -23,6 +23,9 @@ module "kinesisfirehoseformetrics" {
     limit_to_namespaces = ["AWS/SNS", "AWS/SQS"]
     sumo_account_id     = 926226587429
     fields              = {}
-    iam_role_arn        = ""
+    "iam_details" = {
+      "create_iam_role" = true,
+      "iam_role_arn"    = ""
+    }
   }
 }

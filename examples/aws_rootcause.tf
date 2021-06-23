@@ -1,5 +1,5 @@
 module "rootcause" {
-  source = "../aws/rootcause"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/rootcause"
 
   create_collector = true
   collector_details = {
@@ -43,5 +43,9 @@ module "rootcause" {
     limit_to_regions  = ["us-east-1"]
   }
   sumologic_organization_id = "0000000000123456"
-  aws_iam_role_arn          = ""
+
+  iam_details = {
+    "create_iam_role" = true,
+    "iam_role_arn"    = ""
+  }
 }

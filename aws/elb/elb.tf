@@ -25,7 +25,7 @@ resource "aws_s3_bucket" "s3_bucket" {
 }
 
 resource "aws_sns_topic" "sns_topic" {
-  for_each = toset(local.create_sns_topic ? ["sns_topic"] : [])
+  for_each = toset(var.source_details.sns_topic_details.create_sns_topic ? ["sns_topic"] : [])
 
   name = "SumoLogic-Terraform-Elb-Module-${random_string.aws_random.id}"
   policy = templatefile("${path.module}/templates/sns_topic_policy.tmpl", {
@@ -37,7 +37,7 @@ resource "aws_sns_topic" "sns_topic" {
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
-  for_each = toset(local.create_sns_topic && var.source_details.bucket_details.create_bucket ? ["bucket_notification"] : [])
+  for_each = toset(var.source_details.sns_topic_details.create_sns_topic && var.source_details.bucket_details.create_bucket ? ["bucket_notification"] : [])
 
   bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
 
@@ -48,7 +48,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 }
 
 resource "aws_iam_role" "source_iam_role" {
-  for_each = toset(local.create_iam_role ? ["source_iam_role"] : [])
+  for_each = toset(var.source_details.iam_details.create_iam_role ? ["source_iam_role"] : [])
 
   name = "SumoLogic-Terraform-Elb-Module-${random_string.aws_random.id}"
   path = "/"
@@ -63,7 +63,7 @@ resource "aws_iam_role" "source_iam_role" {
 }
 
 resource "aws_iam_policy" "iam_policy" {
-  for_each = toset(local.create_iam_role ? ["iam_policy"] : [])
+  for_each = toset(var.source_details.iam_details.create_iam_role ? ["iam_policy"] : [])
 
   name = "SumoLogicElbSource-${random_string.aws_random.id}"
   policy = templatefile("${path.module}/templates/sumologic_source_policy.tmpl", {
@@ -102,7 +102,7 @@ resource "sumologic_elb_source" "source" {
   scan_interval        = var.source_details.scan_interval
   authentication {
     type     = "AWSRoleBasedAuthentication"
-    role_arn = local.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"].arn : var.source_details.iam_role_arn
+    role_arn = var.source_details.iam_details.create_iam_role ? aws_iam_role.source_iam_role["source_iam_role"].arn : var.source_details.iam_details.iam_role_arn
   }
 
   path {
@@ -130,7 +130,7 @@ resource "aws_sns_topic_subscription" "subscription" {
   endpoint               = sumologic_elb_source.source.url
   endpoint_auto_confirms = true
   protocol               = "https"
-  topic_arn              = local.create_sns_topic ? aws_sns_topic.sns_topic["sns_topic"].arn : var.source_details.sns_topic_arn
+  topic_arn              = var.source_details.sns_topic_details.create_sns_topic ? aws_sns_topic.sns_topic["sns_topic"].arn : var.source_details.sns_topic_details.sns_topic_arn
 }
 
 # Reason to use the SAM app, is to have single source of truth for Auto Enable access logs functionality.
