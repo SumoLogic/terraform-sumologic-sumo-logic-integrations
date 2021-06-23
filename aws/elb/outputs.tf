@@ -9,17 +9,17 @@ output "aws_s3_bucket" {
 }
 
 output "aws_sns_topic" {
-  value       = local.create_sns_topic ? aws_sns_topic.sns_topic : {}
+  value       = var.source_details.sns_topic_details.create_sns_topic ? aws_sns_topic.sns_topic : {}
   description = "AWS SNS topic attached to the AWS S3 bucket."
 }
 
 output "aws_s3_bucket_notification" {
-  value       = local.create_sns_topic && var.source_details.bucket_details.create_bucket ? aws_s3_bucket_notification.bucket_notification : {}
+  value       = var.source_details.sns_topic_details.create_sns_topic && var.source_details.bucket_details.create_bucket ? aws_s3_bucket_notification.bucket_notification : {}
   description = "AWS S3 Bucket Notification attached to the AWS S3 Bucket"
 }
 
 output "aws_iam_role" {
-  value       = local.create_iam_role ? aws_iam_role.source_iam_role : {}
+  value       = var.source_details.iam_details.create_iam_role ? aws_iam_role.source_iam_role : {}
   description = "AWS IAM role with permission to allow Sumo Logic to read logs from S3 Bucket."
 }
 
