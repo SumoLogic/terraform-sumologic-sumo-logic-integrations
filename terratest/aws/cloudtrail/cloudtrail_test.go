@@ -110,8 +110,14 @@ func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
 			},
 			"sumo_account_id": "926226587429",
 			"collector_id":    "",
-			"iam_role_arn":    "",
-			"sns_topic_arn":   "",
+			"iam_details": map[string]interface{}{
+				"create_iam_role": true,
+				"iam_role_arn":    nil,
+			},
+			"sns_topic_details": map[string]interface{}{
+				"create_sns_topic": true,
+				"sns_topic_arn":    nil,
+			},
 		},
 	}
 
@@ -173,8 +179,14 @@ func TestWithExistingBucketTrailCollectorSNSIAM(t *testing.T) {
 			},
 			"sumo_account_id": "926226587429",
 			"collector_id":    COLLECTOR_ID,
-			"iam_role_arn":    IAM_ROLE,
-			"sns_topic_arn":   SNS_TOPIC,
+			"iam_details": map[string]interface{}{
+				"create_iam_role": false,
+				"iam_role_arn":    IAM_ROLE,
+			},
+			"sns_topic_details": map[string]interface{}{
+				"create_sns_topic": false,
+				"sns_topic_arn":    SNS_TOPIC,
+			},
 		},
 	}
 
@@ -241,8 +253,14 @@ func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
 			},
 			"sumo_account_id": "926226587429",
 			"collector_id":    "",
-			"iam_role_arn":    "",
-			"sns_topic_arn":   "",
+			"iam_details": map[string]interface{}{
+				"create_iam_role": true,
+				"iam_role_arn":    nil,
+			},
+			"sns_topic_details": map[string]interface{}{
+				"create_sns_topic": true,
+				"sns_topic_arn":    nil,
+			},
 		},
 	}
 
@@ -347,8 +365,14 @@ func TestUpdates(t *testing.T) {
 			"fields":               map[string]interface{}{},
 			"sumo_account_id":      "926226587429",
 			"collector_id":         "",
-			"iam_role_arn":         IAM_ROLE,
-			"sns_topic_arn":        "",
+			"iam_details": map[string]interface{}{
+				"create_iam_role": false,
+				"iam_role_arn":    IAM_ROLE,
+			},
+			"sns_topic_details": map[string]interface{}{
+				"create_sns_topic": true,
+				"sns_topic_arn":    nil,
+			},
 		},
 	}
 
@@ -390,8 +414,14 @@ func TestUpdates(t *testing.T) {
 			},
 			"sumo_account_id": "926226587429",
 			"collector_id":    "",
-			"iam_role_arn":    IAM_ROLE,
-			"sns_topic_arn":   "",
+			"iam_details": map[string]interface{}{
+				"create_iam_role": false,
+				"iam_role_arn":    IAM_ROLE,
+			},
+			"sns_topic_details": map[string]interface{}{
+				"create_sns_topic": true,
+				"sns_topic_arn":    nil,
+			},
 		},
 	}
 
