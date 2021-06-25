@@ -160,6 +160,7 @@ func TestWithExistingBucketTrailCollectorSNSIAM(t *testing.T) {
 		"create_collector":          false,
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"create_trail":              false,
+		"wait_for_seconds":          1,
 		"source_details": map[string]interface{}{
 			"source_name":     "My Test Source",
 			"source_category": "Labs/test/cloudtrail",
@@ -341,6 +342,7 @@ func TestUpdates(t *testing.T) {
 		"create_collector":          true,
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"create_trail":              false,
+		"wait_for_seconds":          1,
 		"collector_details": map[string]interface{}{
 			"collector_name": "Test Updated Cloudtrail Module One",
 			"description":    "This is a new description.",
@@ -380,7 +382,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 2, 5)
+		common.AssertResourceCounts(t, count, 0, 3, 5)
 	})
 
 	// update fields to source
@@ -388,6 +390,7 @@ func TestUpdates(t *testing.T) {
 		"create_collector":          true,
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"create_trail":              false,
+		"wait_for_seconds":          1,
 		"collector_details": map[string]interface{}{
 			"collector_name": "Test Updated Cloudtrail Module One",
 			"description":    "This is a new description.",

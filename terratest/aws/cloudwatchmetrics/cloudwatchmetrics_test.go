@@ -104,6 +104,7 @@ func TestWithExistingValues(t *testing.T) {
 	vars := map[string]interface{}{
 		"create_collector":          false,
 		"sumologic_organization_id": common.SumologicOrganizationId,
+		"wait_for_seconds":          1,
 		"source_details": map[string]interface{}{
 			"source_name":          "CloudWatch Metrics Source",
 			"source_category":      "Labs/aws/cloudwatch/metrics",

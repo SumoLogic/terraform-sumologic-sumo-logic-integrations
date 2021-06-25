@@ -84,6 +84,7 @@ func TestWithExistingValues(t *testing.T) {
 			"bucket_name":          BUCKET_NAME,
 			"force_destroy_bucket": true,
 		},
+		"wait_for_seconds":          1,
 		"create_collector": false,
 		"source_details": map[string]interface{}{
 			"source_name":     "Test Source For Metrics One",

@@ -189,6 +189,7 @@ func TestWithExistingValues(t *testing.T) {
 			"create_iam_role": false,
 			"iam_role_arn":    IAM_ROLE,
 		},
+		"wait_for_seconds": 1,
 	}
 
 	options, count := SetUpTest(t, vars, aws_region)

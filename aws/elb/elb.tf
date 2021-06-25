@@ -79,13 +79,13 @@ resource "sumologic_collector" "collector" {
   timezone    = "UTC"
 }
 
-resource "time_sleep" "wait_3_minutes" {
-  create_duration = "180s"
+resource "time_sleep" "wait_for_minutes" {
+  create_duration = "${var.wait_for_seconds}s"
 }
 
 resource "sumologic_elb_source" "source" {
   depends_on = [
-    time_sleep.wait_3_minutes
+    time_sleep.wait_for_minutes
   ]
 
   lifecycle {
