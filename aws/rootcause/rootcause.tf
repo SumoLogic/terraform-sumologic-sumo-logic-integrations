@@ -38,14 +38,14 @@ resource "sumologic_collector" "collector" {
   timezone    = "UTC"
 }
 
-resource "time_sleep" "wait_3_minutes" {
-  create_duration = "180s"
+resource "time_sleep" "wait_for_seconds" {
+  create_duration = "${var.wait_for_seconds}s"
 }
 
 resource "sumologic_aws_inventory_source" "aws_inventory_source" {
   for_each = toset(var.create_inventory_source ? ["aws_inventory_source"] : [])
   depends_on = [
-    time_sleep.wait_3_minutes
+    time_sleep.wait_for_seconds
   ]
   name          = var.inventory_source_details.source_name
   description   = var.inventory_source_details.description
@@ -71,7 +71,7 @@ resource "sumologic_aws_inventory_source" "aws_inventory_source" {
 resource "sumologic_aws_xray_source" "aws_xray_source" {
   for_each = toset(var.create_xray_source ? ["aws_xray_source"] : [])
   depends_on = [
-    time_sleep.wait_3_minutes
+    time_sleep.wait_for_seconds
   ]
   name          = var.xray_source_details.source_name
   description   = var.xray_source_details.description

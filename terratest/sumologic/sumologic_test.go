@@ -52,7 +52,7 @@ func getLogsMonitor(suffix, folderId string) map[string]interface{} {
 		"monitor_parent_id":    folderId,
 		"monitor_is_disabled":  true,
 		"queries": map[string]interface{}{
-			"A": "account=* region=* dbidentifier=* | count by dbidentifier, namespace, region, account",
+			"A": "account=* region=* | count by namespace, region, account",
 		},
 		"triggers": []map[string]interface{}{
 			{
@@ -88,7 +88,7 @@ func getMetricsMonitor(suffix, folderId string) map[string]interface{} {
 		"monitor_parent_id":    folderId,
 		"monitor_is_disabled":  true,
 		"queries": map[string]interface{}{
-			"A": "account=* region=* dbidentifier=* | count by dbidentifier, namespace, region, account",
+			"A": "account=* region=* | count by namespace, region, account",
 		},
 		"triggers": []map[string]interface{}{
 			{

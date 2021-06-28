@@ -75,3 +75,12 @@ variable "sumologic_organization_id" {
   }
 }
 
+variable "wait_for_seconds" {
+  type        = number
+  description = <<EOT
+        wait_for_seconds is used to delay sumo logic source creation. This helps persisting IAM role in AWS system.
+        Default value is 180 seconds.
+        If the AWS IAM role is created outside the module, the value can be decreased to 1 second.
+    EOT
+  default     = 180
+}

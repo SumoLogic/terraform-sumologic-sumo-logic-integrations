@@ -91,6 +91,7 @@ func TestWithExistingResourcesValues(t *testing.T) {
 		"create_collector":          false,
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"auto_enable_access_logs":   "Existing",
+		"wait_for_seconds":          1,
 		"source_details": map[string]interface{}{
 			"source_name":     "My ELB Source Existing Resources",
 			"source_category": "Labs/test/elb",
@@ -165,6 +166,7 @@ func TestWithExistingCollectorIAMNewSNSResources(t *testing.T) {
 		"create_collector":          false,
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"auto_enable_access_logs":   "Existing",
+		"wait_for_seconds":          1,
 		"source_details": map[string]interface{}{
 			"source_name":     "My ELB Source Exixting IAM",
 			"source_category": "Labs/test/elb",
