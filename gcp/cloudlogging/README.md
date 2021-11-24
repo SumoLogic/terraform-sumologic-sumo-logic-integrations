@@ -12,7 +12,7 @@ For examples please check the [example] folder.
 
 <!-- Links -->
 [Cloud Logging]:https://cloud.google.com/logging
-[example]:(example)
+[example]:./example
 
 ## Requirements
 
