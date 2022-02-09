@@ -137,14 +137,14 @@ resource "aws_sns_topic_subscription" "subscription" {
 resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_access_logs" {
   for_each = toset(local.auto_enable_access_logs ? ["auto_enable_access_logs"] : [])
 
-  name             = "Auto-Enable-Access-Logs-Elb-${random_string.aws_random.id}"
+  name             = "Auto-Enable-Access-Logs-${var.auto_enable_access_logs_options.auto_enable_logging}-${random_string.aws_random.id}"
   application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable"
-  semantic_version = "1.0.2"
+  semantic_version = var.app_semantic_version
   capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
   parameters = {
     BucketName                = local.bucket_name
-    BucketPrefix              = "elasticloadbalancing"
-    AutoEnableLogging         = "ALB"
+    BucketPrefix              = var.auto_enable_access_logs_options.bucket_prefix
+    AutoEnableLogging         = var.auto_enable_access_logs_options.auto_enable_logging
     AutoEnableResourceOptions = var.auto_enable_access_logs
     FilterExpression          = var.auto_enable_access_logs_options.filter
     RemoveOnDeleteStack       = var.auto_enable_access_logs_options.remove_on_delete_stack
