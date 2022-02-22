@@ -108,8 +108,16 @@ variable "auto_enable_access_logs" {
   default = "Both"
 }
 
+variable "app_semantic_version" {
+  type        = string
+  description = "Provide the latest version of Serverless Application Repository 'sumologic-s3-logging-auto-enable'."
+  default = "1.0.4"
+}
+
 variable "auto_enable_access_logs_options" {
   type = object({
+    bucket_prefix          = string
+    auto_enable_logging    = string
     filter                 = string
     remove_on_delete_stack = bool
   })
@@ -120,8 +128,14 @@ variable "auto_enable_access_logs_options" {
 	EOT
 
   default = {
+    bucket_prefix          = ""
+    auto_enable_logging    = ""
     filter                 = ""
     remove_on_delete_stack = true
+  }
+  validation {
+    condition = contains(["ALB", "ELB"], var.auto_enable_access_logs_options.auto_enable_logging)
+    error_message = "The value must be one of ALB or ELB."
   }
 }
 
