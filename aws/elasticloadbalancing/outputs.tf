@@ -40,5 +40,5 @@ output "aws_sns_subscription" {
 
 output "aws_serverlessapplicationrepository_cloudformation_stack" {
   value       = local.auto_enable_access_logs ? aws_serverlessapplicationrepository_cloudformation_stack.auto_enable_access_logs : {}
-  description = "AWS CloudFormation stack for ALB Auto Enable access logs."
+  description = "AWS CloudFormation stack for ELB Auto Enable access logs."
 }

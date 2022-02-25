@@ -92,10 +92,10 @@ variable "sumologic_organization_id" {
 variable "auto_enable_access_logs" {
   type        = string
   description = <<EOT
-				New - Automatically enables access logging for newly created ALB resources to collect logs for ALB resources. This does not affect ALB resources already collecting logs.
-				Existing - Automatically enables access logging for existing ALB resources to collect logs for ALB resources.
-				Both - Automatically enables access logging for new and existing ALB resources.
-				None - Skips Automatic access Logging enable for ALB resources.
+				New - Automatically enables access logging for newly created ELB resources to collect logs for ELB resources. This does not affect ELB resources already collecting logs.
+				Existing - Automatically enables access logging for existing ELB resources to collect logs for ELB resources.
+				Both - Automatically enables access logging for new and existing ELB resources.
+				None - Skips Automatic access Logging enable for ELB resources.
 		  EOT
   validation {
     condition = contains([
