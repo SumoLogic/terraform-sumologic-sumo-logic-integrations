@@ -198,4 +198,10 @@ resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable
     LogGroupPattern     = var.auto_enable_logs_subscription_options.filter
     UseExistingLogs     = local.auto_enable_existing
   }
+  
+  # ref: https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/issues/14
+  # due to a bug in the underlying cloudformation stack, this lifecycle block must be added
+  # any future update after the initial apply to this parameter group will be ignored
+  # if making changes to the resource parameter group, comment out/destroy this resource, then reapply
+  lifecycle { ignore_changes = [ parameters,tags ] }
 }
