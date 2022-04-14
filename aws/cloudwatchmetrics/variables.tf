@@ -40,8 +40,8 @@ variable "source_details" {
     source_category     = "Labs/aws/cloudwatch/metrics"
     description         = "This source is created using Sumo Logic terraform AWS CloudWatch Metrics module to collect AWS Cloudwatch metrics."
     collector_id        = ""
-    limit_to_regions    = []
-    limit_to_namespaces = []
+    limit_to_regions    = ["us-east-1"]
+    limit_to_namespaces = ["AWS/ApplicationELB","AWS/ApiGateway","AWS/DynamoDB","AWS/Lambda","AWS/RDS","AWS/ECS","AWS/ElastiCache","AWS/ELB","AWS/NetworkELB","AWS/SQS","AWS/SNS"]
     scan_interval       = 300000
     paused              = false
     sumo_account_id     = 926226587429
