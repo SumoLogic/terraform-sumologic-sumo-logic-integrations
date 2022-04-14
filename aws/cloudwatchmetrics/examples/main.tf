@@ -3,7 +3,7 @@ module "cloudwatch_metrics" {
 
   create_collector          = true
   sumologic_organization_id = var.sumologic_organization_id
-  wait_for_seconds          = 180 # tried increasing this from the default of 180 with no luck
+  wait_for_seconds          = 180
   source_details = {
         "collector_id": module.cloudwatch_metrics.sumologic_collector.collector.id ,
         "description": "This source is created using Sumo Logic terraform AWS CloudWatch Metrics module to collect AWS Cloudwatch metrics.",
