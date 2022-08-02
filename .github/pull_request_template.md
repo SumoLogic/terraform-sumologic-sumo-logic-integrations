@@ -1,5 +1,3 @@
-https://timebyping.atlassian.net/browse/*INSERT-TICKET-KEY*
-
 ## Summary
 
 - Explain in a few sentences what this PR changes.
