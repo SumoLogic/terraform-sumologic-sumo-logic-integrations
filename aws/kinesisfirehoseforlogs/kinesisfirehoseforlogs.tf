@@ -164,7 +164,7 @@ resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable
 
   name             = "Auto-Enable-Logs-Subscription-${random_string.aws_random.id}"
   application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector"
-  semantic_version = "1.0.5"
+  semantic_version = "1.0.6"
   capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
   parameters = {
     DestinationArnType  = "Kinesis"
