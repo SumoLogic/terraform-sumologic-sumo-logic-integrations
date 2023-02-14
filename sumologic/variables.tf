@@ -88,6 +88,7 @@ variable "managed_monitors" {
     monitor_monitor_type = string
     monitor_parent_id    = string
     monitor_is_disabled  = bool
+    monitor_evaluation_delay = string
     queries              = map(string)
     triggers = list(object({
       threshold_type   = string

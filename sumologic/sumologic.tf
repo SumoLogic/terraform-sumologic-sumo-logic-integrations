@@ -84,5 +84,6 @@ module "SumoLogicMonitors" {
   group_notifications      = each.value.group_notifications
   connection_notifications = each.value.connection_notifications
   email_notifications      = each.value.email_notifications
+  monitor_evaluation_delay = each.value.monitor_evaluation_delay
 }
 
