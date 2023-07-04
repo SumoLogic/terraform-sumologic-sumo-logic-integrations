@@ -53,6 +53,12 @@ variable "source_details" {
   }
 }
 
+variable "app_semantic_version" {
+  type        = string
+  description = "Provide the latest version of Serverless Application Repository 'sumologic-loggroup-connector'."
+  default = "1.0.7"
+}
+
 variable "auto_enable_logs_subscription" {
   type        = string
   description = <<EOT
