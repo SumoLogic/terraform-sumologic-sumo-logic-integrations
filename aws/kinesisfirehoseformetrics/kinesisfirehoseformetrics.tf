@@ -16,8 +16,16 @@ resource "aws_s3_bucket" "s3_bucket" {
 
   bucket        = local.bucket_name
   force_destroy = var.bucket_details.force_destroy_bucket
-  acl           = "private"
+  # acl           = "private"
 }
+
+# Default s3 bucket acl is private, if you want to update uncomment the following block
+# For more details refer https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl
+# resource "aws_s3_bucket_acl" "s3_bucket_acl" {
+#   for_each = toset(local.create_bucket ? ["s3_bucket_acl"] : [])
+#   bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
+#   acl    = "private"
+# }
 
 resource "aws_s3_bucket_public_access_block" "s3_bucket_access_block" {
   for_each = toset(local.create_bucket ? ["s3_bucket_access_block"] : [])
@@ -116,9 +124,8 @@ resource "aws_kinesis_firehose_delivery_stream" "metrics_delivery_stream" {
     request_configuration {
       content_encoding = "GZIP"
     }
-  }
 
-  s3_configuration {
+    s3_configuration {
     role_arn           = aws_iam_role.firehose_role.arn
     bucket_arn         = "arn:${local.arn_map[local.aws_region]}:s3:::${local.bucket_name}"
     compression_format = "UNCOMPRESSED"
@@ -128,6 +135,7 @@ resource "aws_kinesis_firehose_delivery_stream" "metrics_delivery_stream" {
       log_group_name  = aws_cloudwatch_log_group.log_group.name
       log_stream_name = aws_cloudwatch_log_stream.s3_log_stream.name
     }
+  }
   }
 }
 
