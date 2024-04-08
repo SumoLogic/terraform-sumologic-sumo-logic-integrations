@@ -7,8 +7,12 @@ terraform {
       version = ">= 5.16.2, < 6.0.0"
     }
     sumologic = {
-      source  = "SumoLogic/sumologic"
       version = ">= 2.28.3, < 3.0.0"
+      source  = "SumoLogic/sumologic"
+    }
+    time = {
+      source  = "hashicorp/time"
+      version = ">= 0.11.1"
     }
     random = {
       source  = "hashicorp/random"
