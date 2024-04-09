@@ -1,3 +1,9 @@
+resource "random_string" "aws_random" {
+  length  = 10
+  upper   = false
+  special = false
+}
+
 module "lb_module" {
   source = "SumoLogic/sumo-logic-integrations/sumologic//aws/elb"
 
@@ -6,14 +12,14 @@ module "lb_module" {
   wait_for_seconds          = 20
 
   source_details = {
-    source_name     = "<Source-Name>"
-    source_category = "<Source-Category>"
-    description     = "<Source-Description>"
+    source_name     = "Application Load Balancer Logs (Region)"
+    source_category = "aws/observability/alb/logs"
+    description     = "This source is created using Sumo Logic terraform AWS Observability module to collect AWS Application Load Balancer logs."
     collector_id    = null
     bucket_details = {
       create_bucket        = true
-      bucket_name          = "<AWS-S3-bucket>"
-      path_expression      = "path"
+      bucket_name          = local.bucket_name
+      path_expression      = local.path_expression
       force_destroy_bucket = false
     }
     paused               = false
