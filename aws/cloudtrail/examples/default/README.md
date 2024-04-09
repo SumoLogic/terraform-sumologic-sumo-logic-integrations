@@ -40,8 +40,4 @@
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_aws_account_id"></a> [aws\_account\_id](#output\_aws\_account\_id) | n/a |
-| <a name="output_aws_region_data"></a> [aws\_region\_data](#output\_aws\_region\_data) | n/a |
-| <a name="output_sumologic_env"></a> [sumologic\_env](#output\_sumologic\_env) | n/a |
+No outputs.
