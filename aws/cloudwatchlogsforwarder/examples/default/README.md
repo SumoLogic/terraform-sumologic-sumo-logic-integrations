@@ -11,13 +11,12 @@
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 5.43.0 |
-| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | 2.28.3 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cloudtrail_module"></a> [cloudtrail\_module](#module\_cloudtrail\_module) | SumoLogic/sumo-logic-integrations/sumologic//aws/cloudtrail | n/a |
+| <a name="module_cloudwatch_logs_lambda_log_forwarder_module"></a> [cloudwatch\_logs\_lambda\_log\_forwarder\_module](#module\_cloudwatch\_logs\_lambda\_log\_forwarder\_module) | SumoLogic/sumo-logic-integrations/sumologic//aws/cloudwatchlogsforwarder | n/a |
 
 ## Resources
 
@@ -25,13 +24,11 @@
 |------|------|
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
-| [sumologic_caller_identity.current](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs/data-sources/caller_identity) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_sumo_aws_account_id"></a> [sumo\_aws\_account\_id](#input\_sumo\_aws\_account\_id) | Please provide Sumo's AWS account ID | `string` | n/a | yes |
 | <a name="input_sumologic_access_id"></a> [sumologic\_access\_id](#input\_sumologic\_access\_id) | Sumo Logic Access ID. Visit https://help.sumologic.com/Manage/Security/Access-Keys#Create_an_access_key | `string` | n/a | yes |
 | <a name="input_sumologic_access_key"></a> [sumologic\_access\_key](#input\_sumologic\_access\_key) | Sumo Logic Access Key. Visit https://help.sumologic.com/Manage/Security/Access-Keys#Create_an_access_key | `string` | n/a | yes |
 | <a name="input_sumologic_collector_id"></a> [sumologic\_collector\_id](#input\_sumologic\_collector\_id) | Please provide Sumo Collector ID | `string` | n/a | yes |
@@ -40,8 +37,4 @@
 
 ## Outputs
 
-| Name | Description |
-|------|-------------|
-| <a name="output_aws_account_id"></a> [aws\_account\_id](#output\_aws\_account\_id) | n/a |
-| <a name="output_aws_region_data"></a> [aws\_region\_data](#output\_aws\_region\_data) | n/a |
-| <a name="output_sumologic_env"></a> [sumologic\_env](#output\_sumologic\_env) | n/a |
+No outputs.

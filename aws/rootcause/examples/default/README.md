@@ -10,14 +10,14 @@
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.43.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.44.0 |
 | <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | 2.28.3 |
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cloudtrail_module"></a> [cloudtrail\_module](#module\_cloudtrail\_module) | SumoLogic/sumo-logic-integrations/sumologic//aws/cloudtrail | n/a |
+| <a name="module_root_cause_sources_module"></a> [root\_cause\_sources\_module](#module\_root\_cause\_sources\_module) | SumoLogic/sumo-logic-integrations/sumologic//aws/rootcause | n/a |
 
 ## Resources
 
