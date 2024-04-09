@@ -135,7 +135,7 @@ resource "aws_lambda_permission" "process_dead_letter_queue_lambda_permission" {
 resource "aws_cloudwatch_event_rule" "process_dead_letter_queue_event_rule" {
   description         = "Events rule for Cron"
   schedule_expression = "rate(5 minutes)"
-  is_enabled          = true
+  state          = "ENABLED"
 }
 
 resource "aws_cloudwatch_event_target" "process_dead_letter_queue_event_rule_target" {
