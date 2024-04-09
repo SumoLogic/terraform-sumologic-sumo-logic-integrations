@@ -49,8 +49,3 @@ variable "sumologic_organization_id" {
     error_message = "The organization ID must contain valid characters."
   }
 }
-
-variable "sumologic_collector_id" {
-  type        = string
-  description = "Please provide Sumo Collector ID"
-}

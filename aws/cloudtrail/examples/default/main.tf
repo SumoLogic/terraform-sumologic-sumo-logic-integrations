@@ -1,4 +1,10 @@
 
+resource "random_string" "aws_random" {
+  length  = 10
+  upper   = false
+  special = false
+}
+
 module "cloudtrail_module" {
   source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudtrail"
 
@@ -11,7 +17,7 @@ module "cloudtrail_module" {
     source_name     = "CloudTrail Logs (Region)"
     source_category = "aws/observability/cloudtrail/logs"
     description     = "This source is created using Sumo Logic terraform AWS Observability module to collect AWS cloudtrail logs."
-    collector_id    = var.sumologic_collector_id
+    collector_id    = module.cloudtrail_module.sumologic_collector.collector.id
     bucket_details = {
       create_bucket        = true
       bucket_name          = local.bucket_name
@@ -20,7 +26,7 @@ module "cloudtrail_module" {
     }
     paused               = false
     scan_interval        = 60000
-    sumo_account_id      = var.sumo_aws_account_id
+    sumo_account_id      = 926226587429
     cutoff_relative_time = "-1d"
     fields               = local.cloudtrail_fields
     iam_details = {

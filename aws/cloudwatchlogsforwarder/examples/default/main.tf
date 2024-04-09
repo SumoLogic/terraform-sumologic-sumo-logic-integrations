@@ -3,7 +3,7 @@
 module "cloudwatch_logs_lambda_log_forwarder_module" {
   source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudwatchlogsforwarder"
 
-  create_collector = false
+  create_collector = true
 
   # Lambda Log Forwarder configurations
   email_id               = "test@gmail.com"
@@ -16,7 +16,7 @@ module "cloudwatch_logs_lambda_log_forwarder_module" {
     source_name     = "CloudWatch Logs (Region)"
     source_category = "Labs/aws/cloudwatch"
     description     = "Provide details for the Sumo Logic HTTP source. If not provided, then defaults will be used."
-    collector_id    = var.sumologic_collector_id
+    collector_id    = module.cloudwatch_logs_lambda_log_forwarder_module.sumologic_collector.collector.id
     fields          = local.cloudwatch_logs_fields
   }
 
