@@ -10,13 +10,5 @@ terraform {
       version = ">= 2.28.3, < 3.0.0"
       source  = "SumoLogic/sumologic"
     }
-    time = {
-      source  = "hashicorp/time"
-      version = ">= 0.7.1"
-    }
-    random = {
-      source  = "hashicorp/random"
-      version = ">= 3.1.0"
-    }
-  }
+   }
 }
