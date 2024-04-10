@@ -13,18 +13,18 @@ This module is used to create AWS and Sumo Logic resource to collect ELB logs fr
 | Name | Version |
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.42.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 6.0.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >=3.1.0 |
-| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.9.0 |
+| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.28.3, < 3.0.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >=0.7.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 3.42.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 6.0.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.1.0 |
-| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 2.9.0 |
+| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 2.28.3, < 3.0.0 |
 | <a name="provider_time"></a> [time](#provider\_time) | >=0.7.1 |
 
 ## Modules
@@ -39,6 +39,7 @@ No modules.
 | [aws_iam_role.source_iam_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_s3_bucket.s3_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_notification.bucket_notification](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_notification) | resource |
+| [aws_s3_bucket_policy.dump_access_logs_to_s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_serverlessapplicationrepository_cloudformation_stack.auto_enable_access_logs](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/serverlessapplicationrepository_cloudformation_stack) | resource |
 | [aws_sns_topic.sns_topic](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic) | resource |
 | [aws_sns_topic_subscription.subscription](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription) | resource |
@@ -55,7 +56,7 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_app_semantic_version"></a> [app\_semantic\_version](#input\_app\_semantic\_version) | Provide the latest version of Serverless Application Repository 'sumologic-s3-logging-auto-enable'. | `string` | `"1.0.4"` | no |
+| <a name="input_app_semantic_version"></a> [app\_semantic\_version](#input\_app\_semantic\_version) | Provide the latest version of Serverless Application Repository 'sumologic-s3-logging-auto-enable'. | `string` | `"1.0.5"` | no |
 | <a name="input_auto_enable_access_logs"></a> [auto\_enable\_access\_logs](#input\_auto\_enable\_access\_logs) | New - Automatically enables access logging for newly created ELB resources to collect logs for ELB resources. This does not affect ELB resources already collecting logs.<br>				Existing - Automatically enables access logging for existing ELB resources to collect logs for ELB resources.<br>				Both - Automatically enables access logging for new and existing ELB resources.<br>				None - Skips Automatic access Logging enable for ELB resources. | `string` | `"Both"` | no |
 | <a name="input_auto_enable_access_logs_options"></a> [auto\_enable\_access\_logs\_options](#input\_auto\_enable\_access\_logs\_options) | filter - provide a regex to filter the ELB for which access logs should be enabled. Empty means all resources. For eg :- 'Type': 'application'\|'type': 'application', will enable access logs for Application load balancer only.<br>		remove\_on\_delete\_stack - provide true if you would like to disable access logging when you destroy the terraform resources. | <pre>object({<br>    bucket_prefix          = string<br>    auto_enable_logging    = string<br>    filter                 = string<br>    remove_on_delete_stack = bool<br>  })</pre> | <pre>{<br>  "auto_enable_logging": "",<br>  "bucket_prefix": "",<br>  "filter": "",<br>  "remove_on_delete_stack": true<br>}</pre> | no |
 | <a name="input_collector_details"></a> [collector\_details](#input\_collector\_details) | Provide details for the Sumo Logic collector. If not provided, then defaults will be used. | <pre>object({<br>    collector_name = string<br>    description    = string<br>    fields         = map(string)<br>  })</pre> | <pre>{<br>  "collector_name": "SumoLogic Elb Collector <Random ID>",<br>  "description": "This collector is created using Sumo Logic terraform AWS ELB module to collect AWS elb logs.",<br>  "fields": {}<br>}</pre> | no |
