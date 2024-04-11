@@ -15,7 +15,7 @@ resource "random_string" "aws_random" {
 # Default s3 bucket acl is private, if you want to update uncomment the following block
 # For more details refer https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl
 resource "aws_s3_bucket" "s3_bucket" {
-  for_each = toset(var.source_details.bucket_details.create_bucket ? ["s3_bucket"] : [])
+  for_each = toset(["s3_bucket"])
 
   bucket        = local.bucket_name
   force_destroy = var.source_details.bucket_details.force_destroy_bucket

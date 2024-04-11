@@ -13,7 +13,7 @@ resource "random_string" "aws_random" {
 }
 
 resource "aws_s3_bucket" "s3_bucket" {
-  for_each = toset(var.source_details.bucket_details.create_bucket ? ["s3_bucket"] : [])
+  for_each = toset(["s3_bucket"])
 
   bucket        = local.bucket_name
   force_destroy = var.source_details.bucket_details.force_destroy_bucket
