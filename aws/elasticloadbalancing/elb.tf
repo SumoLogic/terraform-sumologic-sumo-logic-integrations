@@ -20,6 +20,8 @@ resource "aws_s3_bucket" "s3_bucket" {
 }
 
 resource "aws_s3_bucket_policy" "dump_access_logs_to_s3" {
+  for_each = toset(var.source_details.bucket_details.create_bucket ? ["s3_bucket"] : [])
+
   bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
   policy = templatefile("${path.module}/templates/elb_bucket_policy.tmpl", {
     BUCKET_NAME     = local.bucket_name

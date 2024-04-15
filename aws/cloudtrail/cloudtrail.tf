@@ -22,6 +22,8 @@ resource "aws_s3_bucket" "s3_bucket" {
 }
 
 resource "aws_s3_bucket_policy" "s3_bucket" {
+  for_each = toset(var.source_details.bucket_details.create_bucket ? ["s3_bucket"] : [])
+  
   bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
   policy = templatefile("${path.module}/templates/cloudtrail_bucket_policy.tmpl", {
     BUCKET_NAME     = aws_s3_bucket.s3_bucket["s3_bucket"].id
