@@ -12,14 +12,21 @@ resource "random_string" "aws_random" {
   upper   = false
 }
 
+# Default s3 bucket acl is private, if you want to update uncomment the following block
+# For more details refer https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_acl
 resource "aws_s3_bucket" "s3_bucket" {
   for_each = toset(var.source_details.bucket_details.create_bucket ? ["s3_bucket"] : [])
 
   bucket        = local.bucket_name
   force_destroy = var.source_details.bucket_details.force_destroy_bucket
+}
 
+resource "aws_s3_bucket_policy" "s3_bucket" {
+  for_each = toset(var.source_details.bucket_details.create_bucket ? ["s3_bucket"] : [])
+  
+  bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
   policy = templatefile("${path.module}/templates/cloudtrail_bucket_policy.tmpl", {
-    BUCKET_NAME = local.bucket_name
+    BUCKET_NAME     = aws_s3_bucket.s3_bucket["s3_bucket"].id
   })
 }
 
@@ -47,6 +54,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 }
 
 resource "aws_cloudtrail" "cloudtrail" {
+  depends_on = [aws_s3_bucket_policy.s3_bucket]
   for_each = toset(local.create_trail ? ["cloudtrail"] : [])
 
   name                          = local.cloudtrail_name

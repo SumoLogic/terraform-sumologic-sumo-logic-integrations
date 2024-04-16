@@ -9,41 +9,60 @@ This module is used to create the SumoLogic AWS RootCause sources. Features incl
 
 | Name | Version |
 |------|---------|
-| terraform | >= 0.13.0 |
-| aws | >= 3.42.0 |
-| random | >= 3.1.0 |
-| sumologic | >= 2.9.0 |
-| time | >= 0.7.1 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 6.0.0 |
+| <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.1.0 |
+| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.28.3, < 3.0.0 |
+| <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.7.1 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
-| aws | >= 3.42.0 |
-| random | >= 3.1.0 |
-| sumologic | >= 2.9.0 |
-| time | >= 0.7.1 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 6.0.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3.1.0 |
+| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 2.28.3, < 3.0.0 |
+| <a name="provider_time"></a> [time](#provider\_time) | >= 0.7.1 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [aws_iam_policy.iam_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_role.source_iam_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [random_string.aws_random](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
+| [sumologic_aws_inventory_source.aws_inventory_source](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs/resources/aws_inventory_source) | resource |
+| [sumologic_aws_xray_source.aws_xray_source](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs/resources/aws_xray_source) | resource |
+| [sumologic_collector.collector](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs/resources/collector) | resource |
+| [time_sleep.wait_for_seconds](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+| [sumologic_caller_identity.current](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs/data-sources/caller_identity) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| collector\_details | Provide details for the Sumo Logic collector. If not provided, then defaults will be used. | <pre>object({<br>    collector_name = string<br>    description    = string<br>    fields         = map(string)<br>  })</pre> | <pre>{<br>  "collector_name": "SumoLogic RootCause Collector <Random ID>",<br>  "description": "This collector is created using Sumo Logic terraform AWS Root Cause module.",<br>  "fields": {}<br>}</pre> | no |
-| create\_collector | Provide "true" if you would like to create the Sumo Logic Collector. | `bool` | n/a | yes |
-| create\_inventory\_source | Provide "true" if you would like to create the Sumo Logic AWS Inventory source. | `bool` | n/a | yes |
-| create\_xray\_source | Provide "true" if you would like to create the Sumo Logic AWS Xray source. | `bool` | n/a | yes |
-| iam\_details | Provide an existing AWS IAM role ARN value to attach to Sumo Logic sources. If this is kept empty, a new IAM role will be created. | <pre>object({<br>    create_iam_role = bool<br>    iam_role_arn    = string<br>  })</pre> | <pre>{<br>  "create_iam_role": true,<br>  "iam_role_arn": null<br>}</pre> | no |
-| inventory\_source\_details | Provide details for the Sumo Logic AWS Inventory source. If not provided, then defaults will be used. | <pre>object({<br>    source_name         = string<br>    source_category     = string<br>    collector_id        = string<br>    description         = string<br>    limit_to_regions    = list(string)<br>    limit_to_namespaces = list(string)<br>    paused              = bool<br>    scan_interval       = number<br>    sumo_account_id     = number<br>    fields              = map(string)<br>  })</pre> | <pre>{<br>  "collector_id": "",<br>  "description": "This source is created using Sumo Logic terraform AWS RootCause module to collect AWS inventory metadata.",<br>  "fields": {},<br>  "limit_to_namespaces": [],<br>  "limit_to_regions": [],<br>  "paused": false,<br>  "scan_interval": 300000,<br>  "source_category": "Labs/inventory",<br>  "source_name": "Inventory Source",<br>  "sumo_account_id": 926226587429<br>}</pre> | no |
-| sumologic\_organization\_id | Appears on the Account Overview page that displays information about your Sumo Logic organization. Used for IAM Role in Sumo Logic AWS Sources. | `string` | n/a | yes |
-| wait\_for\_seconds | wait\_for\_seconds is used to delay sumo logic source creation. This helps persisting IAM role in AWS system.<br>        Default value is 180 seconds.<br>        If the AWS IAM role is created outside the module, the value can be decreased to 1 second. | `number` | `180` | no |
-| xray\_source\_details | Provide details for the Sumo Logic AWS XRAY source. If not provided, then defaults will be used. | <pre>object({<br>    source_name      = string<br>    source_category  = string<br>    collector_id     = string<br>    description      = string<br>    limit_to_regions = list(string)<br>    paused           = bool<br>    scan_interval    = number<br>    sumo_account_id  = number<br>    fields           = map(string)<br>  })</pre> | <pre>{<br>  "collector_id": "",<br>  "description": "This source is created using Sumo Logic terraform AWS RootCause module to collect AWS Xray metrics.",<br>  "fields": {},<br>  "limit_to_regions": [],<br>  "paused": false,<br>  "scan_interval": 300000,<br>  "source_category": "Labs/xray",<br>  "source_name": "Xray Source",<br>  "sumo_account_id": 926226587429<br>}</pre> | no |
+| <a name="input_collector_details"></a> [collector\_details](#input\_collector\_details) | Provide details for the Sumo Logic collector. If not provided, then defaults will be used. | <pre>object({<br>    collector_name = string<br>    description    = string<br>    fields         = map(string)<br>  })</pre> | <pre>{<br>  "collector_name": "SumoLogic RootCause Collector <Random ID>",<br>  "description": "This collector is created using Sumo Logic terraform AWS Root Cause module.",<br>  "fields": {}<br>}</pre> | no |
+| <a name="input_create_collector"></a> [create\_collector](#input\_create\_collector) | Provide "true" if you would like to create the Sumo Logic Collector. | `bool` | n/a | yes |
+| <a name="input_create_inventory_source"></a> [create\_inventory\_source](#input\_create\_inventory\_source) | Provide "true" if you would like to create the Sumo Logic AWS Inventory source. | `bool` | n/a | yes |
+| <a name="input_create_xray_source"></a> [create\_xray\_source](#input\_create\_xray\_source) | Provide "true" if you would like to create the Sumo Logic AWS Xray source. | `bool` | n/a | yes |
+| <a name="input_iam_details"></a> [iam\_details](#input\_iam\_details) | Provide an existing AWS IAM role ARN value to attach to Sumo Logic sources. If this is kept empty, a new IAM role will be created. | <pre>object({<br>    create_iam_role = bool<br>    iam_role_arn    = string<br>  })</pre> | <pre>{<br>  "create_iam_role": true,<br>  "iam_role_arn": null<br>}</pre> | no |
+| <a name="input_inventory_source_details"></a> [inventory\_source\_details](#input\_inventory\_source\_details) | Provide details for the Sumo Logic AWS Inventory source. If not provided, then defaults will be used. | <pre>object({<br>    source_name         = string<br>    source_category     = string<br>    collector_id        = string<br>    description         = string<br>    limit_to_regions    = list(string)<br>    limit_to_namespaces = list(string)<br>    paused              = bool<br>    scan_interval       = number<br>    sumo_account_id     = number<br>    fields              = map(string)<br>  })</pre> | <pre>{<br>  "collector_id": "",<br>  "description": "This source is created using Sumo Logic terraform AWS RootCause module to collect AWS inventory metadata.",<br>  "fields": {},<br>  "limit_to_namespaces": [],<br>  "limit_to_regions": [],<br>  "paused": false,<br>  "scan_interval": 300000,<br>  "source_category": "Labs/inventory",<br>  "source_name": "Inventory Source",<br>  "sumo_account_id": 926226587429<br>}</pre> | no |
+| <a name="input_sumologic_organization_id"></a> [sumologic\_organization\_id](#input\_sumologic\_organization\_id) | Appears on the Account Overview page that displays information about your Sumo Logic organization. Used for IAM Role in Sumo Logic AWS Sources. | `string` | n/a | yes |
+| <a name="input_wait_for_seconds"></a> [wait\_for\_seconds](#input\_wait\_for\_seconds) | wait\_for\_seconds is used to delay sumo logic source creation. This helps persisting IAM role in AWS system.<br>        Default value is 180 seconds.<br>        If the AWS IAM role is created outside the module, the value can be decreased to 1 second. | `number` | `180` | no |
+| <a name="input_xray_source_details"></a> [xray\_source\_details](#input\_xray\_source\_details) | Provide details for the Sumo Logic AWS XRAY source. If not provided, then defaults will be used. | <pre>object({<br>    source_name      = string<br>    source_category  = string<br>    collector_id     = string<br>    description      = string<br>    limit_to_regions = list(string)<br>    paused           = bool<br>    scan_interval    = number<br>    sumo_account_id  = number<br>    fields           = map(string)<br>  })</pre> | <pre>{<br>  "collector_id": "",<br>  "description": "This source is created using Sumo Logic terraform AWS RootCause module to collect AWS Xray metrics.",<br>  "fields": {},<br>  "limit_to_regions": [],<br>  "paused": false,<br>  "scan_interval": 300000,<br>  "source_category": "Labs/xray",<br>  "source_name": "Xray Source",<br>  "sumo_account_id": 926226587429<br>}</pre> | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| aws\_iam\_role | AWS IAM role with permission to allow Sumo Logic to read logs from S3 Bucket. |
-| inventory\_sumologic\_source | Sumo Logic AWS Inventory source. |
-| random\_string | Random String value created. |
-| sumologic\_collector | Sumo Logic hosted collector. |
-| xray\_sumologic\_source | Sumo Logic AWS XRAY source. |
+| <a name="output_aws_iam_role"></a> [aws\_iam\_role](#output\_aws\_iam\_role) | AWS IAM role with permission to allow Sumo Logic to read logs from S3 Bucket. |
+| <a name="output_inventory_sumologic_source"></a> [inventory\_sumologic\_source](#output\_inventory\_sumologic\_source) | Sumo Logic AWS Inventory source. |
+| <a name="output_random_string"></a> [random\_string](#output\_random\_string) | Random String value created. |
+| <a name="output_sumologic_collector"></a> [sumologic\_collector](#output\_sumologic\_collector) | Sumo Logic hosted collector. |
+| <a name="output_xray_sumologic_source"></a> [xray\_sumologic\_source](#output\_xray\_sumologic\_source) | Sumo Logic AWS XRAY source. |

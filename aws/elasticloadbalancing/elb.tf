@@ -17,7 +17,12 @@ resource "aws_s3_bucket" "s3_bucket" {
 
   bucket        = local.bucket_name
   force_destroy = var.source_details.bucket_details.force_destroy_bucket
+}
 
+resource "aws_s3_bucket_policy" "dump_access_logs_to_s3" {
+  for_each = toset(var.source_details.bucket_details.create_bucket ? ["s3_bucket"] : [])
+
+  bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
   policy = templatefile("${path.module}/templates/elb_bucket_policy.tmpl", {
     BUCKET_NAME     = local.bucket_name
     ELB_ACCCOUNT_ID = local.region_to_elb_account_id[local.aws_region]
@@ -134,6 +139,7 @@ resource "aws_sns_topic_subscription" "subscription" {
 }
 
 # Reason to use the SAM app, is to have single source of truth for Auto Enable access logs functionality.
+# Ignore changes has been implemented to bypass aws resource issue: https://github.com/hashicorp/terraform-provider-aws/issues/16485
 resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_access_logs" {
   for_each = toset(local.auto_enable_access_logs ? ["auto_enable_access_logs"] : [])
 
@@ -148,5 +154,10 @@ resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable
     AutoEnableResourceOptions = var.auto_enable_access_logs
     FilterExpression          = var.auto_enable_access_logs_options.filter
     RemoveOnDeleteStack       = var.auto_enable_access_logs_options.remove_on_delete_stack
+  }
+  lifecycle {
+    ignore_changes = [
+      parameters,tags
+    ]
   }
 }

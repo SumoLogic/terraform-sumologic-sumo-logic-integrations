@@ -7,8 +7,8 @@ terraform {
       version = ">= 5.16.2, < 6.0.0"
     }
     sumologic = {
-      version = ">= 2.9.0"
       source  = "SumoLogic/sumologic"
+      version = ">= 2.28.3, < 3.0.0"
     }
     time = {
       source  = "hashicorp/time"
