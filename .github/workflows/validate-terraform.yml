@@ -1,0 +1,29 @@
+name: "TF template tests"
+on: [workflow_dispatch, pull_request]
+
+jobs:
+
+  ValidateTF:
+    runs-on: ubuntu-latest
+    name: "Validation (format & syntax)"
+    defaults:
+      run:
+        working-directory: ./
+    steps:
+    - uses: actions/checkout@v4
+      name: Checkout source code
+
+    - uses: hashicorp/setup-terraform@v3
+      name: Setup Terraform
+
+    - name: Initialize and Validate Terraform Modules
+      run: |
+        # Find all directories inside the 'aws' directory that contain Terraform files
+        dirs=$(find . -type f -name "versions.tf" -not -path "*example*" -exec dirname {} \; | sort -u)
+        for dir in $dirs; do
+          echo "Running terraform init and validate in directory: $dir"
+          cd $dir
+          terraform init -input=false
+          terraform validate
+          cd - # Go back to the root directory
+        done
