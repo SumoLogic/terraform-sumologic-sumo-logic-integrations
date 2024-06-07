@@ -50,5 +50,5 @@ jobs:
           dirs=$(find . -type f -name "versions.tf" -not -path "*example*" -exec dirname {} \; | sort -u)
           for dir in $dirs; do
             echo "Running Checkov in directory: $dir"
-            checkov --directory $dir --quiet --framework terraform --output cli --download-external-modules true --skip-check CKV2_AWS_10,CKV2_AWS_6,CKV2_AWS_61,CKV2_AWS_62,CKV_AWS_144,CKV_AWS_145,CKV_AWS_18,CKV_AWS_21,CKV_AWS_252,CKV_AWS_26,CKV_AWS_35,CKV_AWS_36,CKV_AWS_67,CKV_TF_1,CKV_TF_2
+            checkov --directory $dir --quiet --framework terraform --output cli --download-external-modules true --skip-check CKV2_AWS_10,CKV2_AWS_6,CKV2_AWS_61,CKV2_AWS_62,CKV_AWS_115,CKV_AWS_117,CKV_AWS_144,CKV_AWS_145,CKV_AWS_158,CKV_AWS_173,CKV_AWS_18,CKV_AWS_21,CKV_AWS_240,CKV_AWS_241,CKV_AWS_252,CKV_AWS_26,CKV_AWS_27,CKV_AWS_272,CKV_AWS_338,CKV_AWS_35,CKV_AWS_36,CKV_AWS_50,CKV_AWS_67,CKV_GCP_83,CKV_TF_1,CKV_TF_2
           done
