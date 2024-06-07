@@ -16,7 +16,7 @@
           "BucketName": "elb-logs-{RandomString}",
           "BucketPrefix": "elasticloadbalancing"
         },
-        "semantic_version": "1.0.2"
+        "semantic_version": "1.0.10"
       }
     }
   ],
