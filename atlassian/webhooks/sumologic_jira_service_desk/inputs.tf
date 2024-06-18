@@ -1,7 +1,7 @@
 # Jira Service Desk
-variable "install_sumo_to_jiraservicedesk_webhook" {
+variable "create_jira_service_desk_webhook_connection" {
   type        = string
-  description = "Install Sumo to Jira Service Desk webhook"
+  description = "Create Sumo Logic connection for Jira Service Desk Webhook"
 }
 variable "jira_servicedesk_url" {
   type        = string
