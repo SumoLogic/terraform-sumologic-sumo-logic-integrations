@@ -11,7 +11,7 @@ data "template_file" "data_json_stjsd" {
 
 # Create/Delete Sumo Logic to Jira Service Desk Webhook
 resource "sumologic_connection" "jira_service_desk_connection" {
-  count       = "${var.install_sumo_to_jiraservicedesk_webhook}" ? 1 : 0
+  count       = var.create_jira_service_desk_webhook_connection ? 1 : 0
   type        = "WebhookConnection"
   name        = "Jira Service Desk Webhook"
   description = "Created via Sumo Logic module."

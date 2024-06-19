@@ -1,4 +1,8 @@
 # Jira Service Desk
+variable "create_jira_service_desk_webhook_connection" {
+  type        = string
+  description = "Create Sumo Logic connection for Jira Service Desk Webhook"
+}
 variable "jira_servicedesk_url" {
   type        = string
   description = "Jira Service Desk URL"

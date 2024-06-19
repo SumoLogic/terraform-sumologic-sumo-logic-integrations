@@ -111,7 +111,7 @@ variable "auto_enable_access_logs" {
 variable "app_semantic_version" {
   type        = string
   description = "Provide the latest version of Serverless Application Repository 'sumologic-s3-logging-auto-enable'."
-  default = "1.0.5"
+  default = "1.0.10"
 }
 
 variable "auto_enable_access_logs_options" {

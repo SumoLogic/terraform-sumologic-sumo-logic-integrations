@@ -68,7 +68,7 @@
           "LogGroupPattern": "lambda",
           "UseExistingLogs": "true"
         },
-        "semantic_version": "1.0.5"
+        "semantic_version": "1.0.11"
       }
     }
   ],

@@ -83,7 +83,7 @@
             "LogGroupPattern": "aws",
             "RoleArn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-Logs-{RandomString}"
           },
-          "semantic_version": "1.0.5"
+          "semantic_version": "1.0.11"
         }
       }
     ],

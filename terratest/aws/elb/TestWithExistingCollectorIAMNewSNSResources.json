@@ -16,7 +16,7 @@
           "BucketName": "cf-templates-1qpf3unpuo1hw-{Region}",
           "BucketPrefix": "elasticloadbalancing"
         },
-        "semantic_version": "1.0.2"
+        "semantic_version": "1.0.10"
       }
     }
   ],
