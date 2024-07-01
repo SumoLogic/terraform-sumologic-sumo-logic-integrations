@@ -13,7 +13,7 @@ This module is used to create the SumoLogic AWS HTTP source to collect AWS Cloud
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 6.0.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.1.0 |
-| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.28.3, < 3.0.0 |
+| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.31.0, < 3.0.0 |
 
 ## Providers
 
@@ -21,7 +21,7 @@ This module is used to create the SumoLogic AWS HTTP source to collect AWS Cloud
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 6.0.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 3.1.0 |
-| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 2.28.3, < 3.0.0 |
+| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 2.31.0, < 3.0.0 |
 
 ## Modules
 
