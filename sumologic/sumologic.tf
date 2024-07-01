@@ -73,8 +73,7 @@ resource "sumologic_content" "SumoLogicApps" {
 module "SumoLogicMonitors" {
   for_each = var.managed_monitors
 
-  # source                   = "SumoLogic/sumo-logic-monitor/sumologic"
-  source                   = "git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-monitor.git?ref=sumo-provider-2.31.0"
+  source                   = "SumoLogic/sumo-logic-monitor/sumologic"
   monitor_name             = each.value.monitor_name
   monitor_description      = each.value.monitor_description
   monitor_monitor_type     = each.value.monitor_monitor_type
