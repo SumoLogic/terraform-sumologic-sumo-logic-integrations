@@ -1,6 +1,6 @@
 variable "sumologic_environment" {
   type        = string
-  description = "Enter au, ca, de, eu, jp, us2, in, fed, us1 or kr. For more information on Sumo Logic deployments visit https://help.sumologic.com/APIs/General-API-Information/Sumo-Logic-Endpoints-and-Firewall-Security"
+  description = "Enter au, ca, de, eu, fed, in, jp, kr, us1 or us2. For more information on Sumo Logic deployments visit https://help.sumologic.com/APIs/General-API-Information/Sumo-Logic-Endpoints-and-Firewall-Security"
 
   validation {
     condition = contains([
@@ -8,13 +8,14 @@ variable "sumologic_environment" {
       "ca",
       "de",
       "eu",
-      "jp",
-      "us1",
-      "us2",
-      "in",
       "fed",
-      "kr"], var.sumologic_environment)
-    error_message = "The value must be one of au, ca, de, eu, jp, us1, us2, in, fed or kr."
+      "in",
+      "jp",
+      "kr",
+      "us1",
+      "us2"
+    ], var.sumologic_environment)
+    error_message = "The value must be one of au, ca, de, eu, fed, in, jp, kr, us1 or us2."
   }
 }
 
