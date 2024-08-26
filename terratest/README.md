@@ -29,7 +29,7 @@ Integration test checks for :
 ## Testing
 
 - Update the `run_tests.sh` to provide below environment variables
-  - SUMOLOGIC_ENVIRONMENT -> Sumo Logic environment (au, ca, de, eu, jp, us1, us2, in, or fed).
+  - SUMOLOGIC_ENVIRONMENT -> Sumo Logic environment (au, ca, de, eu, jp, us1, us2, in, fed, kr).
   - SUMOLOGIC_ACCESS_ID -> Sumo Logic Access ID.
   - SUMOLOGIC_ACCESS_KEY -> Sumo Logic Access key.
   - SUMOLOGIC_ORG_ID -> Sumo Logic Organization ID.
