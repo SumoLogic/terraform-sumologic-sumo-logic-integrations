@@ -196,6 +196,7 @@ resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable
     DestinationArnType  = "Lambda"
     DestinationArnValue = aws_lambda_function.logs_lambda_function.arn
     LogGroupPattern     = var.auto_enable_logs_subscription_options.filter
+    LogGroupTags        = var.auto_enable_logs_subscription_options.tags_filter
     UseExistingLogs     = local.auto_enable_existing
   }
 }

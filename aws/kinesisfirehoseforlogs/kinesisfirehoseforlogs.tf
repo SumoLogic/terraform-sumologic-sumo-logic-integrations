@@ -178,6 +178,7 @@ resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable
     DestinationArnType  = "Kinesis"
     DestinationArnValue = aws_kinesis_firehose_delivery_stream.logs_delivery_stream.arn
     LogGroupPattern     = var.auto_enable_logs_subscription_options.filter
+    LogGroupTags        = var.auto_enable_logs_subscription_options.tags_filter
     UseExistingLogs     = local.auto_enable_existing
     RoleArn             = aws_iam_role.logs_role.arn
   }

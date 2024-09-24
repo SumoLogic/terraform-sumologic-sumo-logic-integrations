@@ -21,9 +21,10 @@ module "cloudwatch_logs_lambda_log_forwarder_module" {
   }
 
   auto_enable_logs_subscription = "Both"
-  app_semantic_version = "1.0.11"
+  app_semantic_version = "1.0.14"
   auto_enable_logs_subscription_options = {
     filter = "lambda|rds"
+    tags_filter = ""
   }
 }
 
