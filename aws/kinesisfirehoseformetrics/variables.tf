@@ -43,6 +43,11 @@ variable "source_details" {
     description         = string
     sumo_account_id     = number
     limit_to_namespaces = list(string)
+    tag_filters = list(object({
+      type      = string
+      namespace = string
+      tags      = list(string)
+    }))
     fields              = map(string)
     iam_details = object({
       create_iam_role = bool
@@ -57,6 +62,7 @@ variable "source_details" {
     description         = "This source is created using Sumo Logic terraform AWS Kinesis Firehose for metrics module to collect AWS Cloudwatch metrics."
     sumo_account_id     = 926226587429
     limit_to_namespaces = []
+    tag_filters         = []
     fields              = {}
     iam_details = {
       create_iam_role = true

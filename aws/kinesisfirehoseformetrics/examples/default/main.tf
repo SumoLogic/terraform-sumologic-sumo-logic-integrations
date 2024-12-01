@@ -17,6 +17,19 @@ module "kinesis_firehose_for_metrics_source_module" {
     description         = "This source is created using Sumo Logic terraform AWS Observability module to collect AWS Cloud Watch metrics."
     collector_id        = null
     limit_to_namespaces = []
+    "tag_filters": [{
+      "type" = "TagFilters"
+      "namespace" = "AWS/EC2"
+      "tags" = ["env=prod;dev"]
+    },{
+      "type" = "TagFilters"
+      "namespace" = "AWS/ApiGateway"
+      "tags" = ["env=prod;dev"]
+    },{
+      "type" = "TagFilters"
+      "namespace" = "AWS/ApplicationELB"
+      "tags" = ["env=dev"]
+    }],
     sumo_account_id     = 926226587429
     fields              = {}
     iam_details = {
