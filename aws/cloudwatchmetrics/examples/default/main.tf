@@ -12,7 +12,20 @@ module "cloudwatch_metrics" {
             "create_iam_role": true,
             "iam_role_arn": null
         },
-        "limit_to_namespaces": ["aws/ec2"],
+        "limit_to_namespaces": ["AWS/EC2", "AWS/ApiGateway", "AWS/ApplicationELB"],
+        "tag_filters": [{
+          "type" = "TagFilters"
+          "namespace" = "AWS/EC2"
+          "tags" = ["env=prod;dev"]
+        },{
+          "type" = "TagFilters"
+          "namespace" = "AWS/ApiGateway"
+          "tags" = ["env=prod;dev"]
+        },{
+          "type" = "TagFilters"
+          "namespace" = "AWS/ApplicationELB"
+          "tags" = ["env=dev"]
+        }],
         "limit_to_regions": ["eu-central-1"],
         "paused": false,
         "scan_interval": 300000,
