@@ -25,6 +25,11 @@ variable "source_details" {
     description         = string
     limit_to_regions    = list(string)
     limit_to_namespaces = list(string)
+    tag_filters = list(object({
+      type      = string
+      namespace = string
+      tags      = list(string)
+    }))
     paused              = bool
     scan_interval       = number
     sumo_account_id     = number
@@ -42,6 +47,7 @@ variable "source_details" {
     collector_id        = ""
     limit_to_regions    = ["us-east-1"]
     limit_to_namespaces = ["AWS/ApplicationELB","AWS/ApiGateway","AWS/DynamoDB","AWS/Lambda","AWS/RDS","AWS/ECS","AWS/ElastiCache","AWS/ELB","AWS/NetworkELB","AWS/SQS","AWS/SNS"]
+    tag_filters         = []
     scan_interval       = 300000
     paused              = false
     sumo_account_id     = 926226587429
