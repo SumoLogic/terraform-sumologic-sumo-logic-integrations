@@ -1,4 +1,3 @@
-
 resource "random_string" "aws_random" {
   length  = 10
   upper   = false
