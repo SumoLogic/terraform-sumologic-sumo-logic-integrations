@@ -1,5 +1,3 @@
-
-
 module "root_cause_sources_module" {
   source = "SumoLogic/sumo-logic-integrations/sumologic//aws/rootcause"
 
