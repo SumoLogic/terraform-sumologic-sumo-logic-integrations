@@ -76,6 +76,7 @@ resource "aws_iam_policy" "iam_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "source-role-policy-attach" {
+  for_each = toset(var.source_details.iam_details.create_iam_role ? ["source_iam_role"] : [])
   role       = aws_iam_role.source_iam_role["source_iam_role"].name
   policy_arn = aws_iam_policy.iam_policy["iam_policy"].arn
 }
