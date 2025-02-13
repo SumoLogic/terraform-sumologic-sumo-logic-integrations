@@ -18,7 +18,7 @@ module "sumologic-cloudtrail-apps" {
     "description"     = "This source is ceated a.",
     "bucket_details" = {
       "create_bucket"        = false,
-      "bucket_name"          = "sumologic-aws-observability-templates",
+      "bucket_name"          = "YourS3BucketName",
       "path_expression"      = "AWSLogs/*/CloudTrail/us-east-1/*",
       "force_destroy_bucket" = true
     },

@@ -59,7 +59,7 @@ function set_env_variables()
     local type="$1"
     if [[ "${type}" = *"cloudtrail"* ]];then
         echo "Setting env variables for ${type}"
-        export BUCKET_NAME="sumologic-aws-observability-templates"
+        export BUCKET_NAME="<YourS3BucketName>"
         export PATH_EXPRESSION="AWSLogs/<AWS_ACCOUNT_ID>/CloudTrail/us-east-1/*"
         export IAM_ROLE="arn:aws:iam::<AWS_ACCOUNT_ID>:role/TestingTerraformCloudTrailRole"
         export TOPIC_ARN="arn:aws:sns:us-east-1:<AWS_ACCOUNT_ID>:dynamodb"
@@ -72,21 +72,21 @@ function set_env_variables()
         export COLLECTOR_ID="<COLLECTOR_ID>"
     elif [[ "${type}" = *"elb"* ]];then
         echo "Setting env variables for ${type}"
-        export BUCKET_NAME_US_WEST_1="cf-templates-1qpf3unpuo1hw-us-west-1"
+        export BUCKET_NAME_US_WEST_1="<YourS3BucketName>-us-west-1"
         export PATH_EXPRESSION_US_WEST_1="*AWSLogs/<AWS_ACCOUNT_ID>/elasticloadbalancing/us-west-1/*"
         export TOPIC_ARN_US_WEST_1="arn:aws:sns:us-west-1:<AWS_ACCOUNT_ID>:dynamodb"
-        export BUCKET_NAME_AP_SOUTH_1="cf-templates-1qpf3unpuo1hw-ap-south-1"
+        export BUCKET_NAME_AP_SOUTH_1="<YourS3BucketName>-ap-south-1"
         export PATH_EXPRESSION_AP_SOUTH_1="*AWSLogs/<AWS_ACCOUNT_ID>/elasticloadbalancing/ap-south-1/*"
         export IAM_ROLE="arn:aws:iam::<AWS_ACCOUNT_ID>:role/TestingTerraformCloudTrailRole"
         export COLLECTOR_ID="<COLLECTOR_ID>"
     elif [[ "${type}" = *"kinesisfirehoseforlogs"* ]];then
         echo "Setting env variables for ${type}"
-        export BUCKET_NAME_US_WEST_1="cf-templates-1qpf3unpuo1hw-us-west-1"
+        export BUCKET_NAME_US_WEST_1="<YourS3BucketName>-us-west-1"
         export COLLECTOR_ID="<COLLECTOR_ID>"
     elif [[ "${type}" = *"kinesisfirehoseformetrics"* ]];then
         echo "Setting env variables for ${type}"
-        export BUCKET_NAME_US_WEST_1="cf-templates-1qpf3unpuo1hw-us-west-1"
-        export BUCKET_NAME_AP_SOUTH_1="cf-templates-1qpf3unpuo1hw-ap-south-1"
+        export BUCKET_NAME_US_WEST_1="<YourS3BucketName>-us-west-1"
+        export BUCKET_NAME_AP_SOUTH_1="<YourS3BucketName>-ap-south-1"
         export IAM_ROLE="arn:aws:iam::<AWS_ACCOUNT_ID>:role/TestingTerraformCloudTrailRole"
         export COLLECTOR_ID="<COLLECTOR_ID>"
     elif [[ "${type}" = *"rootcause"* ]];then
