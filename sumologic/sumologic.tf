@@ -74,6 +74,7 @@ module "SumoLogicMonitors" {
   for_each = var.managed_monitors
 
   source                   = "SumoLogic/sumo-logic-monitor/sumologic"
+  version                  = "1.2.7"
   monitor_name             = each.value.monitor_name
   monitor_description      = each.value.monitor_description
   monitor_monitor_type     = each.value.monitor_monitor_type

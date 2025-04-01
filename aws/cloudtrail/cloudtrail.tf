@@ -75,8 +75,6 @@ resource "aws_iam_role" "source_iam_role" {
     ENVIRONMENT           = data.sumologic_caller_identity.current.environment,
     SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id
   })
-
-  managed_policy_arns = [aws_iam_policy.iam_policy["iam_policy"].arn]
 }
 
 resource "aws_iam_policy" "iam_policy" {
@@ -86,6 +84,12 @@ resource "aws_iam_policy" "iam_policy" {
   policy = templatefile("${path.module}/templates/sumologic_source_policy.tmpl", {
     BUCKET_NAME = local.bucket_name
   })
+}
+
+resource "aws_iam_role_policy_attachment" "source-role-policy-attach" {
+  for_each = toset(var.source_details.iam_details.create_iam_role ? ["source_iam_role"] : [])
+  role       = aws_iam_role.source_iam_role["source_iam_role"].name
+  policy_arn = aws_iam_policy.iam_policy["iam_policy"].arn
 }
 
 resource "sumologic_collector" "collector" {

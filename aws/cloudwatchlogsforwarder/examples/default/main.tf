@@ -1,5 +1,3 @@
-
-
 module "cloudwatch_logs_lambda_log_forwarder_module" {
   source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudwatchlogsforwarder"
 
@@ -27,5 +25,3 @@ module "cloudwatch_logs_lambda_log_forwarder_module" {
     tags_filter = ""
   }
 }
-
-

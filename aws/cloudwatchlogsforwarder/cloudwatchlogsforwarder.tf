@@ -80,10 +80,10 @@ resource "aws_iam_role_policy_attachment" "invoke_lambda_policy_attachment" {
 resource "aws_lambda_function" "logs_lambda_function" {
   function_name = "SumoCWLogsLambda-${random_string.aws_random.id}"
   handler       = "cloudwatchlogs_lambda.handler"
-  runtime       = "nodejs18.x"
+  runtime       = "nodejs22.x"
   role          = aws_iam_role.lambda_iam_role.arn
   s3_bucket     = "appdevzipfiles-${local.aws_region}"
-  s3_key        = "cloudwatchLogsDLQ/v1.2.0/cloudwatchlogs-with-dlq.zip"
+  s3_key        = "cloudwatchLogsDLQ/v1.3.0/cloudwatchlogs-with-dlq.zip"
   timeout       = 300
   memory_size   = 128
   dead_letter_config {
@@ -103,10 +103,10 @@ resource "aws_lambda_function" "logs_lambda_function" {
 resource "aws_lambda_function" "process_dead_letter_queue_lambda" {
   function_name = "SumoCWProcessDLQLambda-${random_string.aws_random.id}"
   handler       = "DLQProcessor.handler"
-  runtime       = "nodejs18.x"
+  runtime       = "nodejs22.x"
   role          = aws_iam_role.lambda_iam_role.arn
   s3_bucket     = "appdevzipfiles-${local.aws_region}"
-  s3_key        = "cloudwatchLogsDLQ/v1.2.0/cloudwatchlogs-with-dlq.zip"
+  s3_key        = "cloudwatchLogsDLQ/v1.3.0/cloudwatchlogs-with-dlq.zip"
   timeout       = 300
   memory_size   = 128
   dead_letter_config {
