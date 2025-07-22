@@ -5,9 +5,10 @@ resource "random_string" "aws_random" {
 }
 
 module "kinesis_firehose_for_logs_module" {
-  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/kinesisfirehoseforlogs"
+  source = "../../../kinesisfirehoseforlogs"
 
   create_collector = true
+  aws_resource_tags = local.aws_resource_tags
 
   source_details = {
     source_name     = "Cloud Watch Logs (Region)"

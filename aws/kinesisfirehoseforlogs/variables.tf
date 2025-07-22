@@ -92,6 +92,11 @@ variable "auto_enable_logs_subscription_options" {
 
   default = {
     filter = "lambda"
-    tags_filter = ""
+    tags_filter = null
   }
+}
+
+variable "aws_resource_tags" {
+  description = "Map of tags to apply to all AWS resources provisioned through the Module"
+  type        = map(string)
 }

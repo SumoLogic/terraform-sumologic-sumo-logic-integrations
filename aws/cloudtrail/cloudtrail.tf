@@ -19,6 +19,7 @@ resource "aws_s3_bucket" "s3_bucket" {
 
   bucket        = local.bucket_name
   force_destroy = var.source_details.bucket_details.force_destroy_bucket
+  tags = var.aws_resource_tags
 }
 
 resource "aws_s3_bucket_policy" "s3_bucket" {
@@ -40,6 +41,7 @@ resource "aws_sns_topic" "sns_topic" {
     SNS_TOPIC_NAME = "SumoLogic-Terraform-CloudTrail-Module-${random_string.aws_random.id}",
     AWS_ACCOUNT    = local.aws_account_id
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
@@ -62,6 +64,7 @@ resource "aws_cloudtrail" "cloudtrail" {
   s3_bucket_name                = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket["s3_bucket"].id : local.bucket_name
   is_multi_region_trail         = var.cloudtrail_details.is_multi_region_trail
   is_organization_trail         = var.cloudtrail_details.is_organization_trail
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_role" "source_iam_role" {
@@ -75,6 +78,7 @@ resource "aws_iam_role" "source_iam_role" {
     ENVIRONMENT           = data.sumologic_caller_identity.current.environment,
     SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "iam_policy" {

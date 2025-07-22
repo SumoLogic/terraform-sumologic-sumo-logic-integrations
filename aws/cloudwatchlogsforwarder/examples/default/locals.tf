@@ -5,4 +5,10 @@ locals {
 
   # Cloud Watch Logs inputs
   cloudwatch_logs_fields      = { account = local.aws_account_id }
+
+  # AWS resource tags
+  aws_resource_tags = {
+    Creator        = "SumoLogic"
+    Environment = "Test"
+  }
 }

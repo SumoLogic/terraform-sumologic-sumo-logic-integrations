@@ -5,4 +5,10 @@ locals {
 
   # S3 bucket inputs
   bucket_name          = "aws-observability-random-${random_string.aws_random.id}"
+
+  # AWS resource tags
+  aws_resource_tags = {
+    Creator        = "SumoLogic"
+    Environment = "Test"
+  }
 }

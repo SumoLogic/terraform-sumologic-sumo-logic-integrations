@@ -1,9 +1,10 @@
 module "cloudwatch_metrics" {
-  source = "git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/cloudwatchmetrics"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudwatchmetrics"
 
   create_collector          = true
   sumologic_organization_id = var.sumologic_organization_id
   wait_for_seconds          = 20
+  aws_resource_tags = local.aws_resource_tags
   source_details = {
         "collector_id": module.cloudwatch_metrics.sumologic_collector.collector.id ,
         "description": "This source is created using Sumo Logic terraform AWS CloudWatch Metrics module to collect AWS Cloudwatch metrics.",

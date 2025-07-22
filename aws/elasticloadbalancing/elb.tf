@@ -17,6 +17,7 @@ resource "aws_s3_bucket" "s3_bucket" {
 
   bucket        = local.bucket_name
   force_destroy = var.source_details.bucket_details.force_destroy_bucket
+  tags = var.aws_resource_tags
 }
 
 resource "aws_s3_bucket_policy" "dump_access_logs_to_s3" {
@@ -39,6 +40,7 @@ resource "aws_sns_topic" "sns_topic" {
     SNS_TOPIC_NAME = "SumoLogic-Terraform-Elb-Module-${random_string.aws_random.id}",
     AWS_ACCOUNT    = local.aws_account_id
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_s3_bucket_notification" "bucket_notification" {
@@ -63,7 +65,7 @@ resource "aws_iam_role" "source_iam_role" {
     ENVIRONMENT           = data.sumologic_caller_identity.current.environment,
     SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id
   })
-
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "iam_policy" {
@@ -165,4 +167,5 @@ resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable
       parameters,tags
     ]
   }
+  tags = var.aws_resource_tags
 }

@@ -6,4 +6,10 @@ locals {
   # S3 bucket inputs
   bucket_name          = "aws-observability-random-${random_string.aws_random.id}"
   path_expression      = "AWSLogs/${local.aws_account_id}/alb/${local.aws_region}/*"
+
+  # AWS resource tags
+  aws_resource_tags = {
+    Creator        = "SumoLogic"
+    Environment = "Test"
+  }
 }

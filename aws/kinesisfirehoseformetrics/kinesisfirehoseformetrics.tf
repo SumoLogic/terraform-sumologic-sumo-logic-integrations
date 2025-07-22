@@ -17,6 +17,7 @@ resource "aws_s3_bucket" "s3_bucket" {
   bucket        = local.bucket_name
   force_destroy = var.bucket_details.force_destroy_bucket
   # acl           = "private"
+  tags = var.aws_resource_tags
 }
 
 # Default s3 bucket acl is private, if you want to update uncomment the following block
@@ -40,6 +41,7 @@ resource "aws_s3_bucket_public_access_block" "s3_bucket_access_block" {
 resource "aws_cloudwatch_log_group" "log_group" {
   name              = "/aws/kinesisfirehose/kinesis-metrics-log-group-${random_string.aws_random.id}"
   retention_in_days = 7
+  tags = var.aws_resource_tags
 }
 
 resource "aws_cloudwatch_log_stream" "s3_log_stream" {
@@ -57,6 +59,7 @@ resource "aws_iam_role" "firehose_role" {
   assume_role_policy = templatefile("${path.module}/templates/firehose_assume_role.tmpl", {
     AWS_ACCOUNT_ID = local.aws_account_id,
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "firehose_s3_upload_policy" {
@@ -86,6 +89,7 @@ resource "aws_iam_role_policy_attachment" "firehose_s3_policy_attach" {
 resource "aws_iam_role" "metrics_role" {
   name               = "SumoLogic-Firehose-Metrics-${random_string.aws_random.id}"
   assume_role_policy = templatefile("${path.module}/templates/metrics_assume_role.tmpl", {})
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "metrics_policy" {
@@ -137,6 +141,7 @@ resource "aws_kinesis_firehose_delivery_stream" "metrics_delivery_stream" {
     }
   }
   }
+  tags = var.aws_resource_tags
 }
 
 resource "aws_cloudwatch_metric_stream" "metric_stream" {
@@ -150,6 +155,7 @@ resource "aws_cloudwatch_metric_stream" "metric_stream" {
       namespace = include_filter.value
     }
   }
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_role" "source_iam_role" {
@@ -164,6 +170,7 @@ resource "aws_iam_role" "source_iam_role" {
     SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id,
     ARN                   = local.arn_map[local.aws_region]
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "iam_policy" {

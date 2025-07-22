@@ -10,6 +10,7 @@ module "lb_module" {
   create_collector          = true
   sumologic_organization_id = var.sumologic_organization_id
   wait_for_seconds          = 20
+  aws_resource_tags = local.aws_resource_tags
 
   source_details = {
     source_name     = "Classic Load Balancer Logs (Region)"

@@ -19,7 +19,7 @@ resource "aws_iam_role" "source_iam_role" {
     ENVIRONMENT           = data.sumologic_caller_identity.current.environment,
     SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id
   })
-
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "iam_policy" {

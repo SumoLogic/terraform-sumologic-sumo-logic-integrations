@@ -1,10 +1,11 @@
 module "root_cause_sources_module" {
-  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/rootcause"
+  source = "../../../rootcause"
 
   create_collector          = true
   sumologic_organization_id = var.sumologic_organization_id
 
   wait_for_seconds = 20
+  aws_resource_tags = local.aws_resource_tags
   iam_details = {
     create_iam_role = true
     iam_role_arn    = null

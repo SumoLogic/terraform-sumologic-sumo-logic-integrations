@@ -117,3 +117,8 @@ variable "auto_enable_logs_subscription_options" {
     tags_filter = ""
   }
 }
+
+variable "aws_resource_tags" {
+  description = "Map of tags to apply to all AWS resources provisioned through the Module"
+  type        = map(string)
+}

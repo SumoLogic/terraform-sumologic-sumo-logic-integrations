@@ -2,6 +2,7 @@ module "cloudwatch_logs_lambda_log_forwarder_module" {
   source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudwatchlogsforwarder"
 
   create_collector = true
+  aws_resource_tags = local.aws_resource_tags
 
   # Lambda Log Forwarder configurations
   email_id               = "test@gmail.com"

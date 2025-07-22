@@ -14,7 +14,7 @@ locals {
   auto_enable_access_logs = var.auto_enable_access_logs != "None" ? true : false
 
   # If we create the bucket, then get the default PATH expression.
-logs_path_expression = var.source_details.bucket_details.create_bucket ? "*${var.auto_enable_access_logs_options.bucket_prefix}/AWSLogs/${local.aws_account_id}/elasticloadbalancing/${local.aws_region}/*" : var.source_details.bucket_details.path_expression
+  logs_path_expression = var.source_details.bucket_details.create_bucket ? "*${var.auto_enable_access_logs_options.bucket_prefix}/AWSLogs/${local.aws_account_id}/elasticloadbalancing/${local.aws_region}/*" : var.source_details.bucket_details.path_expression
 
   region_to_elb_account_id = {
     "us-east-1"      = "127311923021",
