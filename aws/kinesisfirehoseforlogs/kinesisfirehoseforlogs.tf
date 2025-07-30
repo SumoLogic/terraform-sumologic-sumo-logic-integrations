@@ -41,7 +41,7 @@ resource "aws_s3_bucket_public_access_block" "s3_bucket_access_block" {
 resource "aws_cloudwatch_log_group" "log_group" {
   name              = "/aws/kinesisfirehose/kinesis-logs-log-group-${random_string.aws_random.id}"
   retention_in_days = 7
-  tags = var.aws_resource_tags
+  tags              = var.aws_resource_tags
 }
 
 resource "aws_cloudwatch_log_stream" "s3_log_stream" {
@@ -128,16 +128,16 @@ resource "aws_kinesis_firehose_delivery_stream" "logs_delivery_stream" {
     }
 
     s3_configuration {
-    role_arn           = aws_iam_role.firehose_role.arn
-    bucket_arn         = "arn:${local.arn_map[local.aws_region]}:s3:::${local.bucket_name}"
-    compression_format = "UNCOMPRESSED"
-    //error_output_prefix = "SumoLogic-Kinesis-Failed-Logs/"
-    cloudwatch_logging_options {
-      enabled         = true
-      log_group_name  = aws_cloudwatch_log_group.log_group.name
-      log_stream_name = aws_cloudwatch_log_stream.s3_log_stream.name
+      role_arn           = aws_iam_role.firehose_role.arn
+      bucket_arn         = "arn:${local.arn_map[local.aws_region]}:s3:::${local.bucket_name}"
+      compression_format = "UNCOMPRESSED"
+      //error_output_prefix = "SumoLogic-Kinesis-Failed-Logs/"
+      cloudwatch_logging_options {
+        enabled         = true
+        log_group_name  = aws_cloudwatch_log_group.log_group.name
+        log_stream_name = aws_cloudwatch_log_stream.s3_log_stream.name
+      }
     }
-  }
 
     request_configuration {
       content_encoding = "GZIP"

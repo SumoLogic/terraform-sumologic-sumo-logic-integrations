@@ -31,7 +31,7 @@ resource "aws_iam_policy" "iam_policy" {
 
 resource "aws_iam_role_policy_attachment" "policy_attachment" {
   depends_on = [aws_iam_policy.iam_policy]
-  for_each = toset(var.source_details.iam_details.create_iam_role ? ["source_iam_role"] : [])
+  for_each   = toset(var.source_details.iam_details.create_iam_role ? ["source_iam_role"] : [])
 
   role       = aws_iam_role.source_iam_role[each.key].name
   policy_arn = aws_iam_policy.iam_policy["iam_policy"].arn
@@ -73,12 +73,12 @@ resource "sumologic_cloudwatch_source" "cloudwatch_metrics_sources" {
     limit_to_namespaces = var.source_details.limit_to_namespaces
 
     dynamic "tag_filters" {
-    for_each = var.source_details.tag_filters
-    content {
-      type = tag_filters.value.type
-      namespace = tag_filters.value.namespace
-      tags = tag_filters.value.tags
+      for_each = var.source_details.tag_filters
+      content {
+        type      = tag_filters.value.type
+        namespace = tag_filters.value.namespace
+        tags      = tag_filters.value.tags
+      }
     }
-   }
   }
 }

@@ -2,7 +2,7 @@ locals {
 
   # AWS resource tags
   aws_resource_tags = {
-    Creator        = "SumoLogic"
+    Creator     = "SumoLogic"
     Environment = "Test"
   }
 }

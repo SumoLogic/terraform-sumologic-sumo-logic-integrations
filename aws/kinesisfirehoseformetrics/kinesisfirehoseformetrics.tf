@@ -41,7 +41,7 @@ resource "aws_s3_bucket_public_access_block" "s3_bucket_access_block" {
 resource "aws_cloudwatch_log_group" "log_group" {
   name              = "/aws/kinesisfirehose/kinesis-metrics-log-group-${random_string.aws_random.id}"
   retention_in_days = 7
-  tags = var.aws_resource_tags
+  tags              = var.aws_resource_tags
 }
 
 resource "aws_cloudwatch_log_stream" "s3_log_stream" {
@@ -89,7 +89,7 @@ resource "aws_iam_role_policy_attachment" "firehose_s3_policy_attach" {
 resource "aws_iam_role" "metrics_role" {
   name               = "SumoLogic-Firehose-Metrics-${random_string.aws_random.id}"
   assume_role_policy = templatefile("${path.module}/templates/metrics_assume_role.tmpl", {})
-  tags = var.aws_resource_tags
+  tags               = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "metrics_policy" {
@@ -130,16 +130,16 @@ resource "aws_kinesis_firehose_delivery_stream" "metrics_delivery_stream" {
     }
 
     s3_configuration {
-    role_arn           = aws_iam_role.firehose_role.arn
-    bucket_arn         = "arn:${local.arn_map[local.aws_region]}:s3:::${local.bucket_name}"
-    compression_format = "UNCOMPRESSED"
-    //error_output_prefix = "SumoLogic-Kinesis-Failed-Metrics/"
-    cloudwatch_logging_options {
-      enabled         = true
-      log_group_name  = aws_cloudwatch_log_group.log_group.name
-      log_stream_name = aws_cloudwatch_log_stream.s3_log_stream.name
+      role_arn           = aws_iam_role.firehose_role.arn
+      bucket_arn         = "arn:${local.arn_map[local.aws_region]}:s3:::${local.bucket_name}"
+      compression_format = "UNCOMPRESSED"
+      //error_output_prefix = "SumoLogic-Kinesis-Failed-Metrics/"
+      cloudwatch_logging_options {
+        enabled         = true
+        log_group_name  = aws_cloudwatch_log_group.log_group.name
+        log_stream_name = aws_cloudwatch_log_stream.s3_log_stream.name
+      }
     }
-  }
   }
   tags = var.aws_resource_tags
 }
@@ -182,7 +182,7 @@ resource "aws_iam_policy" "iam_policy" {
 
 resource "aws_iam_role_policy_attachment" "policy_attachment" {
   depends_on = [aws_iam_policy.iam_policy]
-  for_each = toset(var.source_details.iam_details.create_iam_role ? ["source_iam_role"] : [])
+  for_each   = toset(var.source_details.iam_details.create_iam_role ? ["source_iam_role"] : [])
 
   role       = aws_iam_role.source_iam_role[each.key].name
   policy_arn = aws_iam_policy.iam_policy["iam_policy"].arn
@@ -219,12 +219,12 @@ resource "sumologic_kinesis_metrics_source" "source" {
   path {
     type = "KinesisMetricPath"
     dynamic "tag_filters" {
-    for_each = var.source_details.tag_filters
-    content {
-      type = tag_filters.value.type
-      namespace = tag_filters.value.namespace
-      tags = tag_filters.value.tags
+      for_each = var.source_details.tag_filters
+      content {
+        type      = tag_filters.value.type
+        namespace = tag_filters.value.namespace
+        tags      = tag_filters.value.tags
+      }
     }
-   }
   }
 }

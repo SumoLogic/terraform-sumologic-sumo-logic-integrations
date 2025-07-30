@@ -48,7 +48,7 @@ variable "source_details" {
       namespace = string
       tags      = list(string)
     }))
-    fields              = map(string)
+    fields = map(string)
     iam_details = object({
       create_iam_role = bool
       iam_role_arn    = string
@@ -94,4 +94,5 @@ variable "wait_for_seconds" {
 variable "aws_resource_tags" {
   description = "Map of tags to apply to all AWS resources provisioned through the Module"
   type        = map(string)
+  default     = {}
 }

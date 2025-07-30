@@ -4,10 +4,11 @@
   },
   "aws_cloudtrail": {},
   "aws_s3_bucket": {},
+  "aws_s3_bucket_policy": {},
   "aws_s3_bucket_notification": {},
   "aws_iam_role": {},
   "aws_sns_subscription": {
-    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
+    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"requestPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
     "endpoint_auto_confirms": true,
     "topic_arn": "{SNS_TOPIC_ARN}"
   },
@@ -16,7 +17,7 @@
   "sumologic_source": {
     "category": "Labs/test/cloudtrail",
     "content_type": "AwsCloudTrailBucket",
-    "description": "This source is ceated a.",
+    "description": "This source is created using Sumo Logic terraform AWS cloudtrail module to collect AWS cloudtrail logs.",
     "path": [
       {
         "bucket_name": "{BucketName}",

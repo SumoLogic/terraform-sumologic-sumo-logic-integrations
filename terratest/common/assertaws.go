@@ -2,19 +2,19 @@ package common
 
 import (
 	"fmt"
-
-	aws_sdk "github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/cloudformation"
-	"github.com/aws/aws-sdk-go/service/cloudtrail"
-	"github.com/aws/aws-sdk-go/service/cloudwatch"
-	"github.com/aws/aws-sdk-go/service/cloudwatchlogs"
-	"github.com/aws/aws-sdk-go/service/firehose"
-	"github.com/aws/aws-sdk-go/service/iam"
-	"github.com/aws/aws-sdk-go/service/lambda"
-	"github.com/aws/aws-sdk-go/service/s3"
-	"github.com/aws/aws-sdk-go/service/sns"
-	"github.com/aws/aws-sdk-go/service/sqs"
+    "context"
+    "github.com/aws/aws-sdk-go-v2/config"
+	aws_sdk "github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cloudformation"
+	"github.com/aws/aws-sdk-go-v2/service/cloudtrail"
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatch"
+	"github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs"
+	"github.com/aws/aws-sdk-go-v2/service/firehose"
+	"github.com/aws/aws-sdk-go-v2/service/iam"
+	"github.com/aws/aws-sdk-go-v2/service/lambda"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
+	"github.com/aws/aws-sdk-go-v2/service/sns"
+	"github.com/aws/aws-sdk-go-v2/service/sqs"
 	"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/stretchr/testify/assert"
 )
@@ -25,7 +25,7 @@ func (a *ResourcesAssert) AWS_SNS_TOPIC(value interface{}) {
 	snsClient := aws.NewSnsClient(a.t, a.AwsRegion)
 	for _, element := range arns {
 		input := sns.GetTopicAttributesInput{TopicArn: aws_sdk.String(element)}
-		_, err := snsClient.GetTopicAttributes(&input)
+		_, err := snsClient.GetTopicAttributes(context.TODO(), &input)
 		assert.NoErrorf(a.t, err, "AWS SNS TOPIC :- Error Message %v", err)
 	}
 }
@@ -45,7 +45,7 @@ func (a *ResourcesAssert) AWS_IAM_ROLE(value interface{}) {
 	iamClient := aws.NewIamClient(a.t, a.AwsRegion)
 	for _, element := range names {
 		input := iam.GetRoleInput{RoleName: aws_sdk.String(element)}
-		_, err := iamClient.GetRole(&input)
+		_, err := iamClient.GetRole(context.TODO(), &input)
 		assert.NoErrorf(a.t, err, "AWS IAM ROLE :- Error Message %v", err)
 	}
 }
@@ -56,7 +56,7 @@ func (a *ResourcesAssert) AWS_SNS_SUBSCRIPTION(value interface{}) {
 	snsClient := aws.NewSnsClient(a.t, a.AwsRegion)
 	for _, element := range arns {
 		input := sns.GetSubscriptionAttributesInput{SubscriptionArn: aws_sdk.String(element)}
-		_, err := snsClient.GetSubscriptionAttributes(&input)
+		_, err := snsClient.GetSubscriptionAttributes(context.TODO(), &input)
 		assert.NoErrorf(a.t, err, "AWS SNS SUBSCRIPTION :- Error Message %v", err)
 	}
 }
@@ -64,11 +64,16 @@ func (a *ResourcesAssert) AWS_SNS_SUBSCRIPTION(value interface{}) {
 func (a *ResourcesAssert) AWS_CLOUDTRAIL(value interface{}) {
 	fmt.Println("******** Asserting AWS CLOUDTRAILS ********")
 	names := getKeyValuesFromData(value, "name")
-	mySession := session.Must(session.NewSession())
-	svc := cloudtrail.New(mySession, aws_sdk.NewConfig().WithRegion(a.AwsRegion))
+    // Load AWS configuration
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(a.AwsRegion))
+	assert.NoErrorf(a.t, err, "Failed to load AWS config: %v", err)
+
+    // Create CloudTrail client
+	svc := cloudtrail.NewFromConfig(cfg)
+
 	for _, element := range names {
 		input := cloudtrail.GetTrailInput{Name: aws_sdk.String(element)}
-		_, err := svc.GetTrail(&input)
+		_, err := svc.GetTrail(context.TODO(), &input)
 		assert.NoErrorf(a.t, err, "AWS CLOUDTRAIl :- Error Message %v", err)
 	}
 }
@@ -80,8 +85,8 @@ func (a *ResourcesAssert) AWS_S3_BUCKET_NOTIFICATION(value interface{}) {
 	s3_client := aws.NewS3Client(a.t, a.AwsRegion)
 
 	for _, element := range bucket_names {
-		input := s3.GetBucketNotificationConfigurationRequest{Bucket: aws_sdk.String(element)}
-		notificationConfiguration, err := s3_client.GetBucketNotificationConfiguration(&input)
+		input := s3.GetBucketNotificationConfigurationInput{Bucket: aws_sdk.String(element)}
+		notificationConfiguration, err := s3_client.GetBucketNotificationConfiguration(context.TODO(), &input)
 		assert.NoErrorf(a.t, err, "AWS S3 Bucket NOTIFICATION :- Error Message %v", err)
 		assert.Greater(a.t, len(notificationConfiguration.TopicConfigurations), 0, "No topic configuration present in the Bucket.")
 	}
@@ -94,7 +99,7 @@ func (a *ResourcesAssert) AWS_CLOUDWATCH_LOG_GROUP(value interface{}) {
 	cw_client := aws.NewCloudWatchLogsClient(a.t, a.AwsRegion)
 
 	for _, element := range lg_names {
-		output, err := cw_client.DescribeLogGroups(&cloudwatchlogs.DescribeLogGroupsInput{
+		output, err := cw_client.DescribeLogGroups(context.TODO(), &cloudwatchlogs.DescribeLogGroupsInput{
 			LogGroupNamePrefix: aws_sdk.String(element),
 		})
 		assert.NoErrorf(a.t, err, "AWS LOG GROUP :- Error Message %v", err)
@@ -109,7 +114,7 @@ func (a *ResourcesAssert) AWS_CLOUDWATCH_LOG_STREAM(value interface{}) {
 	cw_client := aws.NewCloudWatchLogsClient(a.t, a.AwsRegion)
 
 	for _, element := range ls_names {
-		output, err := cw_client.DescribeLogStreams(&cloudwatchlogs.DescribeLogStreamsInput{
+		output, err := cw_client.DescribeLogStreams(context.TODO(), &cloudwatchlogs.DescribeLogStreamsInput{
 			LogGroupName:        aws_sdk.String(element["log_group_name"].(string)),
 			LogStreamNamePrefix: aws_sdk.String(element["name"].(string)),
 		})
@@ -122,11 +127,17 @@ func (a *ResourcesAssert) AWS_SERVERLESSAPPLICATIONREPOSITORY_CLOUDFORMATION_STA
 	fmt.Println("******** Asserting AWS SERVERLESSAPPLICATIONREPOSITORY CLOUDFORMATION STACK ********")
 	cf_arns := getKeyValuesFromData(value, "id")
 
-	mySession := session.Must(session.NewSession())
-	svc := cloudformation.New(mySession, aws_sdk.NewConfig().WithRegion(a.AwsRegion))
+	// Load default config with region
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(a.AwsRegion))
+	if err != nil {
+		assert.NoErrorf(a.t, err, "Failed to load AWS config")
+		return
+	}
+
+	svc := cloudformation.NewFromConfig(cfg)
 
 	for _, element := range cf_arns {
-		output, err := svc.DescribeStacks(&cloudformation.DescribeStacksInput{
+		output, err := svc.DescribeStacks(context.TODO(), &cloudformation.DescribeStacksInput{
 			StackName: &element,
 		})
 		assert.NoErrorf(a.t, err, "AWS CLOUDFORMATION STACK :- Error Message %v", err)
@@ -138,11 +149,17 @@ func (a *ResourcesAssert) AWS_KINESIS_FIREHOSE_DELIVERY_STREAM(value interface{}
 	fmt.Println("******** Asserting AWS KINESIS FIREHOSE DELIVERY STREAM ********")
 	stream_arns := getKeyValuesFromData(value, "name")
 
-	mySession := session.Must(session.NewSession())
-	svc := firehose.New(mySession, aws_sdk.NewConfig().WithRegion(a.AwsRegion))
+	// Load default config with region
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(a.AwsRegion))
+	if err != nil {
+		assert.NoErrorf(a.t, err, "Failed to load AWS config")
+		return
+	}
+
+	svc := firehose.NewFromConfig(cfg)
 
 	for _, element := range stream_arns {
-		_, err := svc.DescribeDeliveryStream(&firehose.DescribeDeliveryStreamInput{
+		_, err := svc.DescribeDeliveryStream(context.TODO(), &firehose.DescribeDeliveryStreamInput{
 			DeliveryStreamName: &element,
 		})
 		assert.NoErrorf(a.t, err, "AWS KINESIS FIREHOSE STREAM :- Error Message %v", err)
@@ -156,7 +173,7 @@ func (a *ResourcesAssert) AWS_SQS_QUEUE(value interface{}) {
 	sqs_client := aws.NewSqsClient(a.t, a.AwsRegion)
 
 	for _, element := range queue_names {
-		output, err := sqs_client.ListQueues(&sqs.ListQueuesInput{
+		output, err := sqs_client.ListQueues(context.TODO(), &sqs.ListQueuesInput{
 			QueueNamePrefix: &element,
 		})
 		assert.NoErrorf(a.t, err, "AWS SQS :- Error Message %v", err)
@@ -168,11 +185,17 @@ func (a *ResourcesAssert) AWS_LAMBDA_FUNCTION(value interface{}) {
 	fmt.Println("******** Asserting AWS LAMBDA FUNCTION ********")
 	fucntion_names := getKeyValuesFromData(value, "function_name")
 
-	mySession := session.Must(session.NewSession())
-	svc := lambda.New(mySession, aws_sdk.NewConfig().WithRegion(a.AwsRegion))
+	// Load default config with region
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(a.AwsRegion))
+	if err != nil {
+		assert.NoErrorf(a.t, err, "Failed to load AWS config")
+		return
+	}
+
+	svc := lambda.NewFromConfig(cfg)
 
 	for _, element := range fucntion_names {
-		_, err := svc.GetFunction(&lambda.GetFunctionInput{
+		_, err := svc.GetFunction(context.TODO(), &lambda.GetFunctionInput{
 			FunctionName: &element,
 		})
 		assert.NoErrorf(a.t, err, "AWS Lambda :- Error Message %v", err)
@@ -183,11 +206,17 @@ func (a *ResourcesAssert) AWS_CLOUDWATCH_METRIC_ALARM(value interface{}) {
 	fmt.Println("******** Asserting AWS CLOUDWATCH METRIC ALARM ********")
 	alarm_names := getKeyValuesFromData(value, "alarm_name")
 
-	mySession := session.Must(session.NewSession())
-	svc := cloudwatch.New(mySession, aws_sdk.NewConfig().WithRegion(a.AwsRegion))
+	// Load default config with region
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(a.AwsRegion))
+	if err != nil {
+		assert.NoErrorf(a.t, err, "Failed to load AWS config")
+		return
+	}
+
+	svc := cloudwatch.NewFromConfig(cfg)
 
 	for _, element := range alarm_names {
-		output, err := svc.DescribeAlarms(&cloudwatch.DescribeAlarmsInput{
+		output, err := svc.DescribeAlarms(context.TODO(), &cloudwatch.DescribeAlarmsInput{
 			AlarmNamePrefix: &element,
 		})
 		assert.NoErrorf(a.t, err, "AWS CLOUDWATCH ALARM :- Error Message %v", err)

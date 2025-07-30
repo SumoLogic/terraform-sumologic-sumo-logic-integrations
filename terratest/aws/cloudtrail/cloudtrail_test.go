@@ -51,7 +51,7 @@ func TestWithDefaultValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 11, 0, 0)
+		common.AssertResourceCounts(t, count, 13, 0, 0)
 	})
 	outputs := common.FetchAllOutputs(t, options)
 	replacementMap := map[string]interface{}{
@@ -89,12 +89,16 @@ func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
 				"MyCollector": "TestTerraform",
 			},
 		},
+        "aws_resource_tags": map[string]interface{}{
+		    "Creator": "SumoLogic",
+			"Environment": "Test",
+		},
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"create_trail":              false,
 		"source_details": map[string]interface{}{
 			"source_name":     "My Test Source",
 			"source_category": "Labs/test/cloudtrail",
-			"description":     "This source is ceated a.",
+			"description":     "This source is created using Sumo Logic terraform AWS cloudtrail module to collect AWS cloudtrail logs.",
 			"bucket_details": map[string]interface{}{
 				"create_bucket":   false,
 				"bucket_name":     BUCKET_NAME,
@@ -125,7 +129,7 @@ func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 8, 0, 0)
+		common.AssertResourceCounts(t, count, 9, 0, 0)
 	})
 
 	outputs := common.FetchAllOutputs(t, options)
@@ -161,10 +165,14 @@ func TestWithExistingBucketTrailCollectorSNSIAM(t *testing.T) {
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"create_trail":              false,
 		"wait_for_seconds":          1,
+	    "aws_resource_tags": map[string]interface{}{
+		    "Creator": "SumoLogic",
+			"Environment": "Test",
+		},
 		"source_details": map[string]interface{}{
 			"source_name":     "My Test Source",
 			"source_category": "Labs/test/cloudtrail",
-			"description":     "This source is ceated a.",
+			"description":     "This source is created using Sumo Logic terraform AWS cloudtrail module to collect AWS cloudtrail logs.",
 			"bucket_details": map[string]interface{}{
 				"create_bucket":   false,
 				"bucket_name":     BUCKET_NAME,
@@ -224,7 +232,7 @@ func TestWithExistingBucketTrailCollectorSNSIAM(t *testing.T) {
 // 4. With New Bucket, Existing Trail (we will create a new trail), new Collector, New SNS Topic, New IAM Role
 func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
 	t.Parallel()
-	aws_region := "us-west-2"
+	aws_region := "us-east-1"
 	PATH_EXPRESSION := fmt.Sprintf("AWSLogs/%s/CloudTrail/%s/*", aws.GetAccountId(t), aws_region)
 	vars := map[string]interface{}{
 		"create_collector": true,
@@ -233,15 +241,19 @@ func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
 			"description":    "thsisia",
 			"fields":         map[string]interface{}{},
 		},
+        "aws_resource_tags": map[string]interface{}{
+		    "Creator": "SumoLogic",
+			"Environment": "Test",
+		},
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"create_trail":              false,
 		"source_details": map[string]interface{}{
 			"source_name":     "My Test Source",
 			"source_category": "Labs/test/cloudtrail",
-			"description":     "This source is ceated a.",
+			"description":     "This source is created using Sumo Logic terraform AWS cloudtrail module to collect AWS cloudtrail logs.",
 			"bucket_details": map[string]interface{}{
 				"create_bucket":   true,
-				"bucket_name":     "my-test-tf-mod-us-west-2",
+				"bucket_name":     fmt.Sprintf("aws-integration-random-%s", aws_region)
 				"path_expression": PATH_EXPRESSION,
 				// This does not have any impact as terraform does not manage existing bucket.
 				"force_destroy_bucket": true,
@@ -269,7 +281,7 @@ func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 11, 0, 0)
+		common.AssertResourceCounts(t, count, 13, 0, 0)
 	})
 	outputs := common.FetchAllOutputs(t, options)
 	replacementMap := map[string]interface{}{
@@ -304,7 +316,7 @@ func TestUpdates(t *testing.T) {
 		"create_trail":              true,
 		"collector_details": map[string]interface{}{
 			"collector_name": "Test Updates Cloudtrail Module",
-			"description":    "thsisia",
+			"description":    "This is a description.",
 			"fields":         map[string]interface{}{},
 		},
 	}
@@ -313,7 +325,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 11, 0, 0)
+		common.AssertResourceCounts(t, count, 13, 0, 0)
 	})
 
 	// Updating the Collector Name, description and fields only
@@ -323,7 +335,7 @@ func TestUpdates(t *testing.T) {
 		"create_trail":              true,
 		"collector_details": map[string]interface{}{
 			"collector_name": "Test Updated Cloudtrail Module One",
-			"description":    "This is a new description.",
+			"description":    "This is a updated description.",
 			"fields": map[string]interface{}{
 				"TestCollector": "MyValue",
 			},
@@ -353,7 +365,7 @@ func TestUpdates(t *testing.T) {
 		"source_details": map[string]interface{}{
 			"source_name":     "My Test Source Another",
 			"source_category": "Labs/test/cloudtrail",
-			"description":     "This source is ceated a.",
+			"description":     "This source is created using Sumo Logic terraform AWS cloudtrail module to collect AWS cloudtrail logs.",
 			"bucket_details": map[string]interface{}{
 				"create_bucket":   false,
 				"bucket_name":     BUCKET_NAME,
@@ -382,7 +394,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 3, 5)
+		common.AssertResourceCounts(t, count, 0, 4, 7)
 	})
 
 	// update fields to source
@@ -391,6 +403,10 @@ func TestUpdates(t *testing.T) {
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"create_trail":              false,
 		"wait_for_seconds":          1,
+		"aws_resource_tags": map[string]interface{}{
+		    "Creator": "SumoLogic",
+			"Environment": "Test",
+		},
 		"collector_details": map[string]interface{}{
 			"collector_name": "Test Updated Cloudtrail Module One",
 			"description":    "This is a new description.",
@@ -401,7 +417,7 @@ func TestUpdates(t *testing.T) {
 		"source_details": map[string]interface{}{
 			"source_name":     "My Test Source Another",
 			"source_category": "Labs/test/cloudtrail",
-			"description":     "This source is ceated a.",
+			"description":     "This source is created using Sumo Logic terraform AWS cloudtrail module to collect AWS cloudtrail logs.",
 			"bucket_details": map[string]interface{}{
 				"create_bucket":   false,
 				"bucket_name":     BUCKET_NAME,
@@ -432,6 +448,6 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 1, 0)
+		common.AssertResourceCounts(t, count, 0, 2, 0)
 	})
 }

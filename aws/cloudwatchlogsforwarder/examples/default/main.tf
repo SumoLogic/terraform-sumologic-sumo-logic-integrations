@@ -1,7 +1,7 @@
 module "cloudwatch_logs_lambda_log_forwarder_module" {
   source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudwatchlogsforwarder"
 
-  create_collector = true
+  create_collector  = true
   aws_resource_tags = local.aws_resource_tags
 
   # Lambda Log Forwarder configurations
@@ -20,9 +20,9 @@ module "cloudwatch_logs_lambda_log_forwarder_module" {
   }
 
   auto_enable_logs_subscription = "Both"
-  app_semantic_version = "1.0.14"
+  app_semantic_version          = "1.0.15"
   auto_enable_logs_subscription_options = {
-    filter = "lambda|rds"
+    filter      = "lambda|rds"
     tags_filter = ""
   }
 }

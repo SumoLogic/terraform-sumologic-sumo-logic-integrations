@@ -19,15 +19,15 @@ resource "aws_s3_bucket" "s3_bucket" {
 
   bucket        = local.bucket_name
   force_destroy = var.source_details.bucket_details.force_destroy_bucket
-  tags = var.aws_resource_tags
+  tags          = var.aws_resource_tags
 }
 
 resource "aws_s3_bucket_policy" "s3_bucket" {
   for_each = toset(var.source_details.bucket_details.create_bucket ? ["s3_bucket"] : [])
-  
+
   bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
   policy = templatefile("${path.module}/templates/cloudtrail_bucket_policy.tmpl", {
-    BUCKET_NAME     = aws_s3_bucket.s3_bucket["s3_bucket"].id
+    BUCKET_NAME = aws_s3_bucket.s3_bucket["s3_bucket"].id
   })
 }
 
@@ -57,14 +57,14 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 
 resource "aws_cloudtrail" "cloudtrail" {
   depends_on = [aws_s3_bucket_policy.s3_bucket]
-  for_each = toset(local.create_trail ? ["cloudtrail"] : [])
+  for_each   = toset(local.create_trail ? ["cloudtrail"] : [])
 
   name                          = local.cloudtrail_name
   include_global_service_events = var.cloudtrail_details.include_global_service_events
   s3_bucket_name                = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket["s3_bucket"].id : local.bucket_name
   is_multi_region_trail         = var.cloudtrail_details.is_multi_region_trail
   is_organization_trail         = var.cloudtrail_details.is_organization_trail
-  tags = var.aws_resource_tags
+  tags                          = var.aws_resource_tags
 }
 
 resource "aws_iam_role" "source_iam_role" {
@@ -91,7 +91,7 @@ resource "aws_iam_policy" "iam_policy" {
 }
 
 resource "aws_iam_role_policy_attachment" "source-role-policy-attach" {
-  for_each = toset(var.source_details.iam_details.create_iam_role ? ["source_iam_role"] : [])
+  for_each   = toset(var.source_details.iam_details.create_iam_role ? ["source_iam_role"] : [])
   role       = aws_iam_role.source_iam_role["source_iam_role"].name
   policy_arn = aws_iam_policy.iam_policy["iam_policy"].arn
 }

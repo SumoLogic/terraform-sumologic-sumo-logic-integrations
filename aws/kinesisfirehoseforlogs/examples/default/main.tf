@@ -5,9 +5,9 @@ resource "random_string" "aws_random" {
 }
 
 module "kinesis_firehose_for_logs_module" {
-  source = "../../../kinesisfirehoseforlogs"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/kinesisfirehoseforlogs"
 
-  create_collector = true
+  create_collector  = true
   aws_resource_tags = local.aws_resource_tags
 
   source_details = {
@@ -25,9 +25,9 @@ module "kinesis_firehose_for_logs_module" {
   }
 
   auto_enable_logs_subscription = "Both"
-  app_semantic_version = "1.0.14"
+  app_semantic_version          = "1.0.15"
   auto_enable_logs_subscription_options = {
-    filter = "lambda|rds"
+    filter      = "lambda|rds"
     tags_filter = ""
   }
 }

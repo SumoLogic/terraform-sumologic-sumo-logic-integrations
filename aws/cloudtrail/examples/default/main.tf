@@ -11,7 +11,7 @@ module "cloudtrail_module" {
   create_trail              = true
   sumologic_organization_id = var.sumologic_organization_id
   wait_for_seconds          = 20
-  aws_resource_tags = local.aws_resource_tags
+  aws_resource_tags         = local.aws_resource_tags
 
   source_details = {
     source_name     = "CloudTrail Logs (Region)"
@@ -35,7 +35,7 @@ module "cloudtrail_module" {
     }
     sns_topic_details = {
       create_sns_topic = true
-      sns_topic_arn = null
+      sns_topic_arn    = null
     }
   }
 }

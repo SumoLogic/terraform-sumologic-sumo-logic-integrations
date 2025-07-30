@@ -8,6 +8,11 @@ output "aws_s3_bucket" {
   description = "AWS S3 Bucket name created to Store the CloudTrail logs."
 }
 
+output "aws_s3_bucket_policy" {
+  value       = var.source_details.bucket_details.create_bucket ? aws_s3_bucket_policy.s3_bucket : {}
+  description = "AWS S3 bucket Policy belongs to S3 Bucket created."
+}
+
 output "aws_sns_topic" {
   value       = var.source_details.sns_topic_details.create_sns_topic ? aws_sns_topic.sns_topic : {}
   description = "AWS SNS topic attached to the AWS S3 bucket."

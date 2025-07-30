@@ -38,7 +38,7 @@ module "lb_module" {
     }
   }
   auto_enable_access_logs = "Both"
-  app_semantic_version = "1.0.10"
+  app_semantic_version = "1.0.17"
   auto_enable_access_logs_options = {
     bucket_prefix          = "classicloadbalancing"
     auto_enable_logging    = "ELB"

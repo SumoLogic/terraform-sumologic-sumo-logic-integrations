@@ -16,7 +16,7 @@
           "BucketName": "elb-logs-{RandomString}",
           "BucketPrefix": "elasticloadbalancing"
         },
-        "semantic_version": "1.0.10"
+        "semantic_version": "1.0.17"
       }
     }
   ],
@@ -31,15 +31,13 @@
   "aws_s3_bucket": [
     {
       "s3_bucket": {
-        "acl": "private",
         "bucket": "elb-logs-{RandomString}",
-        "policy": "{\"Statement\":[{\"Action\":\"s3:PutObject\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::033677994240:root\"},\"Resource\":\"arn:aws:s3:::elb-logs-{RandomString}/*\"},{\"Action\":\"s3:PutObject\",\"Condition\":{\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}},\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"delivery.logs.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::elb-logs-{RandomString}/*\"},{\"Action\":\"s3:GetBucketAcl\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"delivery.logs.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::elb-logs-{RandomString}\"}],\"Version\":\"2012-10-17\"}",
         "region": "{Region}"
       }
     }
   ],
   "aws_sns_subscription": {
-    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
+    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"requestPolicy\":null,\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
     "endpoint_auto_confirms": true,
     "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-{RandomString}"
   },

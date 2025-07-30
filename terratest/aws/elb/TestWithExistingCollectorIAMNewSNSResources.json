@@ -13,17 +13,17 @@
         ],
         "parameters": {
           "AutoEnableLogging": "ALB",
-          "BucketName": "cf-templates-1qpf3unpuo1hw-{Region}",
+          "BucketName": "aws-integration-random-{Region}",
           "BucketPrefix": "elasticloadbalancing"
         },
-        "semantic_version": "1.0.10"
+        "semantic_version": "1.0.17"
       }
     }
   ],
   "aws_iam_role": {},
   "aws_s3_bucket": {},
   "aws_sns_subscription": {
-    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
+    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"requestPolicy\":null,\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
     "endpoint_auto_confirms": true,
     "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-{RandomString}"
   },
@@ -31,7 +31,7 @@
     {
       "sns_topic": {
         "name": "SumoLogic-Terraform-Elb-Module-{RandomString}",
-        "policy": "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":\"sns:Publish\",\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-{RandomString}\",\"Condition\":{\"StringEquals\":{\"aws:SourceAccount\":\"{AccountId}\"},\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::cf-templates-1qpf3unpuo1hw-{Region}\"}}}]}"
+        "policy": "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":\"sns:Publish\",\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-{RandomString}\",\"Condition\":{\"StringEquals\":{\"aws:SourceAccount\":\"{AccountId}\"},\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::aws-integration-random-{Region}\"}}}]}"
       }
     }
   ],

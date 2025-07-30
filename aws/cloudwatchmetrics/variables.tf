@@ -30,10 +30,10 @@ variable "source_details" {
       namespace = string
       tags      = list(string)
     }))
-    paused              = bool
-    scan_interval       = number
-    sumo_account_id     = number
-    fields              = map(string)
+    paused          = bool
+    scan_interval   = number
+    sumo_account_id = number
+    fields          = map(string)
     iam_details = object({
       create_iam_role = bool
       iam_role_arn    = string
@@ -46,7 +46,7 @@ variable "source_details" {
     description         = "This source is created using Sumo Logic terraform AWS CloudWatch Metrics module to collect AWS Cloudwatch metrics."
     collector_id        = ""
     limit_to_regions    = ["us-east-1"]
-    limit_to_namespaces = ["AWS/ApplicationELB","AWS/ApiGateway","AWS/DynamoDB","AWS/Lambda","AWS/RDS","AWS/ECS","AWS/ElastiCache","AWS/ELB","AWS/NetworkELB","AWS/SQS","AWS/SNS"]
+    limit_to_namespaces = ["AWS/ApplicationELB", "AWS/ApiGateway", "AWS/DynamoDB", "AWS/Lambda", "AWS/RDS", "AWS/ECS", "AWS/ElastiCache", "AWS/ELB", "AWS/NetworkELB", "AWS/SQS", "AWS/SNS"]
     tag_filters         = []
     scan_interval       = 300000
     paused              = false
@@ -82,4 +82,5 @@ variable "wait_for_seconds" {
 variable "aws_resource_tags" {
   description = "Map of tags to apply to all AWS resources provisioned through the Module"
   type        = map(string)
+  default     = {}
 }

@@ -14,7 +14,7 @@ resource "random_string" "aws_random" {
 resource "aws_cloudwatch_log_group" "cloudwatch_log_group" {
   name              = "SumoCWLogGroup-${random_string.aws_random.id}"
   retention_in_days = 7
-  tags = var.aws_resource_tags
+  tags              = var.aws_resource_tags
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "cloudwatch_log_subscription_filter" {
@@ -41,7 +41,7 @@ resource "aws_iam_role" "lambda_iam_role" {
   path = "/"
 
   assume_role_policy = templatefile("${path.module}/templates/logs_assume_role.tmpl", {})
-  tags = var.aws_resource_tags
+  tags               = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "lambda_sqs_policy" {
@@ -140,8 +140,8 @@ resource "aws_lambda_permission" "process_dead_letter_queue_lambda_permission" {
 resource "aws_cloudwatch_event_rule" "process_dead_letter_queue_event_rule" {
   description         = "Events rule for Cron"
   schedule_expression = "rate(5 minutes)"
-  state          = "ENABLED"
-  tags = var.aws_resource_tags
+  state               = "ENABLED"
+  tags                = var.aws_resource_tags
 }
 
 resource "aws_cloudwatch_event_target" "process_dead_letter_queue_event_rule_target" {
@@ -173,7 +173,7 @@ resource "aws_cloudwatch_metric_alarm" "metric_alarm" {
   period              = 3600
   statistic           = "Sum"
   threshold           = 100000
-  tags = var.aws_resource_tags
+  tags                = var.aws_resource_tags
 }
 
 resource "sumologic_collector" "collector" {
