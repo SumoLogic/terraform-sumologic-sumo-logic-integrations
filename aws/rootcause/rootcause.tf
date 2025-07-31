@@ -27,6 +27,7 @@ resource "aws_iam_policy" "iam_policy" {
 
   name   = "SumoLogicCloudWatchMetricsSource-${random_string.aws_random.id}"
   policy = templatefile("${path.module}/templates/sumologic_source_policy.tmpl", {})
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_role_policy_attachment" "source-role-policy-attach" {

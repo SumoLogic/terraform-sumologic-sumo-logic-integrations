@@ -75,6 +75,7 @@ resource "aws_iam_policy" "iam_policy" {
   policy = templatefile("${path.module}/templates/sumologic_source_policy.tmpl", {
     BUCKET_NAME = local.bucket_name
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_role_policy_attachment" "source-role-policy-attach" {

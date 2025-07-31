@@ -67,6 +67,7 @@ resource "aws_iam_policy" "firehose_s3_upload_policy" {
     BUCKET_NAME = local.bucket_name
     ARN         = local.arn_map[local.aws_region]
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "firehose_delivery_policy" {
@@ -74,6 +75,7 @@ resource "aws_iam_policy" "firehose_delivery_policy" {
     KINESIS_LOG_GROUP_ARN = aws_cloudwatch_log_group.log_group.arn
     KINESIS_FIREHOSE_ARN  = aws_kinesis_firehose_delivery_stream.logs_delivery_stream.arn
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_role_policy_attachment" "firehose_policy_attach" {
@@ -101,6 +103,7 @@ resource "aws_iam_policy" "logs_policy" {
     AWS_ACCOUNT = local.aws_account_id
     ROLE_NAME   = aws_iam_role.logs_role.name
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_role_policy_attachment" "logs_policy_attach" {

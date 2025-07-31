@@ -49,6 +49,7 @@ resource "aws_iam_policy" "lambda_sqs_policy" {
   policy = templatefile("${path.module}/templates/lambda_sqs.tmpl", {
     DEAD_LETTER_QUEUE_ARN = aws_sqs_queue.sqs_queue.arn
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_role_policy_attachment" "lambda_sqs_policy_attachment" {
@@ -61,6 +62,7 @@ resource "aws_iam_policy" "create_logs_policy" {
   policy = templatefile("${path.module}/templates/lambda_logs.tmpl", {
     LOG_GROUP_ARN = aws_cloudwatch_log_group.cloudwatch_log_group.arn
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_role_policy_attachment" "create_logs_policy_attachment" {
@@ -73,6 +75,7 @@ resource "aws_iam_policy" "invoke_lambda_policy" {
   policy = templatefile("${path.module}/templates/invoke_lambda.tmpl", {
     LAMBDA_ARN = aws_lambda_function.process_dead_letter_queue_lambda.arn
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_role_policy_attachment" "invoke_lambda_policy_attachment" {
