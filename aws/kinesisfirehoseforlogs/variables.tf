@@ -91,7 +91,7 @@ variable "auto_enable_logs_subscription_options" {
 	EOT
 
   default = {
-    filter      = "lambda"
+    filter      = "apigateway|lambda|rds"
     tags_filter = null
   }
 }

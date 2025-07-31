@@ -31,7 +31,7 @@ variable "sumologic_access_id" {
 variable "sumologic_access_key" {
   type        = string
   description = "Sumo Logic Access Key. Visit https://help.sumologic.com/Manage/Security/Access-Keys#Create_an_access_key"
-  sensitive = true
+  sensitive   = true
 
   validation {
     condition     = can(regex("\\w+", var.sumologic_access_key))

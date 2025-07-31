@@ -10,7 +10,7 @@ module "lb_module" {
   create_collector          = true
   sumologic_organization_id = var.sumologic_organization_id
   wait_for_seconds          = 20
-  aws_resource_tags = local.aws_resource_tags
+  aws_resource_tags         = local.aws_resource_tags
 
   source_details = {
     source_name     = "Classic Load Balancer Logs (Region)"
@@ -38,7 +38,7 @@ module "lb_module" {
     }
   }
   auto_enable_access_logs = "Both"
-  app_semantic_version = "1.0.17"
+  app_semantic_version    = "1.0.17"
   auto_enable_access_logs_options = {
     bucket_prefix          = "classicloadbalancing"
     auto_enable_logging    = "ELB"
