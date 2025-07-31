@@ -3,7 +3,20 @@ module github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/mas
 go 1.24.0
 
 require (
-	github.com/aws/aws-sdk-go v1.55.7
+	github.com/aws/aws-sdk-go-v2 v1.36.6
+	github.com/aws/aws-sdk-go-v2/config v1.29.18
+	github.com/aws/aws-sdk-go-v2/service/cloudformation v1.61.1
+	github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.49.4
+	github.com/aws/aws-sdk-go-v2/service/cloudwatch v1.45.4
+	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.53.1
+	github.com/aws/aws-sdk-go-v2/service/ec2 v1.234.0
+	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.46.1
+	github.com/aws/aws-sdk-go-v2/service/firehose v1.37.8
+	github.com/aws/aws-sdk-go-v2/service/iam v1.43.1
+	github.com/aws/aws-sdk-go-v2/service/lambda v1.73.0
+	github.com/aws/aws-sdk-go-v2/service/s3 v1.84.1
+	github.com/aws/aws-sdk-go-v2/service/sns v1.34.8
+	github.com/aws/aws-sdk-go-v2/service/sqs v1.38.9
 	github.com/gruntwork-io/terratest v0.50.0
 	github.com/stretchr/testify v1.10.0
 )
@@ -12,9 +25,7 @@ require (
 	filippo.io/edwards25519 v1.1.0 // indirect
 	github.com/agext/levenshtein v1.2.3 // indirect
 	github.com/apparentlymart/go-textseg/v15 v15.0.0 // indirect
-	github.com/aws/aws-sdk-go-v2 v1.36.6 // indirect
 	github.com/aws/aws-sdk-go-v2/aws/protocol/eventstream v1.6.11 // indirect
-	github.com/aws/aws-sdk-go-v2/config v1.29.18 // indirect
 	github.com/aws/aws-sdk-go-v2/credentials v1.17.71 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/ec2/imds v1.16.33 // indirect
 	github.com/aws/aws-sdk-go-v2/feature/s3/manager v1.17.85 // indirect
@@ -24,30 +35,18 @@ require (
 	github.com/aws/aws-sdk-go-v2/internal/v4a v1.3.37 // indirect
 	github.com/aws/aws-sdk-go-v2/service/acm v1.33.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/autoscaling v1.54.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/cloudformation v1.61.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/cloudtrail v1.49.4 // indirect
-	github.com/aws/aws-sdk-go-v2/service/cloudwatch v1.45.4 // indirect
-	github.com/aws/aws-sdk-go-v2/service/cloudwatchlogs v1.53.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/dynamodb v1.44.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/ec2 v1.234.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ecr v1.46.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ecs v1.60.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2 v1.46.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/firehose v1.37.8 // indirect
-	github.com/aws/aws-sdk-go-v2/service/iam v1.43.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/accept-encoding v1.12.4 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/checksum v1.7.5 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/endpoint-discovery v1.10.18 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/presigned-url v1.12.18 // indirect
 	github.com/aws/aws-sdk-go-v2/service/internal/s3shared v1.18.18 // indirect
 	github.com/aws/aws-sdk-go-v2/service/kms v1.41.3 // indirect
-	github.com/aws/aws-sdk-go-v2/service/lambda v1.73.0 // indirect
 	github.com/aws/aws-sdk-go-v2/service/rds v1.99.2 // indirect
 	github.com/aws/aws-sdk-go-v2/service/route53 v1.53.1 // indirect
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.84.1 // indirect
 	github.com/aws/aws-sdk-go-v2/service/secretsmanager v1.35.8 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sns v1.34.8 // indirect
-	github.com/aws/aws-sdk-go-v2/service/sqs v1.38.9 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssm v1.60.2 // indirect
 	github.com/aws/aws-sdk-go-v2/service/sso v1.25.6 // indirect
 	github.com/aws/aws-sdk-go-v2/service/ssooidc v1.30.4 // indirect
@@ -84,7 +83,6 @@ require (
 	github.com/jackc/pgx/v5 v5.7.5 // indirect
 	github.com/jackc/puddle/v2 v2.2.2 // indirect
 	github.com/jinzhu/copier v0.4.0 // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect

@@ -253,7 +253,7 @@ func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
 			"description":     "This source is created using Sumo Logic terraform AWS cloudtrail module to collect AWS cloudtrail logs.",
 			"bucket_details": map[string]interface{}{
 				"create_bucket":   true,
-				"bucket_name":     fmt.Sprintf("aws-integration-random-%s", aws_region)
+				"bucket_name":     fmt.Sprintf("aws-integration-random-%s", aws_region),
 				"path_expression": PATH_EXPRESSION,
 				// This does not have any impact as terraform does not manage existing bucket.
 				"force_destroy_bucket": true,
