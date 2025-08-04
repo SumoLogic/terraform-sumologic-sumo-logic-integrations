@@ -1,19 +1,19 @@
 package common
 
 import (
+	"context"
 	"fmt"
-	"io/ioutil"
-	"net/http"
-	"strings"
-    "context"
 	aws_sdk "github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/ec2"
+	ec2types "github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	elbv2 "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2"
 	elbv2types "github.com/aws/aws-sdk-go-v2/service/elasticloadbalancingv2/types"
-	ec2types "github.com/aws/aws-sdk-go-v2/service/ec2/types"
 	"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
+	"net/http"
+	"strings"
 )
 
 // createELB will create the Load Balancer, target group, modify the security group for your IP.
@@ -72,7 +72,7 @@ func (a *ResourcesAssert) CreateELB(LoadBalancerName, TargetGroupName string) (*
 					LoadBalancerArn: lb_id,
 					Protocol:        elbv2types.ProtocolEnumHttp,
 					Port:            aws_sdk.Int32(80),
-					DefaultActions:  []elbv2types.Action{
+					DefaultActions: []elbv2types.Action{
 						{Type: elbv2types.ActionTypeEnumForward, TargetGroupArn: tg_id},
 					},
 				})
