@@ -59,6 +59,7 @@ func TestWithDefaultValues(t *testing.T) {
 				"create_iam_role": true,
 				"iam_role_arn":    nil,
 			},
+            "tag_filters": []string{},
 		},
 	}
 
@@ -66,7 +67,7 @@ func TestWithDefaultValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 6, 0, 0)
+		common.AssertResourceCounts(t, count, 7, 0, 0)
 	})
 
 	outputs := common.FetchAllOutputs(t, options)
@@ -123,6 +124,17 @@ func TestWithExistingValues(t *testing.T) {
 				"create_iam_role": false,
 				"iam_role_arn":    IAM_ROLE,
 			},
+            "tag_filters": []map[string]interface{}{
+                {
+                    "type":      "TagFilters",
+                    "namespace": "AWS/EC2",
+                    "tags":      []string{"env=prod;dev"},
+                },
+            },
+		},
+        "aws_resource_tags": map[string]interface{}{
+		    "Creator": "SumoLogic",
+			"Environment": "Test",
 		},
 	}
 
@@ -178,6 +190,7 @@ func TestUpdates(t *testing.T) {
 				"create_iam_role": true,
 				"iam_role_arn":    nil,
 			},
+            "tag_filters": []string{},
 		},
 	}
 
@@ -185,7 +198,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 6, 0, 0)
+		common.AssertResourceCounts(t, count, 7, 0, 0)
 	})
 
 	vars = map[string]interface{}{
@@ -216,6 +229,17 @@ func TestUpdates(t *testing.T) {
 				"create_iam_role": true,
 				"iam_role_arn":    nil,
 			},
+            "tag_filters": []map[string]interface{}{
+                {
+                    "type":      "TagFilters",
+                    "namespace": "AWS/EC2",
+                    "tags":      []string{"env=prod;dev"},
+                },
+            },
+		},
+        "aws_resource_tags": map[string]interface{}{
+		    "Creator": "SumoLogic",
+			"Environment": "Test",
 		},
 	}
 
@@ -223,7 +247,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 1, 0)
+		common.AssertResourceCounts(t, count, 0, 2, 0)
 	})
 
 	vars = map[string]interface{}{
@@ -247,6 +271,7 @@ func TestUpdates(t *testing.T) {
 				"create_iam_role": true,
 				"iam_role_arn":    nil,
 			},
+            "tag_filters": []string{},
 		},
 	}
 
@@ -254,6 +279,6 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 1, 0, 2)
+		common.AssertResourceCounts(t, count, 1, 1, 2)
 	})
 }

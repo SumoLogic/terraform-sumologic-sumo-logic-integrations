@@ -111,7 +111,7 @@ variable "auto_enable_access_logs" {
 variable "app_semantic_version" {
   type        = string
   description = "Provide the latest version of Serverless Application Repository 'sumologic-s3-logging-auto-enable'."
-  default = "1.0.10"
+  default     = "1.0.17"
 }
 
 variable "auto_enable_access_logs_options" {
@@ -134,7 +134,7 @@ variable "auto_enable_access_logs_options" {
     remove_on_delete_stack = true
   }
   validation {
-    condition = contains(["ALB", "ELB"], var.auto_enable_access_logs_options.auto_enable_logging)
+    condition     = contains(["ALB", "ELB"], var.auto_enable_access_logs_options.auto_enable_logging)
     error_message = "The value must be one of ALB or ELB."
   }
 }
@@ -147,4 +147,10 @@ variable "wait_for_seconds" {
         If the AWS IAM role is created outside the module, the value can be decreased to 1 second.
     EOT
   default     = 180
+}
+
+variable "aws_resource_tags" {
+  description = "Map of tags to apply to all AWS resources provisioned through the Module"
+  type        = map(string)
+  default     = {}
 }

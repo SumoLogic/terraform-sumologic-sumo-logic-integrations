@@ -19,7 +19,7 @@ resource "aws_iam_role" "source_iam_role" {
     ENVIRONMENT           = data.sumologic_caller_identity.current.environment,
     SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id
   })
-
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "iam_policy" {
@@ -27,10 +27,11 @@ resource "aws_iam_policy" "iam_policy" {
 
   name   = "SumoLogicCloudWatchMetricsSource-${random_string.aws_random.id}"
   policy = templatefile("${path.module}/templates/sumologic_source_policy.tmpl", {})
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_role_policy_attachment" "source-role-policy-attach" {
-  for_each = toset(var.iam_details.create_iam_role ? ["source_iam_role"] : [])
+  for_each   = toset(var.iam_details.create_iam_role ? ["source_iam_role"] : [])
   role       = aws_iam_role.source_iam_role["source_iam_role"].name
   policy_arn = aws_iam_policy.iam_policy["iam_policy"].arn
 }

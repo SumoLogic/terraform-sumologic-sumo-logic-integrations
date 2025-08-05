@@ -13,19 +13,19 @@
         ],
         "parameters": {
           "AutoEnableLogging": "ALB",
-          "BucketName": "cf-templates-1qpf3unpuo1hw-{Region}",
+          "BucketName": "aws-integration-random-{Region}",
           "BucketPrefix": "elasticloadbalancing"
         },
-        "semantic_version": "1.0.10"
+        "semantic_version": "1.0.17"
       }
     }
   ],
   "aws_iam_role": {},
   "aws_s3_bucket": {},
   "aws_sns_subscription": {
-    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
+    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"requestPolicy\":null,\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
     "endpoint_auto_confirms": true,
-    "topic_arn": "arn:aws:sns:{Region}:{AccountId}:dynamodb"
+    "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-3zu74ts6j3"
   },
   "aws_sns_topic": {},
   "aws_s3_bucket_notification": {},

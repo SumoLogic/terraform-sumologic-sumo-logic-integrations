@@ -56,7 +56,7 @@ variable "source_details" {
 variable "app_semantic_version" {
   type        = string
   description = "Provide the latest version of Serverless Application Repository 'sumologic-loggroup-connector'."
-  default = "1.0.14"
+  default     = "1.0.15"
 }
 
 variable "auto_enable_logs_subscription" {
@@ -80,7 +80,7 @@ variable "auto_enable_logs_subscription" {
 
 variable "auto_enable_logs_subscription_options" {
   type = object({
-    filter = string
+    filter      = string
     tags_filter = string
   })
 
@@ -91,7 +91,13 @@ variable "auto_enable_logs_subscription_options" {
 	EOT
 
   default = {
-    filter = "lambda"
-    tags_filter = ""
+    filter      = "apigateway|lambda|rds"
+    tags_filter = null
   }
+}
+
+variable "aws_resource_tags" {
+  description = "Map of tags to apply to all AWS resources provisioned through the Module"
+  type        = map(string)
+  default     = {}
 }

@@ -15,6 +15,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 // ReadJsonFile is used to read a JSON file and provide the output.
@@ -43,6 +44,27 @@ func log33(format []byte, replacementMap map[string]interface{}) string {
 		i += 2
 	}
 	return strings.NewReplacer(args...).Replace(string(format))
+}
+
+func isValidJSONStr(s string) bool {
+	s = strings.TrimSpace(s)
+	if s == "" {
+		return false
+	}
+	return json.Valid([]byte(s))
+}
+
+func toJSONString(v any) (string, bool) {
+	switch x := v.(type) {
+	case string:
+		return x, true
+	default:
+		b, err := json.Marshal(v)
+		if err != nil {
+			return "", false
+		}
+		return string(b), true
+	}
 }
 
 // ApplyTerraformWithVars is used to Intialize, validate and apply the terraform module
@@ -127,7 +149,21 @@ func AssertObject(t *testing.T, expectedKey string, expectedValue interface{}, a
 		}
 	default:
 		fmt.Println("**** Compairing Key { " + expectedKey + " } ****")
-		assert.Equal(t, expectedValue, actualValue, fmt.Sprintf("Mismatch between actual value and expected values for key %v.", expectedKey))
+
+		// If expected is a (non-empty, valid) JSON string, compare as JSON
+		if es, ok := expectedValue.(string); ok && isValidJSONStr(es) {
+			as, ok2 := toJSONString(actualValue)
+			if !ok2 || !isValidJSONStr(as) {
+				// Decide what you want here: strict fail or fallback to raw equality
+				require.Failf(t,
+					"invalid actual JSON",
+					"key %s: expected valid JSON, but actual isn't valid JSON/stringifies \nactual: %#v",
+					expectedKey, actualValue)
+			}
+			require.JSONEqf(t, es, as, "key %s: JSON mismatch", expectedKey)
+		} else {
+			assert.Equal(t, expectedValue, actualValue, fmt.Sprintf("Mismatch between actual value and expected values for key %v.", expectedKey))
+		}
 	}
 }
 

@@ -84,13 +84,13 @@ variable "managed_apps" {
 
 variable "managed_monitors" {
   type = map(object({
-    monitor_name         = string
-    monitor_description  = string
-    monitor_monitor_type = string
-    monitor_parent_id    = string
-    monitor_is_disabled  = bool
+    monitor_name             = string
+    monitor_description      = string
+    monitor_monitor_type     = string
+    monitor_parent_id        = string
+    monitor_is_disabled      = bool
     monitor_evaluation_delay = string
-    queries              = map(string)
+    queries                  = map(string)
     triggers = list(object({
       threshold_type   = string
       threshold        = string

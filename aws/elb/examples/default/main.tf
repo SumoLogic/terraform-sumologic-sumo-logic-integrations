@@ -10,6 +10,7 @@ module "lb_module" {
   create_collector          = true
   sumologic_organization_id = var.sumologic_organization_id
   wait_for_seconds          = 20
+  aws_resource_tags         = local.aws_resource_tags
 
   source_details = {
     source_name     = "Application Load Balancer Logs (Region)"
@@ -37,7 +38,7 @@ module "lb_module" {
     }
   }
   auto_enable_access_logs = "Both"
-  app_semantic_version = "1.0.10"
+  app_semantic_version    = "1.0.17"
   auto_enable_access_logs_options = {
     filter                 = "'Type': 'application'|'type': 'application'"
     remove_on_delete_stack = true

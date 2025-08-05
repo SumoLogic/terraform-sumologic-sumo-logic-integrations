@@ -1,100 +1,99 @@
 {
-    "random_string": {
-      "lower": true
+  "random_string": {
+    "lower": true
+  },
+  "aws_cloudwatch_log_group": {
+    "name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
+    "retention_in_days": 7
+  },
+  "aws_cloudwatch_log_stream": [
+    {
+      "http_log_stream": {
+        "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
+        "name": "HttpEndpointDelivery"
+      }
     },
-    "aws_cloudwatch_log_group": {
-      "name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
-      "retention_in_days": 7
-    },
-    "aws_cloudwatch_log_stream": [
-      {
-        "http_log_stream": {
-          "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
-          "name": "HttpEndpointDelivery"
-        }
+    {
+      "s3_log_stream": {
+        "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
+        "name": "S3Delivery"
+      }
+    }
+  ],
+  "aws_iam_role": [
+    {
+      "logs_role": {
+        "name": "SumoLogic-Firehose-Logs-{RandomString}",
+        "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"logs.{Region}.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
       },
-      {
-        "s3_log_stream": {
-          "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
-          "name": "S3Delivery"
-        }
+      "firehose_role": {
+        "name": "SumoLogic-Firehose-{RandomString}",
+        "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"firehose.amazonaws.com\"},\"Action\":\"sts:AssumeRole\",\"Condition\":{\"StringEquals\":{\"sts:ExternalId\":\"{AccountId}\"}}}]}"
       }
-    ],
-    "aws_iam_role": [
+    }
+  ],
+  "aws_kinesis_firehose_delivery_stream": {
+    "destination": "http_endpoint",
+    "http_endpoint_configuration": [
       {
-        "logs_role": {
-          "name": "SumoLogic-Firehose-Logs-{RandomString}",
-          "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"logs.{Region}.amazonaws.com\"},\"Action\":\"sts:AssumeRole\"}]}"
-        },
-        "firehose_role": {
-          "name": "SumoLogic-Firehose-{RandomString}",
-          "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"firehose.amazonaws.com\"},\"Action\":\"sts:AssumeRole\",\"Condition\":{\"StringEquals\":{\"sts:ExternalId\":\"{AccountId}\"}}}]}"
-        }
-      }
-    ],
-    "aws_kinesis_firehose_delivery_stream": {
-      "destination": "http_endpoint",
-      "http_endpoint_configuration": [
-        {
-          "buffering_interval": 60,
-          "buffering_size": 4,
-          "cloudwatch_logging_options": [
-            {
-              "enabled": true,
-              "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
-              "log_stream_name": "HttpEndpointDelivery"
-            }
-          ],
-          "name": "sumologic-logs-endpoint-{RandomString}",
-          "retry_duration": 60,
-          "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-{RandomString}",
-          "s3_backup_mode": "FailedDataOnly",
-          "url": "{URL}"
-        }
-      ],
-      "s3_configuration": [
-        {
-          "bucket_arn": "arn:aws:s3:::{BucketName}",
-          "compression_format": "UNCOMPRESSED",
-          "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-{RandomString}",
-          "cloudwatch_logging_options": [
+        "buffering_interval": 60,
+        "buffering_size": 4,
+        "cloudwatch_logging_options": [
+          {
+            "enabled": true,
+            "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
+            "log_stream_name": "HttpEndpointDelivery"
+          }
+        ],
+        "name": "sumologic-logs-endpoint-{RandomString}",
+        "retry_duration": 60,
+        "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-{RandomString}",
+        "s3_backup_mode": "FailedDataOnly",
+        "s3_configuration": [
+          {
+            "bucket_arn": "arn:aws:s3:::{BucketName}",
+            "compression_format": "UNCOMPRESSED",
+            "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-{RandomString}",
+            "cloudwatch_logging_options": [
             {
               "enabled": true,
               "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
               "log_stream_name": "S3Delivery"
-            }
-          ]
-        }
-      ]
-    },
-    "aws_s3_bucket": {},
-    "aws_serverlessapplicationrepository_cloudformation_stack": [
-      {
-        "auto_enable_logs_subscription": {
-          "name": "Auto-Enable-Logs-Subscription-{RandomString}",
-          "application_id": "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector",
-          "capabilities": [
-            "CAPABILITY_IAM",
-            "CAPABILITY_RESOURCE_POLICY"
-          ],
-          "parameters": {
-            "DestinationArnType": "Kinesis",
-            "DestinationArnValue": "arn:aws:firehose:{Region}:{AccountId}:deliverystream/Kinesis-Logs-{RandomString}",
-            "LogGroupPattern": "aws",
-            "RoleArn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-Logs-{RandomString}"
-          },
-          "semantic_version": "1.0.11"
-        }
+            }]
+          }
+        ],
+        "url": "{URL}"
       }
-    ],
-    "sumologic_collector": {},
-    "sumologic_source": {
-      "category": "My/Test/cvategory",
-      "content_type": "KinesisLog",
-      "description": "This is jsyd",
-      "name": "Test Source For Logs One",
-      "fields": {
-        "TestCollector": "MyValue"
+    ]
+  },
+  "aws_s3_bucket": {},
+  "aws_serverlessapplicationrepository_cloudformation_stack": [
+    {
+      "auto_enable_logs_subscription": {
+        "name": "Auto-Enable-Logs-Subscription-{RandomString}",
+        "application_id": "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector",
+        "capabilities": [
+          "CAPABILITY_IAM",
+          "CAPABILITY_RESOURCE_POLICY"
+        ],
+        "parameters": {
+          "DestinationArnType": "Kinesis",
+          "DestinationArnValue": "arn:aws:firehose:{Region}:{AccountId}:deliverystream/Kinesis-Logs-{RandomString}",
+          "LogGroupPattern": "aws",
+          "RoleArn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-Logs-{RandomString}"
+        },
+        "semantic_version": "1.0.15"
       }
     }
+  ],
+  "sumologic_collector": {},
+  "sumologic_source": {
+    "category": "My/Test/cvategory",
+    "content_type": "KinesisLog",
+    "description": "This is jsyd",
+    "name": "Test Source For Logs One",
+    "fields": {
+      "TestCollector": "MyValue"
+    }
   }
+}
