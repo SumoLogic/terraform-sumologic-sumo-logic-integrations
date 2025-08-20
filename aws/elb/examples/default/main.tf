@@ -38,7 +38,7 @@ module "lb_module" {
     }
   }
   auto_enable_access_logs = "Both"
-  app_semantic_version    = "1.0.17"
+  app_semantic_version    = "1.0.18"
   auto_enable_access_logs_options = {
     filter                 = "'Type': 'application'|'type': 'application'"
     remove_on_delete_stack = true
