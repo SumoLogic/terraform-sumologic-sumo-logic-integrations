@@ -6,7 +6,7 @@ This module installs [Sumo Logic Pagerduty V2 application](https://help.sumologi
 
 ## Requirements
 
-* [Terraform](https://www.terraform.io/downloads.html) >= 0.13.0
+* [Terraform](https://www.terraform.io/downloads.html) >= 1.5.7
 * Null >= 2.1
 * Pagerduty >= 1.7
 

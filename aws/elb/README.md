@@ -12,8 +12,8 @@ This module is used to create AWS and Sumo Logic resource to collect ELB logs fr
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 6.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7        |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >=3.1.0 |
 | <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.31.3, < 4.0.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >=0.7.1 |
@@ -22,7 +22,7 @@ This module is used to create AWS and Sumo Logic resource to collect ELB logs fr
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 6.0.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.1.0 |
 | <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 2.31.3, < 4.0.0 |
 | <a name="provider_time"></a> [time](#provider\_time) | >=0.7.1 |
@@ -65,6 +65,7 @@ No modules.
 | <a name="input_source_details"></a> [source\_details](#input\_source\_details) | Provide details for the Sumo Logic ELB source. If not provided, then defaults will be used. | <pre>object({<br/>    source_name     = string<br/>    source_category = string<br/>    collector_id    = string<br/>    description     = string<br/>    bucket_details = object({<br/>      create_bucket        = bool<br/>      bucket_name          = string<br/>      path_expression      = string<br/>      force_destroy_bucket = bool<br/>    })<br/>    paused               = bool<br/>    scan_interval        = string<br/>    sumo_account_id      = number<br/>    cutoff_relative_time = string<br/>    fields               = map(string)<br/>    iam_details = object({<br/>      create_iam_role = bool<br/>      iam_role_arn    = string<br/>    })<br/>    sns_topic_details = object({<br/>      create_sns_topic = bool<br/>      sns_topic_arn    = string<br/>    })<br/>  })</pre> | <pre>{<br/>  "bucket_details": {<br/>    "bucket_name": "elb-logs-random-id",<br/>    "create_bucket": true,<br/>    "force_destroy_bucket": true,<br/>    "path_expression": "*AWSLogs/<ACCOUNT-ID>/elasticloadbalancing/<REGION-NAME>/*"<br/>  },<br/>  "collector_id": "",<br/>  "cutoff_relative_time": "-1d",<br/>  "description": "This source is created using Sumo Logic terraform AWS elb module to collect AWS elb logs.",<br/>  "fields": {},<br/>  "iam_details": {<br/>    "create_iam_role": true,<br/>    "iam_role_arn": null<br/>  },<br/>  "paused": false,<br/>  "scan_interval": 300000,<br/>  "sns_topic_details": {<br/>    "create_sns_topic": true,<br/>    "sns_topic_arn": null<br/>  },<br/>  "source_category": "Labs/aws/elb",<br/>  "source_name": "Elb Source",<br/>  "sumo_account_id": 926226587429<br/>}</pre> | no |
 | <a name="input_sumologic_organization_id"></a> [sumologic\_organization\_id](#input\_sumologic\_organization\_id) | Appears on the Account Overview page that displays information about your Sumo Logic organization. Used for IAM Role in Sumo Logic AWS Sources. | `string` | n/a | yes |
 | <a name="input_wait_for_seconds"></a> [wait\_for\_seconds](#input\_wait\_for\_seconds) | wait\_for\_seconds is used to delay sumo logic source creation. This helps persisting IAM role in AWS system.<br/>        Default value is 180 seconds.<br/>        If the AWS IAM role is created outside the module, the value can be decreased to 1 second. | `number` | `180` | no |
+| <a name="input_aws_resource_tags"></a> [aws\_resource\_tags](#input\_aws\_resource\_tags) | Map of tags to apply to all AWS resources provisioned through the Module | `map(string)` | `{}` | no |
 
 ## Outputs
 
