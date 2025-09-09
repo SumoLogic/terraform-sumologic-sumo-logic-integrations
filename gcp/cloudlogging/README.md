@@ -16,11 +16,11 @@ For examples please check the [example] folder.
 
 ## Requirements
 
-| Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13 |
-| <a name="requirement_google"></a> [google](#requirement\_google) | >= 4.0 |
-| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.11 |
+| Name | Version  |
+|------|----------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
+| <a name="requirement_google"></a> [google](#requirement\_google) | >= 4.0   |
+| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.11  |
 
 ## Providers
 
