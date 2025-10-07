@@ -12,7 +12,7 @@ The modules configure/create the following resources:
 
 #### Requirements
 
-* [Terraform 0.13+](https://www.terraform.io/downloads.html)
+* [Terraform 1.5.7+](https://www.terraform.io/downloads.html)
 * [curl](https://curl.haxx.se/download.html) for App installations.
 * [Sumo Logic Terraform Provider](https://registry.terraform.io/providers/SumoLogic/sumologic/latest)
 * [Null Terraform Provider](https://registry.terraform.io/providers/hashicorp/null/latest).
@@ -22,7 +22,7 @@ The modules configure/create the following resources:
 
     ```shell
     terraform {
-      required_version = ">= 0.13"
+      required_version = ">= 1.5.7"
 
       required_providers {
         null = {

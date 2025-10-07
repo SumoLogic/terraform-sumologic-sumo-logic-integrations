@@ -11,8 +11,8 @@ This module is used to create the SumoLogic AWS Kinesis Firehose for Logs source
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.0 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 6.0.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7        |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.1.0 |
 | <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.31.3, < 4.0.0 |
 
@@ -20,7 +20,7 @@ This module is used to create the SumoLogic AWS Kinesis Firehose for Logs source
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 6.0.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 3.1.0 |
 | <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 2.31.3, < 4.0.0 |
 
@@ -68,6 +68,7 @@ No modules.
 | <a name="input_create_bucket"></a> [create\_bucket](#input\_create\_bucket) | Provide "true" if you would like to create AWS S3 bucket to store logs. Provide "bucket\_details" if set to "false". | `bool` | `true` | no |
 | <a name="input_create_collector"></a> [create\_collector](#input\_create\_collector) | Provide "true" if you would like to create the Sumo Logic Collector. | `bool` | n/a | yes |
 | <a name="input_source_details"></a> [source\_details](#input\_source\_details) | Provide details for the Sumo Logic Kinesis Firehose for Logs source. If not provided, then defaults will be used. | <pre>object({<br/>    source_name     = string<br/>    source_category = string<br/>    collector_id    = string<br/>    description     = string<br/>    fields          = map(string)<br/>  })</pre> | <pre>{<br/>  "collector_id": "",<br/>  "description": "This source is created using Sumo Logic terraform AWS Kinesis Firehose for logs module to collect AWS Cloudwatch logs.",<br/>  "fields": {},<br/>  "source_category": "Labs/aws/cloudwatch/logs",<br/>  "source_name": "Kinesis Firehose for Logs Source"<br/>}</pre> | no |
+| <a name="input_aws_resource_tags"></a> [aws\_resource\_tags](#input\_aws\_resource\_tags) | Map of tags to apply to all AWS resources provisioned through the Module | `map(string)` | `{}` | no |
 
 ## Outputs
 

@@ -24,15 +24,20 @@
   "aws_s3_bucket": [
     {
       "s3_bucket": {
-        "acl": "private",
         "bucket": "my-test-tf-mod-{Region}",
-        "policy": "{\"Statement\":[{\"Action\":\"s3:GetBucketAcl\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}\",\"Sid\":\"AWSCloudTrailAclCheck\"},{\"Action\":\"s3:PutObject\",\"Condition\":{\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}},\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}/*\",\"Sid\":\"AWSCloudTrailWrite\"},{\"Action\":\"s3:ListBucket\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}\",\"Sid\":\"AWSBucketExistenceCheck\"}],\"Version\":\"2008-10-17\"}",
         "region": "{Region}"
       }
     }
   ],
+  "aws_s3_bucket_policy": [
+    {
+      "s3_bucket": {
+        "policy": "{\"Statement\":[{\"Action\":\"s3:GetBucketAcl\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}\",\"Sid\":\"AWSCloudTrailAclCheck\"},{\"Action\":\"s3:PutObject\",\"Condition\":{\"StringEquals\":{\"s3:x-amz-acl\":\"bucket-owner-full-control\"}},\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}/*\",\"Sid\":\"AWSCloudTrailWrite\"},{\"Action\":\"s3:ListBucket\",\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"cloudtrail.amazonaws.com\"},\"Resource\":\"arn:aws:s3:::my-test-tf-mod-{Region}\",\"Sid\":\"AWSBucketExistenceCheck\"}],\"Version\":\"2008-10-17\"}"
+      }
+    }
+  ],
   "aws_sns_subscription": {
-    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
+    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"requestPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
     "endpoint_auto_confirms": true,
     "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{RandomString}"
   },
@@ -67,7 +72,7 @@
   "sumologic_source": {
     "category": "Labs/test/cloudtrail",
     "content_type": "AwsCloudTrailBucket",
-    "description": "This source is ceated a.",
+    "description": "This source is created using Sumo Logic terraform AWS cloudtrail module to collect AWS cloudtrail logs.",
     "path": [
       {
         "bucket_name": "my-test-tf-mod-{Region}",

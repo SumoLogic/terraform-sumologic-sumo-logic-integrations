@@ -35,6 +35,7 @@ output "sumologic_source" {
 
 output "aws_kinesis_firehose_delivery_stream" {
   value       = aws_kinesis_firehose_delivery_stream.logs_delivery_stream
+  sensitive   = true
   description = "AWS Kinesis firehose delivery stream to send logs to Sumo Logic."
 }
 

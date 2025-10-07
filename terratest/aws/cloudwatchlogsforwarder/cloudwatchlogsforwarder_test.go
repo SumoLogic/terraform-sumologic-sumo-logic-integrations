@@ -85,6 +85,10 @@ func TestWithExistingValues(t *testing.T) {
 			},
 		},
 		"auto_enable_logs_subscription": "Existing",
+		"aws_resource_tags": map[string]interface{}{
+		    "Creator": "SumoLogic",
+			"Environment": "Test",
+		},
 	}
 
 	options, count := SetUpTest(t, vars, aws_region)
@@ -168,11 +172,15 @@ func TestUpdates(t *testing.T) {
 				"TestCollector": "MyValue",
 			},
 		},
+        "aws_resource_tags": map[string]interface{}{
+		    "Creator": "SumoLogic",
+			"Environment": "Test",
+		},
 	}
 
 	count = UpdateTerraform(t, vars, options)
 
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 1, 2, 2)
+		common.AssertResourceCounts(t, count, 1, 8, 2)
 	})
 }

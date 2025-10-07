@@ -48,7 +48,7 @@ func TestWithDefaultValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 11, 0, 0)
+		common.AssertResourceCounts(t, count, 13, 0, 0)
 	})
 
 	outputs := common.FetchAllOutputs(t, options)
@@ -118,6 +118,10 @@ func TestWithExistingResourcesValues(t *testing.T) {
 				"create_sns_topic": false,
 				"sns_topic_arn":    SNS_TOPIC,
 			},
+		},
+        "aws_resource_tags": map[string]interface{}{
+		    "Creator": "SumoLogic",
+			"Environment": "Test",
 		},
 	}
 
@@ -194,6 +198,10 @@ func TestWithExistingCollectorIAMNewSNSResources(t *testing.T) {
 				"sns_topic_arn":    nil,
 			},
 		},
+        "aws_resource_tags": map[string]interface{}{
+		    "Creator": "SumoLogic",
+			"Environment": "Test",
+		},
 	}
 
 	options, count := SetUpTest(t, vars, aws_region)
@@ -243,13 +251,17 @@ func TestUpdates(t *testing.T) {
 		},
 		"sumologic_organization_id": common.SumologicOrganizationId,
 		"auto_enable_access_logs":   "Existing",
+	    "aws_resource_tags": map[string]interface{}{
+		    "Creator": "SumoLogic",
+			"Environment": "Test",
+		},
 	}
 
 	options, count := SetUpTest(t, vars, aws_region)
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 11, 0, 0)
+		common.AssertResourceCounts(t, count, 13, 0, 0)
 	})
 
 	vars = map[string]interface{}{
@@ -268,6 +280,6 @@ func TestUpdates(t *testing.T) {
 	count = UpdateTerraform(t, vars, options)
 
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 1, 1)
+		common.AssertResourceCounts(t, count, 0, 4, 1)
 	})
 }

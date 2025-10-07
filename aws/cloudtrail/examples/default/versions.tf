@@ -1,5 +1,5 @@
 terraform {
-  required_version = ">= 0.13.0"
+  required_version = ">= 1.5.7"
 
   required_providers {
     sumologic = {
@@ -8,7 +8,7 @@ terraform {
     }
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 5.16.2, < 6.0.0"
+      version = ">= 5.16.2, < 7.0.0"
     }
     random = {
       source  = "hashicorp/random"

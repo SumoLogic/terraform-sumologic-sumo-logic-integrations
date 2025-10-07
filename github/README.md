@@ -8,7 +8,7 @@ Note: This module doesn't create the field required by Github App, please config
 
 ## Requirements
 
-* [Terraform](https://www.terraform.io/downloads.html) >= 0.13.0
+* [Terraform](https://www.terraform.io/downloads.html) >= 1.5.7
 * Null >= 2.1
 * Github >= 2.8
 

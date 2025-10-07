@@ -10,6 +10,7 @@ module "kinesis_firehose_for_metrics_source_module" {
   create_collector          = true
   sumologic_organization_id = var.sumologic_organization_id
   wait_for_seconds          = 20
+  aws_resource_tags         = local.aws_resource_tags
 
   source_details = {
     source_name         = "Cloud Watch Metrics (Region)"
@@ -17,21 +18,21 @@ module "kinesis_firehose_for_metrics_source_module" {
     description         = "This source is created using Sumo Logic terraform AWS Observability module to collect AWS Cloud Watch metrics."
     collector_id        = null
     limit_to_namespaces = []
-    "tag_filters": [{
-      "type" = "TagFilters"
+    "tag_filters" : [{
+      "type"      = "TagFilters"
       "namespace" = "AWS/EC2"
-      "tags" = ["env=prod;dev"]
-    },{
-      "type" = "TagFilters"
+      "tags"      = ["env=prod;dev"]
+      }, {
+      "type"      = "TagFilters"
       "namespace" = "AWS/ApiGateway"
-      "tags" = ["env=prod;dev"]
-    },{
-      "type" = "TagFilters"
+      "tags"      = ["env=prod;dev"]
+      }, {
+      "type"      = "TagFilters"
       "namespace" = "AWS/ApplicationELB"
-      "tags" = ["env=dev"]
+      "tags"      = ["env=dev"]
     }],
-    sumo_account_id     = 926226587429
-    fields              = {}
+    sumo_account_id = 926226587429
+    fields          = {}
     iam_details = {
       create_iam_role = true
       iam_role_arn    = null

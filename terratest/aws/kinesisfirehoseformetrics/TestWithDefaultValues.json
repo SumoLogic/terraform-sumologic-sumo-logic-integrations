@@ -63,28 +63,27 @@
         "retry_duration": 60,
         "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-{RandomString}",
         "s3_backup_mode": "FailedDataOnly",
-        "url": "{URL}"
-      }
-    ],
-    "s3_configuration": [
-      {
-        "bucket_arn": "arn:aws:s3:::sumologic-kinesis-firehose-metrics-{RandomString}",
-        "compression_format": "UNCOMPRESSED",
-        "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-{RandomString}",
-        "cloudwatch_logging_options": [
+        "s3_configuration": [
           {
-            "enabled": true,
-            "log_group_name": "/aws/kinesisfirehose/kinesis-metrics-log-group-{RandomString}",
-            "log_stream_name": "S3Delivery"
+            "bucket_arn": "arn:aws:s3:::sumologic-kinesis-firehose-metrics-{RandomString}",
+            "compression_format": "UNCOMPRESSED",
+            "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-{RandomString}",
+            "cloudwatch_logging_options": [
+              {
+                "enabled": true,
+                "log_group_name": "/aws/kinesisfirehose/kinesis-metrics-log-group-{RandomString}",
+                "log_stream_name": "S3Delivery"
+              }
+            ]
           }
-        ]
+        ],
+        "url": "{URL}"
       }
     ]
   },
   "aws_s3_bucket": [
     {
       "s3_bucket": {
-        "acl": "private",
         "bucket": "sumologic-kinesis-firehose-metrics-{RandomString}",
         "region": "{Region}"
       }

@@ -6,7 +6,7 @@ The [Sumo Logic to Jira Service Desk Webhook](https://help.sumologic.com/Beta/We
 
 ## Requirements
 
-* [Terraform](https://www.terraform.io/downloads.html) >= 0.13.0
+* [Terraform](https://www.terraform.io/downloads.html) >= 1.5.7
 * Template >= 2.1
 * Sumologic >= 2.1.0
 

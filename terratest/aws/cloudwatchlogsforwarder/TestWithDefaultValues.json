@@ -46,7 +46,7 @@
     "function_name": "SumoCWLogsLambda-{RandomString}",
     "handler": "cloudwatchlogs_lambda.handler",
     "s3_bucket": "appdevzipfiles-{Region}",
-    "s3_key": "cloudwatchlogs-with-dlq.zip"
+    "s3_key": "cloudwatchLogsDLQ/v1.3.0/cloudwatchlogs-with-dlq.zip"
   },
   "aws_iam_role": [
     {
@@ -68,13 +68,13 @@
           "LogGroupPattern": "lambda",
           "UseExistingLogs": "true"
         },
-        "semantic_version": "1.0.11"
+        "semantic_version": "1.0.15"
       }
     }
   ],
   "aws_sns_topic": {
     "name": "SumoCWEmailSNSTopic-{RandomString}",
-    "policy": "{\"Version\":\"2008-10-17\",\"Id\":\"__default_policy_ID\",\"Statement\":[{\"Sid\":\"__default_statement_ID\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Action\":[\"SNS:GetTopicAttributes\",\"SNS:SetTopicAttributes\",\"SNS:AddPermission\",\"SNS:RemovePermission\",\"SNS:DeleteTopic\",\"SNS:Subscribe\",\"SNS:ListSubscriptionsByTopic\",\"SNS:Publish\",\"SNS:Receive\"],\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoCWEmailSNSTopic-{RandomString}\",\"Condition\":{\"StringEquals\":{\"AWS:SourceOwner\":\"{AccountId}\"}}}]}"
+    "policy": "{\"Version\":\"2008-10-17\",\"Id\":\"__default_policy_ID\",\"Statement\":[{\"Sid\":\"__default_statement_ID\",\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"*\"},\"Action\":[\"SNS:GetTopicAttributes\",\"SNS:SetTopicAttributes\",\"SNS:AddPermission\",\"SNS:RemovePermission\",\"SNS:DeleteTopic\",\"SNS:Subscribe\",\"SNS:ListSubscriptionsByTopic\",\"SNS:Publish\"],\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoCWEmailSNSTopic-{RandomString}\",\"Condition\":{\"StringEquals\":{\"AWS:SourceOwner\":\"{AccountId}\"}}}]}"
   },
   "sumologic_collector": [
     {

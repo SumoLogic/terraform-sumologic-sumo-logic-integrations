@@ -19,7 +19,18 @@ function check_command()
 function validate_command()
 {
   local cmd="$1"
-  if eval $cmd; then
+  # Capture both stdout and stderr
+  local output
+  output=$(eval "$cmd" 2>&1)
+  local status=$?
+
+  # Print the command output
+  echo "-----------------------------"
+  echo "output : $output"
+  echo "status : $status"
+  echo "-----------------------------"
+
+  if [ $status -eq 0 ]; then
     echo "\"$cmd\" worked Successfully."
   else
     echo "\"$cmd\" failed. Please check the error as printed in the command line, correct it and re-run the tests again."
@@ -49,7 +60,10 @@ function integration_test()
     echo "2. Running integration tests ........................\n"
 
     AWS_PROFILE=${AWS_DEFAULT_PROFILE} go test -v -timeout 60m ./${module} | tee ${module}/test.log
-    
+    ## Use below command to run single testcase
+    #AWS_PROFILE=${AWS_DEFAULT_PROFILE} go test -v -timeout 60m ./${module} -run ^TestUpdatesOnly$
+    ## Note: use below command for debugging
+    #AWS_PROFILE=${AWS_DEFAULT_PROFILE} dlv test ./aws/cloudtrail -- -test.run '^TestWithExistingTrailNewBucketCollectorSNSIAM' -test.v -test.timeout 360m
     echo "\nIntegration tests Completed.\n" 
 }
 
@@ -110,9 +124,10 @@ export SUMOLOGIC_ORG_ID=
 export AWS_DEFAULT_PROFILE=
 export AWS_PROFILE=
 
-# 2. Deccalring the modules. Please update the array, if some new modules are added.
+# 2. Declaring the modules. Please update the array, if some new modules are added.
+# Deprecated "aws/rootcause" - https://help.sumologic.com/release-notes-service/2025/06/03/observability/
 declare -a modules=(
-    "aws/cloudtrail" "aws/elb" "aws/cloudwatchmetrics" "aws/kinesisfirehoseforlogs" "aws/kinesisfirehoseformetrics" "aws/rootcause" "aws/cloudwatchlogsforwarder" "sumologic"
+    "aws/cloudtrail" "aws/elb" "aws/cloudwatchmetrics" "aws/kinesisfirehoseforlogs" "aws/kinesisfirehoseformetrics" "aws/cloudwatchlogsforwarder" "sumologic"
 )
 
 # 3. Iterating through the module array to run unit and integration test cases.

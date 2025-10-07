@@ -17,6 +17,7 @@ resource "aws_s3_bucket" "s3_bucket" {
   bucket        = local.bucket_name
   force_destroy = var.bucket_details.force_destroy_bucket
   # acl           = "private"
+  tags = var.aws_resource_tags
 }
 
 # Default s3 bucket acl is private, if you want to update uncomment the following block
@@ -40,6 +41,7 @@ resource "aws_s3_bucket_public_access_block" "s3_bucket_access_block" {
 resource "aws_cloudwatch_log_group" "log_group" {
   name              = "/aws/kinesisfirehose/kinesis-logs-log-group-${random_string.aws_random.id}"
   retention_in_days = 7
+  tags              = var.aws_resource_tags
 }
 
 resource "aws_cloudwatch_log_stream" "s3_log_stream" {
@@ -57,6 +59,7 @@ resource "aws_iam_role" "firehose_role" {
   assume_role_policy = templatefile("${path.module}/templates/firehose_assume_role.tmpl", {
     AWS_ACCOUNT_ID = local.aws_account_id,
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "firehose_s3_upload_policy" {
@@ -64,6 +67,7 @@ resource "aws_iam_policy" "firehose_s3_upload_policy" {
     BUCKET_NAME = local.bucket_name
     ARN         = local.arn_map[local.aws_region]
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "firehose_delivery_policy" {
@@ -71,6 +75,7 @@ resource "aws_iam_policy" "firehose_delivery_policy" {
     KINESIS_LOG_GROUP_ARN = aws_cloudwatch_log_group.log_group.arn
     KINESIS_FIREHOSE_ARN  = aws_kinesis_firehose_delivery_stream.logs_delivery_stream.arn
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_role_policy_attachment" "firehose_policy_attach" {
@@ -88,6 +93,7 @@ resource "aws_iam_role" "logs_role" {
   assume_role_policy = templatefile("${path.module}/templates/logs_assume_role.tmpl", {
     AWS_REGION = local.aws_region
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_policy" "logs_policy" {
@@ -97,6 +103,7 @@ resource "aws_iam_policy" "logs_policy" {
     AWS_ACCOUNT = local.aws_account_id
     ROLE_NAME   = aws_iam_role.logs_role.name
   })
+  tags = var.aws_resource_tags
 }
 
 resource "aws_iam_role_policy_attachment" "logs_policy_attach" {
@@ -124,21 +131,22 @@ resource "aws_kinesis_firehose_delivery_stream" "logs_delivery_stream" {
     }
 
     s3_configuration {
-    role_arn           = aws_iam_role.firehose_role.arn
-    bucket_arn         = "arn:${local.arn_map[local.aws_region]}:s3:::${local.bucket_name}"
-    compression_format = "UNCOMPRESSED"
-    //error_output_prefix = "SumoLogic-Kinesis-Failed-Logs/"
-    cloudwatch_logging_options {
-      enabled         = true
-      log_group_name  = aws_cloudwatch_log_group.log_group.name
-      log_stream_name = aws_cloudwatch_log_stream.s3_log_stream.name
+      role_arn           = aws_iam_role.firehose_role.arn
+      bucket_arn         = "arn:${local.arn_map[local.aws_region]}:s3:::${local.bucket_name}"
+      compression_format = "UNCOMPRESSED"
+      //error_output_prefix = "SumoLogic-Kinesis-Failed-Logs/"
+      cloudwatch_logging_options {
+        enabled         = true
+        log_group_name  = aws_cloudwatch_log_group.log_group.name
+        log_stream_name = aws_cloudwatch_log_stream.s3_log_stream.name
+      }
     }
-  }
 
     request_configuration {
       content_encoding = "GZIP"
     }
   }
+  tags = var.aws_resource_tags
 }
 
 resource "aws_cloudwatch_log_subscription_filter" "delivery_stream_subscription" {
@@ -182,4 +190,5 @@ resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable
     UseExistingLogs     = local.auto_enable_existing
     RoleArn             = aws_iam_role.logs_role.arn
   }
+  tags = var.aws_resource_tags
 }

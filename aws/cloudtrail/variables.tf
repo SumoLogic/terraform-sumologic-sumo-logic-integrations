@@ -119,3 +119,9 @@ variable "wait_for_seconds" {
     EOT
   default     = 180
 }
+
+variable "aws_resource_tags" {
+  description = "Map of tags to apply to all AWS resources provisioned through the Module"
+  type        = map(string)
+  default     = {}
+}

@@ -48,7 +48,7 @@ variable "source_details" {
       namespace = string
       tags      = list(string)
     }))
-    fields              = map(string)
+    fields = map(string)
     iam_details = object({
       create_iam_role = bool
       iam_role_arn    = string
@@ -89,4 +89,10 @@ variable "wait_for_seconds" {
         If the AWS IAM role is created outside the module, the value can be decreased to 1 second.
     EOT
   default     = 180
+}
+
+variable "aws_resource_tags" {
+  description = "Map of tags to apply to all AWS resources provisioned through the Module"
+  type        = map(string)
+  default     = {}
 }
