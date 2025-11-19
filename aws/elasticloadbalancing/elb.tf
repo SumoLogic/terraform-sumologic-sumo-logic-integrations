@@ -148,25 +148,44 @@ resource "aws_sns_topic_subscription" "subscription" {
 
 # Reason to use the SAM app, is to have single source of truth for Auto Enable access logs functionality.
 # Ignore changes has been implemented to bypass aws resource issue: https://github.com/hashicorp/terraform-provider-aws/issues/16485
-resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_access_logs" {
-  for_each = toset(local.auto_enable_access_logs ? ["auto_enable_access_logs"] : [])
+# resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_access_logs" {
+#   for_each = toset(local.auto_enable_access_logs ? ["auto_enable_access_logs"] : [])
+#
+#   name             = "Auto-Enable-Access-Logs-${var.auto_enable_access_logs_options.auto_enable_logging}-${random_string.aws_random.id}"
+#   application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable"
+#   semantic_version = var.app_semantic_version
+#   capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
+#   parameters = {
+#     BucketName                = local.bucket_name
+#     BucketPrefix              = var.auto_enable_access_logs_options.bucket_prefix
+#     AutoEnableLogging         = var.auto_enable_access_logs_options.auto_enable_logging
+#     AutoEnableResourceOptions = var.auto_enable_access_logs
+#     FilterExpression          = var.auto_enable_access_logs_options.filter
+#     RemoveOnDeleteStack       = var.auto_enable_access_logs_options.remove_on_delete_stack
+#   }
+#   lifecycle {
+#     ignore_changes = [
+#       parameters, tags
+#     ]
+#   }
+#   tags = var.aws_resource_tags
+# }
 
-  name             = "Auto-Enable-Access-Logs-${var.auto_enable_access_logs_options.auto_enable_logging}-${random_string.aws_random.id}"
-  application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable"
-  semantic_version = var.app_semantic_version
-  capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
-  parameters = {
-    BucketName                = local.bucket_name
-    BucketPrefix              = var.auto_enable_access_logs_options.bucket_prefix
-    AutoEnableLogging         = var.auto_enable_access_logs_options.auto_enable_logging
-    AutoEnableResourceOptions = var.auto_enable_access_logs
-    FilterExpression          = var.auto_enable_access_logs_options.filter
-    RemoveOnDeleteStack       = var.auto_enable_access_logs_options.remove_on_delete_stack
+
+module "auto_enable_access_logs_module" {
+  source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/autoenable/modules/s3_logging"
+
+  providers = {
+    aws                         = aws
+    lambda-invoke-extension     = lambda-invoke-extension
   }
-  lifecycle {
-    ignore_changes = [
-      parameters, tags
-    ]
-  }
-  tags = var.aws_resource_tags
+
+  auto_enable_logging           = var.auto_enable_access_logs_options.auto_enable_logging
+  auto_enable_resource_options  = var.auto_enable_access_logs
+  bucket_name                   = local.bucket_name
+  bucket_prefix                 = var.auto_enable_access_logs_options.bucket_prefix
+  filter_expression             = var.auto_enable_access_logs_options.filter
+  remove_on_delete_stack        = var.auto_enable_access_logs_options.remove_on_delete_stack
+
+  aws_resource_tags             = var.aws_resource_tags
 }

@@ -1,0 +1,314 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: "Version - v3.0.0: Template to Lambda Function for automatic subscription of any Sumo Logic lambda function with loggroups matching an input pattern."
+
+Parameters:
+
+  DestinationArnType:
+    Type: String
+    Description: "Lambda - When the destination ARN for subscription filter is an AWS Lambda Function.
+                  Kinesis - When the destination ARN for subscription filter is an Kinesis or Amazon Kinesis data firehose stream."
+    Default: 'Lambda'
+    AllowedValues:
+      - 'Lambda'
+      - 'Kinesis'
+
+  DestinationArnValue:
+    Type: String
+    Default: "arn:aws:lambda:us-east-1:123456789000:function:TestLambda"
+    Description: "Enter Destination ARN like Lambda function, Kinesis stream. For more information, visit - https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/SubscriptionFilters.html"
+
+  LogGroupPattern:
+    Type: String
+    Default: "Test"
+    Description: "Enter regex for matching logGroups"
+
+  UseExistingLogs:
+    Type: String
+    Default: "false"
+    AllowedValues: [ "true", "false" ]
+    Description: "Select true for subscribing existing logs"
+
+  LogGroupTags:
+    Type: CommaDelimitedList
+    Default: ""
+    Description: "Enter comma separated keyvalue pairs for filtering logGroups using tags. Ex KeyName1=string,KeyName2=string. This is optional leave it blank if tag based filtering is not needed."
+
+  RoleArn:
+    Type: String
+    Default: ""
+    Description: "Enter AWS IAM Role arn in case the destination is Kinesis Firehose stream."
+
+Mappings:
+
+  RegionMap:
+    us-east-1:
+      bucketname: appdevzipfiles-us-east-1
+    us-east-2:
+      bucketname: appdevzipfiles-us-east-2
+    us-west-1:
+      bucketname: appdevzipfiles-us-west-1
+    us-west-2:
+      bucketname: appdevzipfiles-us-west-2
+    ap-south-1:
+      bucketname: appdevzipfiles-ap-south-1
+    ap-northeast-2:
+      bucketname: appdevzipfiles-ap-northeast-2
+    ap-southeast-1:
+      bucketname: appdevzipfiles-ap-southeast-1
+    ap-southeast-2:
+      bucketname: appdevzipfiles-ap-southeast-2
+    ap-northeast-1:
+      bucketname: appdevzipfiles-ap-northeast-1
+    ca-central-1:
+      bucketname: appdevzipfiles-ca-central-1
+    eu-central-1:
+      bucketname: appdevzipfiles-eu-central-1
+    eu-west-1:
+      bucketname: appdevzipfiles-eu-west-1
+    eu-west-2:
+      bucketname: appdevzipfiles-eu-west-2
+    eu-west-3:
+      bucketname: appdevzipfiles-eu-west-3
+    eu-north-1:
+      bucketname: appdevzipfiles-eu-north-1s
+    sa-east-1:
+      bucketname: appdevzipfiles-sa-east-1
+    ap-east-1:
+      bucketname: appdevzipfiles-ap-east-1s
+    af-south-1:
+      bucketname: appdevzipfiles-af-south-1s
+    eu-south-1:
+      bucketname: appdevzipfiles-eu-south-1
+    me-south-1:
+      bucketname: appdevzipfiles-me-south-1s
+    me-central-1:
+      bucketname: appdevzipfiles-me-central-1
+    eu-central-2:
+        bucketname: appdevzipfiles-eu-central-2ss
+    ap-northeast-3:
+        bucketname: appdevzipfiles-ap-northeast-3s
+    ap-southeast-3:
+        bucketname: appdevzipfiles-ap-southeast-3
+    il-central-1:
+        bucketname: appdevzipfiles-il-central-1
+
+Conditions:
+  create_invoke_permission:
+    Fn::Equals:
+      - Ref: DestinationArnType
+      - Lambda
+  create_pass_role:
+    Fn::Equals:
+      - Ref: DestinationArnType
+      - Kinesis
+  invoke_existing:
+    Fn::Equals:
+      - Ref: UseExistingLogs
+      - 'true'
+
+Resources:
+
+  SumoLogGroupLambdaConnectorRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: LambdaExecutionPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: ReadWriteFilterPolicy
+                Effect: Allow
+                Action:
+                  - logs:DescribeLogGroups
+                  - logs:DescribeLogStreams
+                  - logs:PutSubscriptionFilter
+                  - logs:ListTagsLogGroup
+                Resource:
+                  - Fn::Sub: arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*
+              - Sid: InvokePolicy
+                Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource:
+                  - Fn::Sub: arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:*SumoLogGroupLambda*
+
+  SumoLogGroupLambdaConnector:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket: !FindInMap [ RegionMap, !Ref 'AWS::Region', bucketname ]
+        S3Key: "sumologic-aws-observability/functions/loggroup-lambda-connector/v1.0.15/loggroup-lambda-connector.zip"
+      Handler: loggroup-lambda-connector.handler
+      Runtime: nodejs22.x
+      MemorySize: 128
+      Timeout: 900
+      Role: !GetAtt SumoLogGroupLambdaConnectorRole.Arn
+      Environment:
+        Variables:
+          DESTINATION_ARN:
+            Ref: DestinationArnValue
+          LOG_GROUP_PATTERN:
+            Ref: LogGroupPattern
+          LOG_GROUP_TAGS:
+            Fn::Join:
+              - ','
+              - Ref: LogGroupTags
+          ROLE_ARN:
+            Ref: RoleArn
+
+  SumoLogGroupLambdaEventRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: Auto subscribe new CloudWatch log groups
+      Name: !Join
+        - ""
+        - - "sumo-log-group-"
+          - !Select
+            - 0
+            - !Split
+              - "-"
+              - !Select
+                - 2
+                - !Split [ "/", !Ref "AWS::StackId" ]
+      EventPattern:
+        source:
+          - aws.logs
+        detail:
+          eventSource:
+            - logs.amazonaws.com
+          eventName:
+            - CreateLogGroup
+      Targets:
+        - Arn: !GetAtt SumoLogGroupLambdaConnector.Arn
+          Id: Main
+
+  AutoSubscribeCWLogGroupInvokePermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref SumoLogGroupLambdaConnector
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt SumoLogGroupLambdaEventRule.Arn
+
+  SumoCWLambdaInvokePermission:
+    Type: AWS::Lambda::Permission
+    Condition: create_invoke_permission
+    Properties:
+      FunctionName:
+        Ref: DestinationArnValue
+      Action: lambda:InvokeFunction
+      Principal: !Sub logs.${AWS::Region}.amazonaws.com
+      SourceAccount:
+        Ref: AWS::AccountId
+      SourceArn:
+        Fn::Sub: arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:*:*
+
+  sumoIAMPassRolePolicy:
+    Type: AWS::IAM::Policy
+    Condition: create_pass_role
+    Properties:
+      PolicyName: KinesisFirehoseLogsPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Action:
+              - iam:PassRole
+            Resource:
+              Ref: RoleArn
+      Roles:
+        - Ref: SumoLogGroupLambdaConnectorRole
+
+  SumoLogGroupExistingLambdaConnectorRole:
+    Type: AWS::IAM::Role
+    Condition: invoke_existing
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: InvokePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Sid: InvokePolicy
+                Effect: Allow
+                Action:
+                  - lambda:InvokeFunction
+                Resource:
+                  - Fn::Sub: arn:${AWS::Partition}:lambda:${AWS::Region}:${AWS::AccountId}:function:${SumoLogGroupLambdaConnector}
+
+  SumoLogGroupExistingLambdaConnector:
+    Type: AWS::Lambda::Function
+    Condition: invoke_existing
+    Properties:
+      Code:
+        ZipFile: |
+          const { LambdaClient, InvokeCommand } = require("@aws-sdk/client-lambda");
+          var response = require('cfn-response');
+          const lambda = new LambdaClient({ apiVersion: '2015-03-31' });
+          exports.handler = async function (event, context) {
+            const payload = { "existingLogs": "true", "token": "" };
+            const responseData = {};
+            let responseStatus = "FAILED";
+            try {
+              const invokeInput = new InvokeCommand({
+                InvocationType: 'Event',
+                FunctionName: process.env.FUNCTION_NAME,
+                Payload: JSON.stringify(payload),
+              });
+              await lambda.send(invokeInput);
+              responseStatus = "SUCCESS";
+            } catch (err) {
+              responseData.Error = "Invoke call failed";
+              console.log(responseData.Error + ":\n", err);
+            }
+            await response.send(event, context, responseStatus, responseData);
+          };
+      Handler: index.handler
+      Runtime: nodejs22.x
+      Environment:
+        Variables:
+          FUNCTION_NAME:
+            Ref: SumoLogGroupLambdaConnector
+      Role: !GetAtt SumoLogGroupExistingLambdaConnectorRole.Arn
+
+  InvokeLambdaConnector:
+    Type: AWS::CloudFormation::CustomResource
+    Condition: invoke_existing
+    DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
+    Properties:
+      ServiceToken:
+        Fn::GetAtt:
+          - SumoLogGroupExistingLambdaConnector
+          - Arn
+      DESTINATION_ARN:
+        Ref: DestinationArnValue
+      LOG_GROUP_PATTERN:
+        Ref: LogGroupPattern
+      ROLE_ARN:
+        Ref: RoleArn
+
+Outputs:
+  SumoLogGroupLambdaConnector:
+    Description: The ARN of the SumoLogGroupLambdaConnector function
+    Value:
+      Fn::GetAtt:
+        - SumoLogGroupLambdaConnector
+        - Arn

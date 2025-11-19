@@ -4,8 +4,8 @@ resource "random_string" "aws_random" {
   special = false
 }
 
-module "auto_enable_module" {
-  source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/autoenable"
+module "s3_logging_auto_enable_module" {
+  source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/autoenable/modules/s3_logging"
 
   providers = {
     aws                    = aws
@@ -13,7 +13,7 @@ module "auto_enable_module" {
   }
 
   auto_enable_logging           = "ALB"
-  auto_enable_resource_options  = "New"
+  auto_enable_resource_options  = "Both"
   bucket_name                  = "aws-observability-sam-akhil90"
   bucket_prefix                = "exmaple/aws-alb/both"
   filter_expression            = "'Type': 'application'|'type': 'application'"

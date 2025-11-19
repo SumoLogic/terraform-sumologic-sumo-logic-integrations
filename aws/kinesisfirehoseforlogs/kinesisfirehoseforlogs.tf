@@ -65,7 +65,7 @@ resource "aws_iam_role" "firehose_role" {
 resource "aws_iam_policy" "firehose_s3_upload_policy" {
   policy = templatefile("${path.module}/templates/firehose_s3_upload_policy.tmpl", {
     BUCKET_NAME = local.bucket_name
-    ARN         = local.arn_map[local.aws_region]
+    ARN         = data.aws_partition.current.partition
   })
   tags = var.aws_resource_tags
 }
@@ -98,7 +98,7 @@ resource "aws_iam_role" "logs_role" {
 
 resource "aws_iam_policy" "logs_policy" {
   policy = templatefile("${path.module}/templates/logs_policy.tmpl", {
-    ARN         = local.arn_map[local.aws_region]
+    ARN         = data.aws_partition.current.partition
     AWS_REGION  = local.aws_region
     AWS_ACCOUNT = local.aws_account_id
     ROLE_NAME   = aws_iam_role.logs_role.name
@@ -132,7 +132,7 @@ resource "aws_kinesis_firehose_delivery_stream" "logs_delivery_stream" {
 
     s3_configuration {
       role_arn           = aws_iam_role.firehose_role.arn
-      bucket_arn         = "arn:${local.arn_map[local.aws_region]}:s3:::${local.bucket_name}"
+      bucket_arn         = "arn:${data.aws_partition.current.partition}:s3:::${local.bucket_name}"
       compression_format = "UNCOMPRESSED"
       //error_output_prefix = "SumoLogic-Kinesis-Failed-Logs/"
       cloudwatch_logging_options {
@@ -175,20 +175,39 @@ resource "sumologic_http_source" "source" {
 }
 
 # Reason to use the SAM app, is to have single source of truth for Auto Subscribe functionality.
-resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_logs_subscription" {
-  for_each = toset(local.auto_enable_logs_subscription ? ["auto_enable_logs_subscription"] : [])
+# resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_logs_subscription" {
+#   for_each = toset(local.auto_enable_logs_subscription ? ["auto_enable_logs_subscription"] : [])
+#
+#   name             = "Auto-Enable-Logs-Subscription-${random_string.aws_random.id}"
+#   application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector"
+#   semantic_version = var.app_semantic_version
+#   capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
+#   parameters = {
+#     DestinationArnType  = "Kinesis"
+#     DestinationArnValue = aws_kinesis_firehose_delivery_stream.logs_delivery_stream.arn
+#     LogGroupPattern     = var.auto_enable_logs_subscription_options.filter
+#     LogGroupTags        = var.auto_enable_logs_subscription_options.tags_filter
+#     UseExistingLogs     = local.auto_enable_existing
+#     RoleArn             = aws_iam_role.logs_role.arn
+#   }
+#   tags = var.aws_resource_tags
+# }
 
-  name             = "Auto-Enable-Logs-Subscription-${random_string.aws_random.id}"
-  application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector"
-  semantic_version = var.app_semantic_version
-  capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
-  parameters = {
-    DestinationArnType  = "Kinesis"
-    DestinationArnValue = aws_kinesis_firehose_delivery_stream.logs_delivery_stream.arn
-    LogGroupPattern     = var.auto_enable_logs_subscription_options.filter
-    LogGroupTags        = var.auto_enable_logs_subscription_options.tags_filter
-    UseExistingLogs     = local.auto_enable_existing
-    RoleArn             = aws_iam_role.logs_role.arn
-  }
-  tags = var.aws_resource_tags
+
+module "loggroup_auto_enable_module" {
+  source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/autoenable/modules/loggroup"
+
+ # Destination Configuration
+  destination_arn_type  = "Kinesis"
+  destination_arn_value = aws_kinesis_firehose_delivery_stream.logs_delivery_stream.arn
+
+  # Log Group Configuration
+  log_group_pattern = var.auto_enable_logs_subscription_options.filter
+  log_group_tags    = var.auto_enable_logs_subscription_options.tags_filter
+
+  # Optional Configuration
+  use_existing_logs = local.auto_enable_existing
+  role_arn          = aws_iam_role.logs_role.arn
+
+  aws_resource_tags = var.aws_resource_tags
 }

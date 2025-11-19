@@ -42,8 +42,3 @@ output "sumologic_source" {
   value       = sumologic_http_source.source
   description = "Sumo Logic HTTP source."
 }
-
-output "aws_serverlessapplicationrepository_cloudformation_stack" {
-  value       = local.auto_enable_logs_subscription ? aws_serverlessapplicationrepository_cloudformation_stack.auto_enable_logs_subscription : {}
-  description = "AWS CloudFormation stack for Auto Enable logs subscription."
-}

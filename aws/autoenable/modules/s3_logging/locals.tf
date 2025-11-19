@@ -27,6 +27,7 @@ locals {
     "il-central-1"   = "appdevzipfiles-il-central-1"
   }
 
+  # s3_logging_auto_enable
   # Conditions
   enable_alb_logging          = var.auto_enable_logging == "ALB"
   enable_elb_logging          = var.auto_enable_logging == "ELB"

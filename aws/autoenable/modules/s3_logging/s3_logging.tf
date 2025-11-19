@@ -244,7 +244,7 @@ resource "aws_lambda_function" "enable_existing_aws_resources" {
 # Example resource usage
 
 resource "lambda_invoke_extension_action" "enable_logging" {
-  count = length(aws_lambda_function.enable_existing_aws_resources) > 0 ? 1 : 0
+  count = local.auto_enable_existing ? 1 : 0
 
   provider = lambda-invoke-extension
   lambda_name            = aws_lambda_function.enable_existing_aws_resources[0].function_name
