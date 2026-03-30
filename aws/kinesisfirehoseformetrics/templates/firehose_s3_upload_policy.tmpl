@@ -12,8 +12,8 @@
         "s3:PutObject"
       ],
       "Resource": [
-        "arn:${ARN}:s3:::${BUCKET_NAME}/*",
-        "arn:${ARN}:s3:::${BUCKET_NAME}"
+        "arn:${AWS_PARTITION}:s3:::${BUCKET_NAME}/*",
+        "arn:${AWS_PARTITION}:s3:::${BUCKET_NAME}"
       ]
     }
   ],
