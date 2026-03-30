@@ -64,8 +64,8 @@ resource "aws_iam_role" "firehose_role" {
 
 resource "aws_iam_policy" "firehose_s3_upload_policy" {
   policy = templatefile("${path.module}/templates/firehose_s3_upload_policy.tmpl", {
-    BUCKET_NAME = local.bucket_name
-    ARN         = local.arn_map[local.aws_region]
+    BUCKET_NAME           = local.bucket_name
+    AWS_PARTITION         = data.aws_partition.current.partition
   })
   tags = var.aws_resource_tags
 }
@@ -98,10 +98,10 @@ resource "aws_iam_role" "logs_role" {
 
 resource "aws_iam_policy" "logs_policy" {
   policy = templatefile("${path.module}/templates/logs_policy.tmpl", {
-    ARN         = local.arn_map[local.aws_region]
-    AWS_REGION  = local.aws_region
-    AWS_ACCOUNT = local.aws_account_id
-    ROLE_NAME   = aws_iam_role.logs_role.name
+    AWS_PARTITION = data.aws_partition.current.partition
+    AWS_REGION    = local.aws_region
+    AWS_ACCOUNT   = local.aws_account_id
+    ROLE_NAME     = aws_iam_role.logs_role.name
   })
   tags = var.aws_resource_tags
 }
@@ -132,7 +132,7 @@ resource "aws_kinesis_firehose_delivery_stream" "logs_delivery_stream" {
 
     s3_configuration {
       role_arn           = aws_iam_role.firehose_role.arn
-      bucket_arn         = "arn:${local.arn_map[local.aws_region]}:s3:::${local.bucket_name}"
+      bucket_arn         = "arn:${data.aws_partition.current.partition}:s3:::${local.bucket_name}"
       compression_format = "UNCOMPRESSED"
       //error_output_prefix = "SumoLogic-Kinesis-Failed-Logs/"
       cloudwatch_logging_options {
