@@ -27,6 +27,7 @@ resource "aws_s3_bucket_policy" "dump_access_logs_to_s3" {
   policy = templatefile("${path.module}/templates/elb_bucket_policy.tmpl", {
     BUCKET_NAME     = local.bucket_name
     ELB_ACCCOUNT_ID = local.region_to_elb_account_id[local.aws_region]
+    AWS_PARTITION   = data.aws_partition.current.partition
   })
 }
 
@@ -39,6 +40,7 @@ resource "aws_sns_topic" "sns_topic" {
     AWS_REGION     = local.aws_region,
     SNS_TOPIC_NAME = "SumoLogic-Terraform-Elb-Module-${random_string.aws_random.id}",
     AWS_ACCOUNT    = local.aws_account_id
+    AWS_PARTITION  = data.aws_partition.current.partition
   })
   tags = var.aws_resource_tags
 }
@@ -64,6 +66,7 @@ resource "aws_iam_role" "source_iam_role" {
     SUMO_LOGIC_ACCOUNT_ID = var.source_details.sumo_account_id,
     ENVIRONMENT           = data.sumologic_caller_identity.current.environment,
     SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id
+    AWS_PARTITION         = data.aws_partition.current.partition
   })
   tags = var.aws_resource_tags
 }
@@ -73,7 +76,8 @@ resource "aws_iam_policy" "iam_policy" {
 
   name = "SumoLogicElbSource-${random_string.aws_random.id}"
   policy = templatefile("${path.module}/templates/sumologic_source_policy.tmpl", {
-    BUCKET_NAME = local.bucket_name
+    BUCKET_NAME   = local.bucket_name
+    AWS_PARTITION = data.aws_partition.current.partition
   })
   tags = var.aws_resource_tags
 }
