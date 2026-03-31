@@ -21,7 +21,7 @@ module "kinesisfirehoseformetrics" {
     description         = "This source is created using Sumo Logic terraform AWS Kinesis Firehose for metrics module to collect AWS Cloudwatch metrics."
     collector_id        = ""
     limit_to_namespaces = ["AWS/SNS", "AWS/SQS"]
-    sumo_account_id     = 926226587429
+    sumo_account_id     = "926226587429"
     fields              = {}
     "iam_details" = {
       "create_iam_role" = true,
