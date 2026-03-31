@@ -4,6 +4,14 @@ locals {
 
   aws_region = data.aws_region.current.id
 
+  # sumo aws account ids
+  sumo_account_ids = {
+    aws        = "926226587429"  # Commercial AWS account
+    aws-us-gov = "926226587429"   # GovCloud account
+    aws-cn     = "926226587429"   # China account
+    aws-eusc   = "052162193518"   # EU Sovereign account
+  }
+
   # create bucket if flag is set to true.
   create_bucket = var.create_bucket
 

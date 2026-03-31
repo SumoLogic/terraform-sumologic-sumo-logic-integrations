@@ -41,7 +41,7 @@ variable "source_details" {
     source_category     = string
     collector_id        = string
     description         = string
-    sumo_account_id     = number
+    sumo_account_id     = string
     limit_to_namespaces = list(string)
     tag_filters = list(object({
       type      = string
@@ -60,7 +60,7 @@ variable "source_details" {
     source_category     = "Labs/aws/cloudwatch/metrics"
     collector_id        = ""
     description         = "This source is created using Sumo Logic terraform AWS Kinesis Firehose for metrics module to collect AWS Cloudwatch metrics."
-    sumo_account_id     = 926226587429
+    sumo_account_id     = "926226587429"
     limit_to_namespaces = []
     tag_filters         = []
     fields              = {}
