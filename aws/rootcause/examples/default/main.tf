@@ -1,5 +1,5 @@
 module "root_cause_sources_module" {
-  source = "../../../rootcause"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/rootcause"
 
   create_collector          = true
   sumologic_organization_id = var.sumologic_organization_id
@@ -24,7 +24,7 @@ module "root_cause_sources_module" {
     limit_to_regions = [local.aws_region]
     paused           = false
     scan_interval    = 300000
-    sumo_account_id  = 926226587429
+    sumo_account_id  = "926226587429"
     fields           = {}
   }
 
@@ -37,7 +37,7 @@ module "root_cause_sources_module" {
     limit_to_regions = [local.aws_region]
     paused           = false
     scan_interval    = 300000
-    sumo_account_id  = 926226587429
+    sumo_account_id  = "926226587429"
     fields           = {}
   }
 }

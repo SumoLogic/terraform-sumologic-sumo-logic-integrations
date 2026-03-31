@@ -32,7 +32,7 @@ variable "inventory_source_details" {
     limit_to_namespaces = list(string)
     paused              = bool
     scan_interval       = number
-    sumo_account_id     = number
+    sumo_account_id     = string
     fields              = map(string)
   })
   description = "Provide details for the Sumo Logic AWS Inventory source. If not provided, then defaults will be used."
@@ -45,7 +45,7 @@ variable "inventory_source_details" {
     limit_to_namespaces = []
     scan_interval       = 300000
     paused              = false
-    sumo_account_id     = 926226587429
+    sumo_account_id     = "926226587429"
     fields              = {}
   }
 }
@@ -64,7 +64,7 @@ variable "xray_source_details" {
     limit_to_regions = list(string)
     paused           = bool
     scan_interval    = number
-    sumo_account_id  = number
+    sumo_account_id  = string
     fields           = map(string)
   })
   description = "Provide details for the Sumo Logic AWS XRAY source. If not provided, then defaults will be used."
@@ -76,7 +76,7 @@ variable "xray_source_details" {
     limit_to_regions = []
     scan_interval    = 300000
     paused           = false
-    sumo_account_id  = 926226587429
+    sumo_account_id  = "926226587429"
     fields           = {}
   }
 }
