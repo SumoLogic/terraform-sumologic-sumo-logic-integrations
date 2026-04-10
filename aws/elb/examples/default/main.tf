@@ -5,7 +5,7 @@ resource "random_string" "aws_random" {
 }
 
 module "lb_module" {
-  source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/elb"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/elb"
 
   create_collector          = true
   sumologic_organization_id = var.sumologic_organization_id
