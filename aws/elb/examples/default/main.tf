@@ -25,7 +25,7 @@ module "lb_module" {
     }
     paused               = false
     scan_interval        = 60000
-    sumo_account_id      = 926226587429
+    sumo_account_id      = "926226587429"
     cutoff_relative_time = "-1d"
     fields               = {}
     iam_details = {

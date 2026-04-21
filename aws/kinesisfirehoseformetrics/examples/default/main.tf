@@ -31,7 +31,7 @@ module "kinesis_firehose_for_metrics_source_module" {
       "namespace" = "AWS/ApplicationELB"
       "tags"      = ["env=dev"]
     }],
-    sumo_account_id = 926226587429
+    sumo_account_id = "926226587429"
     fields          = {}
     iam_details = {
       create_iam_role = true

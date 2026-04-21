@@ -32,6 +32,6 @@ module "cloudwatch_metrics" {
     "scan_interval" : 300000,
     "source_category" : "Labs/aws/cloudwatch/metrics",
     "source_name" : "CloudWatch Metrics Source",
-    "sumo_account_id" : 926226587429
+    "sumo_account_id" : "926226587429"
   }
 }

@@ -31,7 +31,7 @@ variable "source_details" {
     })
     paused               = bool
     scan_interval        = string
-    sumo_account_id      = number
+    sumo_account_id      = string
     cutoff_relative_time = string
     fields               = map(string)
     iam_details = object({
@@ -57,7 +57,7 @@ variable "source_details" {
     }
     paused               = false
     scan_interval        = 300000
-    sumo_account_id      = 926226587429
+    sumo_account_id      = "926226587429"
     cutoff_relative_time = "-1d"
     fields               = {}
     iam_details = {
