@@ -196,19 +196,36 @@ resource "sumologic_http_source" "source" {
 }
 
 # Reason to use the SAM app, is to have single source of truth for Auto Subscribe functionality.
-resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_logs_subscription" {
-  for_each = toset(local.auto_enable_logs_subscription ? ["auto_enable_logs_subscription"] : [])
+# resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_logs_subscription" {
+#   for_each = toset(local.auto_enable_logs_subscription ? ["auto_enable_logs_subscription"] : [])
+#
+#   name             = "Auto-Enable-Logs-Subscription-${random_string.aws_random.id}"
+#   application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector"
+#   semantic_version = var.app_semantic_version
+#   capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
+#   parameters = {
+#     DestinationArnType  = "Lambda"
+#     DestinationArnValue = aws_lambda_function.logs_lambda_function.arn
+#     LogGroupPattern     = var.auto_enable_logs_subscription_options.filter
+#     LogGroupTags        = var.auto_enable_logs_subscription_options.tags_filter
+#     UseExistingLogs     = local.auto_enable_existing
+#   }
+#   tags = var.aws_resource_tags
+# }
 
-  name             = "Auto-Enable-Logs-Subscription-${random_string.aws_random.id}"
-  application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector"
-  semantic_version = var.app_semantic_version
-  capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
-  parameters = {
-    DestinationArnType  = "Lambda"
-    DestinationArnValue = aws_lambda_function.logs_lambda_function.arn
-    LogGroupPattern     = var.auto_enable_logs_subscription_options.filter
-    LogGroupTags        = var.auto_enable_logs_subscription_options.tags_filter
-    UseExistingLogs     = local.auto_enable_existing
-  }
-  tags = var.aws_resource_tags
+module "loggroup_auto_enable_module" {
+  source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/autoenable/modules/loggroup"
+
+ # Destination Configuration
+  destination_arn_type  = "Lambda"
+  destination_arn_value = aws_lambda_function.logs_lambda_function.arn
+
+  # Log Group Configuration
+  log_group_pattern = var.auto_enable_logs_subscription_options.filter
+  log_group_tags    = var.auto_enable_logs_subscription_options.tags_filter
+
+  # Optional Configuration
+  use_existing_logs = local.auto_enable_existing
+
+  aws_resource_tags = var.aws_resource_tags
 }

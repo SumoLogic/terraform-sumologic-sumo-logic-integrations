@@ -77,7 +77,7 @@ variable "source_details" {
 
 variable "app_semantic_version" {
   type        = string
-  description = "Provide the latest version of Serverless Application Repository 'sumologic-loggroup-connector'."
+  description = "Terraform Provide the version of 'loggroup-auto-enable'."
   default     = "1.0.15"
 }
 

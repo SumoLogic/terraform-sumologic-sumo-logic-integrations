@@ -5,7 +5,12 @@ resource "random_string" "aws_random" {
 }
 
 module "lb_module" {
-  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/elb"
+  source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/elb"
+
+  providers = {
+    aws                    = aws
+    lambda-invoke-extension = lambda-invoke-extension
+  }
 
   create_collector          = true
   sumologic_organization_id = var.sumologic_organization_id
