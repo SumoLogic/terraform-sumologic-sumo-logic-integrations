@@ -37,8 +37,3 @@ output "aws_sns_subscription" {
   value       = aws_sns_topic_subscription.subscription
   description = "AWS SNS subscription to Sumo Logic AWS ELB source."
 }
-
-output "aws_serverlessapplicationrepository_cloudformation_stack" {
-  value       = local.auto_enable_access_logs ? aws_serverlessapplicationrepository_cloudformation_stack.auto_enable_access_logs : {}
-  description = "AWS CloudFormation stack for ALB Auto Enable access logs."
-}

@@ -5,7 +5,7 @@ resource "random_string" "aws_random" {
 }
 
 module "kinesis_firehose_for_logs_module" {
-  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/kinesisfirehoseforlogs"
+  source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/kinesisfirehoseforlogs"
 
   create_collector  = true
   aws_resource_tags = local.aws_resource_tags
