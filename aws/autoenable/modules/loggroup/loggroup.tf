@@ -66,9 +66,9 @@ resource "aws_iam_role_policy" "lambda_execution_policy" {
 resource "aws_lambda_function" "sumo_log_group_lambda_connector" {
   function_name = "SumoLogGroupLambdaConnector-${local.random_id_part}"
   s3_bucket     = local.region_bucket_map[data.aws_region.current.id]
-  s3_key        = "sumologic-aws-observability/functions/loggroup-lambda-connector/v1.0.15/loggroup-lambda-connector.zip"
+  s3_key        = "sumologic-aws-observability/functions/loggroup-lambda-connector/v1.0.16/loggroup-lambda-connector.zip"
   handler       = "loggroup-lambda-connector.handler"
-  runtime       = "nodejs22.x"
+  runtime       = "nodejs24.x"
   memory_size   = 128
   timeout       = 900
   role          = aws_iam_role.sumo_log_group_lambda_connector.arn
@@ -253,7 +253,7 @@ resource "aws_lambda_function" "sumo_log_group_existing_lambda_connector" {
 
   function_name = "SumoLogGroupExistingLambdaConnector-${local.random_id_part}"
   handler       = "index.handler"
-  runtime       = "nodejs22.x"
+  runtime       = "nodejs24.x"
   role          = aws_iam_role.sumo_log_group_existing_lambda_connector[0].arn
 
   # Use the archive_file data source
