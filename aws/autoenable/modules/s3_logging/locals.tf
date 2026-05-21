@@ -1,4 +1,7 @@
 locals {
+
+  aws_region = data.aws_region.current.id
+
   region_bucket_map = {
     "us-east-1"      = "appdevzipfiles-us-east-1"
     "us-east-2"      = "appdevzipfiles-us-east-2"

@@ -195,7 +195,8 @@ resource "sumologic_http_source" "source" {
 
 
 module "loggroup_auto_enable_module" {
-  source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/autoenable/modules/loggroup"
+  #source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/autoenable/modules/loggroup"
+  source = "git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/autoenable/modules/loggroup?ref=fy27q2"
 
  # Destination Configuration
   destination_arn_type  = "Kinesis"
