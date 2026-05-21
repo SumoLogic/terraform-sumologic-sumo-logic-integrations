@@ -54,7 +54,7 @@ resource "aws_lambda_function" "enable_new_aws_resources" {
   description  = "Lambda Function for auto enable s3 logs for AWS Resources."
 
   s3_bucket = local.region_bucket_map[data.aws_region.current.id]
-  s3_key    = "sumologic-aws-observability/functions/sumo_app_utils/v3.0.0/sumo_app_utils.zip"
+  s3_key    = "sumologic-aws-observability/functions/sumo-app-utils/v3.0.0/sumo-app-utils.zip"
 
   environment {
     variables = {
@@ -234,7 +234,7 @@ resource "aws_lambda_function" "enable_existing_aws_resources" {
   timeout      = 900
 
   s3_bucket = local.region_bucket_map[data.aws_region.current.id]
-  s3_key    = "sumologic-aws-observability/functions/sumo_app_utils/v3.0.0/sumo_app_utils.zip"
+  s3_key    = "sumologic-aws-observability/functions/sumo-app-utils/v3.0.0/sumo-app-utils.zip"
 
   tags = var.aws_resource_tags
 
