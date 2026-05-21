@@ -48,7 +48,7 @@ resource "aws_lambda_function" "enable_new_aws_resources" {
   function_name = "EnableNewAWSResourcesLambda-${local.random_id_part}"
   role         = aws_iam_role.sumo_lambda_role.arn
   handler      = "awsresource.enable_s3_logs"
-  runtime      = "python3.13"
+  runtime      = "python3.14"
   memory_size  = 128
   timeout      = 600
   description  = "Lambda Function for auto enable s3 logs for AWS Resources."
@@ -229,7 +229,7 @@ resource "aws_lambda_function" "enable_existing_aws_resources" {
   function_name = "EnableExistingAWSResourcesLambda-${local.random_id_part}"
   role         = aws_iam_role.sumo_lambda_role.arn
   handler      = "main.handler"
-  runtime      = "python3.13"
+  runtime      = "python3.14"
   memory_size  = 128
   timeout      = 900
 
