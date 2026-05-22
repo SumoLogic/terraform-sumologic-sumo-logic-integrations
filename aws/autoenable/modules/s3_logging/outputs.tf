@@ -1,6 +1,6 @@
 # Outputs s3 logging
 output "s3_logging_current_region" {
-  value = data.aws_region.current.name
+  value = data.aws_region.current.region
 }
 
 output "enable_new_aws_resources_lambda_arn" {

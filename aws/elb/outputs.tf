@@ -4,7 +4,7 @@ output "random_string" {
 }
 
 output "elb_current_region" {
-  value = data.aws_region.current.name
+  value = data.aws_region.current.region
 }
 
 output "aws_s3_bucket" {
