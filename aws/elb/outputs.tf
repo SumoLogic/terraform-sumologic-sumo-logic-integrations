@@ -3,6 +3,10 @@ output "random_string" {
   description = "Random String value created."
 }
 
+output "elb_current_region" {
+  value = data.aws_region.current.name
+}
+
 output "aws_s3_bucket" {
   value       = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket : {}
   description = "AWS S3 Bucket name created to Store the ELB logs."
