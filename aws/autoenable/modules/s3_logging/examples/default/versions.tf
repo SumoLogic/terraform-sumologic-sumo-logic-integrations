@@ -16,9 +16,3 @@ terraform {
     }
   }
 }
-
-provider "aws" {
-}
-
-provider "lambda-invoke-extension" {
-}
