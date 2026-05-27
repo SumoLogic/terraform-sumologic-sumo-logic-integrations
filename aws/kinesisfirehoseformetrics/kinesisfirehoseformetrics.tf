@@ -64,8 +64,8 @@ resource "aws_iam_role" "firehose_role" {
 
 resource "aws_iam_policy" "firehose_s3_upload_policy" {
   policy = templatefile("${path.module}/templates/firehose_s3_upload_policy.tmpl", {
-    BUCKET_NAME = local.bucket_name
-    ARN         = local.arn_map[local.aws_region]
+    BUCKET_NAME   = local.bucket_name
+    AWS_PARTITION = data.aws_partition.current.partition
   })
   tags = var.aws_resource_tags
 }
@@ -96,10 +96,10 @@ resource "aws_iam_role" "metrics_role" {
 
 resource "aws_iam_policy" "metrics_policy" {
   policy = templatefile("${path.module}/templates/metrics_policy.tmpl", {
-    ARN         = local.arn_map[local.aws_region]
-    AWS_REGION  = local.aws_region
-    AWS_ACCOUNT = local.aws_account_id
-    ROLE_NAME   = aws_iam_role.metrics_role.name
+    AWS_PARTITION = data.aws_partition.current.partition
+    AWS_REGION    = local.aws_region
+    AWS_ACCOUNT   = local.aws_account_id
+    ROLE_NAME     = aws_iam_role.metrics_role.name
   })
   tags = var.aws_resource_tags
 }
@@ -134,7 +134,7 @@ resource "aws_kinesis_firehose_delivery_stream" "metrics_delivery_stream" {
 
     s3_configuration {
       role_arn           = aws_iam_role.firehose_role.arn
-      bucket_arn         = "arn:${local.arn_map[local.aws_region]}:s3:::${local.bucket_name}"
+      bucket_arn         = "arn:${data.aws_partition.current.partition}:s3:::${local.bucket_name}"
       compression_format = "UNCOMPRESSED"
       //error_output_prefix = "SumoLogic-Kinesis-Failed-Metrics/"
       cloudwatch_logging_options {
@@ -168,10 +168,10 @@ resource "aws_iam_role" "source_iam_role" {
   path = "/"
 
   assume_role_policy = templatefile("${path.module}/templates/sumologic_assume_role.tmpl", {
-    SUMO_LOGIC_ACCOUNT_ID = var.source_details.sumo_account_id,
-    ENVIRONMENT           = data.sumologic_caller_identity.current.environment,
+    SUMO_LOGIC_ACCOUNT_ID = local.sumo_account_ids[data.aws_partition.current.partition]
+    ENVIRONMENT           = data.sumologic_caller_identity.current.environment
     SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id,
-    ARN                   = local.arn_map[local.aws_region]
+    AWS_PARTITION         = data.aws_partition.current.partition
   })
   tags = var.aws_resource_tags
 }

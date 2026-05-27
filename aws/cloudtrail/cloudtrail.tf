@@ -27,7 +27,8 @@ resource "aws_s3_bucket_policy" "s3_bucket" {
 
   bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
   policy = templatefile("${path.module}/templates/cloudtrail_bucket_policy.tmpl", {
-    BUCKET_NAME = aws_s3_bucket.s3_bucket["s3_bucket"].id
+    BUCKET_NAME   = aws_s3_bucket.s3_bucket["s3_bucket"].id
+    AWS_PARTITION = data.aws_partition.current.partition
   })
 }
 
@@ -40,6 +41,7 @@ resource "aws_sns_topic" "sns_topic" {
     AWS_REGION     = local.aws_region,
     SNS_TOPIC_NAME = "SumoLogic-Terraform-CloudTrail-Module-${random_string.aws_random.id}",
     AWS_ACCOUNT    = local.aws_account_id
+    AWS_PARTITION  = data.aws_partition.current.partition
   })
   tags = var.aws_resource_tags
 }
@@ -74,9 +76,10 @@ resource "aws_iam_role" "source_iam_role" {
   path = "/"
 
   assume_role_policy = templatefile("${path.module}/templates/sumologic_assume_role.tmpl", {
-    SUMO_LOGIC_ACCOUNT_ID = var.source_details.sumo_account_id,
-    ENVIRONMENT           = data.sumologic_caller_identity.current.environment,
+    SUMO_LOGIC_ACCOUNT_ID = local.sumo_account_ids[data.aws_partition.current.partition]
+    ENVIRONMENT           = data.sumologic_caller_identity.current.environment
     SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id
+    AWS_PARTITION         = data.aws_partition.current.partition
   })
   tags = var.aws_resource_tags
 }
@@ -86,7 +89,8 @@ resource "aws_iam_policy" "iam_policy" {
 
   name = "SumoLogicCloudTrailSource-${random_string.aws_random.id}"
   policy = templatefile("${path.module}/templates/sumologic_source_policy.tmpl", {
-    BUCKET_NAME = local.bucket_name
+    BUCKET_NAME   = local.bucket_name
+    AWS_PARTITION = data.aws_partition.current.partition
   })
   tags = var.aws_resource_tags
 }

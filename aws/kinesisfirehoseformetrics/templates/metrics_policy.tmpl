@@ -8,7 +8,7 @@
         "firehose:PutRecordBatch"
       ],
       "Resource": [
-        "arn:${ARN}:firehose:${AWS_REGION}:${AWS_ACCOUNT}:*"
+        "arn:${AWS_PARTITION}:firehose:${AWS_REGION}:${AWS_ACCOUNT}:*"
       ]
     },
     {
@@ -18,7 +18,7 @@
         "iam:PassRole"
       ],
       "Resource": [
-        "arn:${ARN}:iam::${AWS_ACCOUNT}:role/${ROLE_NAME}"
+        "arn:${AWS_PARTITION}:iam::${AWS_ACCOUNT}:role/${ROLE_NAME}"
       ]
     }
   ],

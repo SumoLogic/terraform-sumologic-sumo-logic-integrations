@@ -32,7 +32,7 @@ variable "source_details" {
     }))
     paused          = bool
     scan_interval   = number
-    sumo_account_id = number
+    sumo_account_id = string
     fields          = map(string)
     iam_details = object({
       create_iam_role = bool
@@ -50,7 +50,7 @@ variable "source_details" {
     tag_filters         = []
     scan_interval       = 300000
     paused              = false
-    sumo_account_id     = 926226587429
+    sumo_account_id     = "926226587429"
     fields              = {}
     iam_details = {
       create_iam_role = true

@@ -21,7 +21,7 @@ module "cloudwatchmetrics" {
     "AWS/SNS"]
     scan_interval   = 300000
     paused          = false
-    sumo_account_id = 926226587429
+    sumo_account_id = "926226587429"
     fields          = {}
     "iam_details" = {
       "create_iam_role" = true,
