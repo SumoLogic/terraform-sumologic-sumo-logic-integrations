@@ -28,6 +28,8 @@ locals {
     "ap-northeast-3" = "appdevzipfiles-ap-northeast-3s"
     "ap-southeast-3" = "appdevzipfiles-ap-southeast-3"
     "il-central-1"   = "appdevzipfiles-il-central-1"
+    "ap-southeast-4" = "appdevzipfiles-ap-southeast-4s"
+    "ap-southeast-6" = "appdevzipfiles-ap-southeast-6ss"
   }
 
   # Random ID simulation for naming
