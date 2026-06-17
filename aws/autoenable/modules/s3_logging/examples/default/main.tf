@@ -8,8 +8,8 @@ module "s3_logging_auto_enable_module" {
   source = "git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/autoenable/modules/s3_logging?ref=fy27q2"
 
   providers = {
-    aws                    = aws
-    lambda-invoke-extension = lambda-invoke-extension
+    aws       = aws
+    sumologic = sumologic
   }
 
   auto_enable_logging           = "ALB"

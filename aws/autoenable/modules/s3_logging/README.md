@@ -24,7 +24,7 @@ This module is used to create AWS resources to automatically enable logging for 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 7.0.0 |
-| <a name="provider_lambda-invoke-extension"></a> [lambda-invoke-extension](#provider\_lambda-invoke-extension) | n/a |
+| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | ~> 1.0.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.1.0 |
 
 ## Modules
@@ -51,7 +51,7 @@ No modules.
 | [aws_lambda_permission.elb_events_invoke_permission](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [aws_lambda_permission.s3_events_invoke_permission](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [aws_lambda_permission.vpc_events_invoke_permission](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
-| lambda-invoke-extension_lambda_invoke_extension_action.enable_logging | resource |
+| [sumologic_lambda_invoke_action.enable_logging](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs/resources/lambda_invoke_action) | resource |
 | [random_string.stack_suffix](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
