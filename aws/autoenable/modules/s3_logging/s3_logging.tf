@@ -253,4 +253,5 @@ resource "sumologic_lambda_invoke_action" "enable_logging" {
   bucket_prefix          = var.bucket_prefix
   account_id             = data.aws_caller_identity.current.account_id
   remove_on_delete_stack = var.remove_on_delete_stack
+  region                 = data.aws_region.current.name
 }
