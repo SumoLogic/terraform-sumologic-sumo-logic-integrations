@@ -243,10 +243,9 @@ resource "aws_lambda_function" "enable_existing_aws_resources" {
 
 # Example resource usage
 
-resource "lambda_invoke_extension_action" "enable_logging" {
+resource "sumologic_lambda_invoke_action" "enable_logging" {
   count = local.auto_enable_existing ? 1 : 0
 
-  provider = lambda-invoke-extension
   lambda_name            = aws_lambda_function.enable_existing_aws_resources[0].function_name
   aws_resource           = local.aws_resource
   bucket_name            = var.bucket_name

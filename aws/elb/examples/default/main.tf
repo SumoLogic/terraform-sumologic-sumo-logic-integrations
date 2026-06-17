@@ -8,8 +8,8 @@ module "lb_module" {
   source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/elb"
 
   providers = {
-    aws                    = aws
-    lambda-invoke-extension = lambda-invoke-extension
+    aws       = aws
+    sumologic = sumologic
   }
 
   create_collector          = true
