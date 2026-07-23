@@ -25,9 +25,8 @@ resource "aws_s3_bucket_policy" "dump_access_logs_to_s3" {
 
   bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
   policy = templatefile("${path.module}/templates/elb_bucket_policy.tmpl", {
-    BUCKET_NAME     = local.bucket_name
-    ELB_ACCCOUNT_ID = local.region_to_elb_account_id[local.aws_region]
-    AWS_PARTITION   = data.aws_partition.current.partition
+    BUCKET_NAME   = local.bucket_name
+    AWS_PARTITION = data.aws_partition.current.partition
   })
 }
 
