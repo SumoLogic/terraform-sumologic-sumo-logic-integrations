@@ -2,7 +2,7 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Sid": "AWSAlbLogDeliveryAclCheck",
+      "Sid": "AWSELBLogDeliveryAclCheck",
       "Effect": "Allow",
       "Principal": {
         "Service": "delivery.logs.amazonaws.com"
@@ -11,7 +11,7 @@
       "Resource": "arn:${AWS_PARTITION}:s3:::${BUCKET_NAME}"
     },
     {
-      "Sid": "AddLBLogsStatement",
+      "Sid": "AddELBLogsStatement",
       "Effect": "Allow",
       "Principal": {
         "Service": "logdelivery.elasticloadbalancing.amazonaws.com"

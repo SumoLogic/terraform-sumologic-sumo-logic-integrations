@@ -30,6 +30,16 @@ resource "aws_s3_bucket_policy" "dump_access_logs_to_s3" {
   })
 }
 
+resource "aws_s3_bucket_policy" "existing_bucket_policy" {
+  for_each = toset(!var.source_details.bucket_details.create_bucket && local.bucket_name != "" ? ["existing"] : [])
+
+  bucket = local.bucket_name
+  policy = templatefile("${path.module}/templates/elb_bucket_policy.tmpl", {
+    BUCKET_NAME   = local.bucket_name
+    AWS_PARTITION = data.aws_partition.current.partition
+  })
+}
+
 resource "aws_sns_topic" "sns_topic" {
   for_each = toset(var.source_details.sns_topic_details.create_sns_topic ? ["sns_topic"] : [])
 
@@ -48,6 +58,17 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   for_each = toset(var.source_details.sns_topic_details.create_sns_topic && var.source_details.bucket_details.create_bucket ? ["bucket_notification"] : [])
 
   bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
+
+  topic {
+    topic_arn = aws_sns_topic.sns_topic["sns_topic"].arn
+    events    = ["s3:ObjectCreated:Put"]
+  }
+}
+
+resource "aws_s3_bucket_notification" "existing_bucket_notification" {
+  for_each = toset(var.source_details.sns_topic_details.create_sns_topic && !var.source_details.bucket_details.create_bucket && local.bucket_name != "" ? ["bucket_notification"] : [])
+
+  bucket = local.bucket_name
 
   topic {
     topic_arn = aws_sns_topic.sns_topic["sns_topic"].arn
@@ -175,6 +196,7 @@ resource "aws_sns_topic_subscription" "subscription" {
 # }
 
 module "auto_enable_access_logs_module" {
+  depends_on = [sumologic_elb_source.source]
   #source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/autoenable/modules/s3_logging"
   source = "git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/autoenable/modules/s3_logging?ref=fy27q2"
 
