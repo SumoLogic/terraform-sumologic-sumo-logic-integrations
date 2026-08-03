@@ -141,6 +141,24 @@ variable "wait_for_seconds" {
   default     = 180
 }
 
+variable "create_sns_subscription" {
+  type        = bool
+  description = "Set to false to skip creating the SNS subscription. Used when the Lambda helper handles subscription for existing buckets."
+  default     = true
+}
+
+variable "create_existing_bucket_policy" {
+  type        = bool
+  description = "Set to false to skip applying bucket policy on an existing bucket. Used when the Lambda helper (AddBucketPolicy) handles it for AWSO."
+  default     = true
+}
+
+variable "create_existing_bucket_notification" {
+  type        = bool
+  description = "Set to false to skip configuring S3 notification on an existing bucket. Used when the Lambda helper (ConfigureBucketNotifications) handles it for AWSO."
+  default     = true
+}
+
 variable "aws_resource_tags" {
   description = "Map of tags to apply to all AWS resources provisioned through the Module"
   type        = map(string)

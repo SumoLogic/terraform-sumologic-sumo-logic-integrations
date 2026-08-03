@@ -31,7 +31,7 @@ resource "aws_s3_bucket_policy" "dump_access_logs_to_s3" {
 }
 
 resource "aws_s3_bucket_policy" "existing_bucket_policy" {
-  for_each = toset(!var.source_details.bucket_details.create_bucket && local.bucket_name != "" ? ["existing"] : [])
+  for_each = toset(!var.source_details.bucket_details.create_bucket && local.bucket_name != "" && var.create_existing_bucket_policy ? ["existing"] : [])
 
   bucket = local.bucket_name
   policy = templatefile("${path.module}/templates/elb_bucket_policy.tmpl", {
@@ -66,7 +66,7 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
 }
 
 resource "aws_s3_bucket_notification" "existing_bucket_notification" {
-  for_each = toset(var.source_details.sns_topic_details.create_sns_topic && !var.source_details.bucket_details.create_bucket && local.bucket_name != "" ? ["bucket_notification"] : [])
+  for_each = toset(var.source_details.sns_topic_details.create_sns_topic && !var.source_details.bucket_details.create_bucket && local.bucket_name != "" && var.create_existing_bucket_notification ? ["bucket_notification"] : [])
 
   bucket = local.bucket_name
 
@@ -150,6 +150,8 @@ resource "sumologic_elb_source" "source" {
 }
 
 resource "aws_sns_topic_subscription" "subscription" {
+  for_each = toset(var.create_sns_subscription ? ["subscription"] : [])
+
   delivery_policy = jsonencode({
     "guaranteed" = false,
     "healthyRetryPolicy" = {
