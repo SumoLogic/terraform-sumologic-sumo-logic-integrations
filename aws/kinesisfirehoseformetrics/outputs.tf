@@ -1,5 +1,5 @@
 output "random_string" {
-  value       = random_string.aws_random.id
+  value       = random_string.aws_random
   description = "Random String value created."
 }
 
@@ -25,21 +25,12 @@ output "aws_cloudwatch_log_stream" {
 }
 
 output "source_aws_iam_role" {
-  value = var.source_details.iam_details.create_iam_role ? {
-    for k, v in aws_iam_role.source_iam_role : k => {
-      arn  = v.arn
-      name = v.name
-      id   = v.id
-    }
-  } : {}
+  value       = var.source_details.iam_details.create_iam_role ? aws_iam_role.source_iam_role : {}
   description = "AWS IAM role with permission to setup Sumo Logic permissions."
 }
 
 output "aws_iam_role" {
-  value = tomap({
-    "metrics_role" = { arn = aws_iam_role.metrics_role.arn, name = aws_iam_role.metrics_role.name, id = aws_iam_role.metrics_role.id }
-    "firehose_role" = { arn = aws_iam_role.firehose_role.arn, name = aws_iam_role.firehose_role.name, id = aws_iam_role.firehose_role.id }
-  })
+  value       = tomap({ "metrics_role" = aws_iam_role.metrics_role, "firehose_role" = aws_iam_role.firehose_role })
   description = "AWS IAM role with permission to setup kinesis firehose metrics."
 }
 

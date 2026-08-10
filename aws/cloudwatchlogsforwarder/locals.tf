@@ -2,7 +2,7 @@ locals {
 
   aws_account_id = data.aws_caller_identity.current.account_id
 
-  aws_region = data.aws_region.current.region
+  aws_region = data.aws_region.current.id
 
   # Get the default collector name if no collector name is provided.
   collector_name = var.collector_details.collector_name == "SumoLogic CloudWatch Logs Collector <Random ID>" ? "SumoLogic CloudWatch Logs Collector ${random_string.aws_random.id}" : var.collector_details.collector_name
