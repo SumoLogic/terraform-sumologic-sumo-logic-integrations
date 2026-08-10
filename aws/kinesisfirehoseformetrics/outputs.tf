@@ -4,7 +4,13 @@ output "random_string" {
 }
 
 output "aws_s3_bucket" {
-  value       = local.create_bucket ? aws_s3_bucket.s3_bucket : {}
+  value = local.create_bucket ? {
+    for k, v in aws_s3_bucket.s3_bucket : k => {
+      id     = v.id
+      arn    = v.arn
+      bucket = v.bucket
+    }
+  } : {}
   description = "AWS S3 Bucket name created to Store the Failed data."
 }
 
