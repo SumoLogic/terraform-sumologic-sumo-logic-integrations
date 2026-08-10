@@ -77,7 +77,7 @@ func TestWithDefaultValues(t *testing.T) {
 // 2. With Existing Bucket, Existing Trail, new Collector, New SNS Topic, New IAM Role
 func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
 	t.Parallel()
-	aws_region := "us-west-1"
+	aws_region := "us-east-1"
 	PATH_EXPRESSION := fmt.Sprintf("AWSLogs/%s/CloudTrail/%s/*", aws.GetAccountId(t), aws_region)
 
 	vars := map[string]interface{}{
@@ -129,7 +129,7 @@ func TestWithExistingBucketTrailNewCollectorSNSIAM(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 9, 0, 0)
+		common.AssertResourceCounts(t, count, 11, 0, 0)
 	})
 
 	outputs := common.FetchAllOutputs(t, options)
@@ -203,7 +203,7 @@ func TestWithExistingBucketTrailCollectorSNSIAM(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 4, 0, 0)
+		common.AssertResourceCounts(t, count, 5, 0, 0)
 	})
 
 	outputs := common.FetchAllOutputs(t, options)

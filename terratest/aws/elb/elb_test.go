@@ -129,7 +129,7 @@ func TestWithExistingResourcesValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 5, 0, 0)
+		common.AssertResourceCounts(t, count, 6, 0, 0)
 	})
 
 	outputs := common.FetchAllOutputs(t, options)
@@ -160,10 +160,10 @@ func TestWithExistingResourcesValues(t *testing.T) {
 
 func TestWithExistingCollectorIAMNewSNSResources(t *testing.T) {
 	t.Parallel()
-	BUCKET_NAME := os.Getenv("BUCKET_NAME_AP_SOUTH_1")
-	PATH_EXPRESSION := os.Getenv("PATH_EXPRESSION_AP_SOUTH_1")
+	BUCKET_NAME := os.Getenv("BUCKET_NAME_US_EAST_1")
+	PATH_EXPRESSION := os.Getenv("PATH_EXPRESSION_US_EAST_1")
 
-	aws_region := "ap-south-1"
+	aws_region := "us-east-1"
 	assertResource := common.GetAssertResource(t, map[string]string{"AWS_DEFAULT_REGION": aws_region})
 	lb_id, dns := assertResource.CreateELB("TestWithDefaultValuesLB", "TestWithDefaultValuesTG")
 	vars := map[string]interface{}{
@@ -208,7 +208,7 @@ func TestWithExistingCollectorIAMNewSNSResources(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 6, 0, 0)
+		common.AssertResourceCounts(t, count, 8, 0, 0)
 	})
 
 	outputs := common.FetchAllOutputs(t, options)
