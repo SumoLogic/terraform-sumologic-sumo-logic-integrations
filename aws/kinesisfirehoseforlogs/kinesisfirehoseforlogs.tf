@@ -174,24 +174,6 @@ resource "sumologic_http_source" "source" {
   name         = var.source_details.source_name
 }
 
-# Reason to use the SAM app, is to have single source of truth for Auto Subscribe functionality.
-# resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_logs_subscription" {
-#   for_each = toset(local.auto_enable_logs_subscription ? ["auto_enable_logs_subscription"] : [])
-#
-#   name             = "Auto-Enable-Logs-Subscription-${random_string.aws_random.id}"
-#   application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector"
-#   semantic_version = var.app_semantic_version
-#   capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
-#   parameters = {
-#     DestinationArnType  = "Kinesis"
-#     DestinationArnValue = aws_kinesis_firehose_delivery_stream.logs_delivery_stream.arn
-#     LogGroupPattern     = var.auto_enable_logs_subscription_options.filter
-#     LogGroupTags        = var.auto_enable_logs_subscription_options.tags_filter
-#     UseExistingLogs     = local.auto_enable_existing
-#     RoleArn             = aws_iam_role.logs_role.arn
-#   }
-#   tags = var.aws_resource_tags
-# }
 
 
 module "loggroup_auto_enable_module" {
@@ -210,4 +192,5 @@ module "loggroup_auto_enable_module" {
   role_arn          = aws_iam_role.logs_role.arn
 
   aws_resource_tags = var.aws_resource_tags
+  aws_cli_profile   = var.aws_cli_profile
 }

@@ -53,7 +53,7 @@ resource "aws_lambda_function" "enable_new_aws_resources" {
   timeout      = 600
   description  = "Lambda Function for auto enable s3 logs for AWS Resources."
 
-  s3_bucket = local.region_bucket_map[data.aws_region.current.id]
+  s3_bucket = local.region_bucket_map[data.aws_region.current.name]
   s3_key    = "sumologic-aws-observability/functions/sumo-app-utils/v3.0.0/sumo-app-utils.zip"
 
   environment {
@@ -233,7 +233,7 @@ resource "aws_lambda_function" "enable_existing_aws_resources" {
   memory_size  = 128
   timeout      = 900
 
-  s3_bucket = local.region_bucket_map[data.aws_region.current.id]
+  s3_bucket = local.region_bucket_map[data.aws_region.current.name]
   s3_key    = "sumologic-aws-observability/functions/sumo-app-utils/v3.0.0/sumo-app-utils.zip"
 
   tags = var.aws_resource_tags
@@ -243,7 +243,7 @@ resource "aws_lambda_function" "enable_existing_aws_resources" {
 
 # Example resource usage
 
-resource "sumologic_lambda_invoke_action" "enable_logging" {
+resource "sumologic_s3_logging_lambda_enable" "enable_logging" {
   count = local.auto_enable_existing ? 1 : 0
 
   lambda_name            = aws_lambda_function.enable_existing_aws_resources[0].function_name
@@ -254,4 +254,5 @@ resource "sumologic_lambda_invoke_action" "enable_logging" {
   account_id             = data.aws_caller_identity.current.account_id
   remove_on_delete_stack = var.remove_on_delete_stack
   region                 = data.aws_region.current.name
+  aws_profile            = var.aws_cli_profile
 }

@@ -199,7 +199,6 @@ resource "aws_sns_topic_subscription" "subscription" {
 
 module "auto_enable_access_logs_module" {
   depends_on = [sumologic_elb_source.source]
-  #source = "/Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/autoenable/modules/s3_logging"
   source = "git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/autoenable/modules/s3_logging?ref=fy27q2"
 
   providers = {
@@ -215,4 +214,5 @@ module "auto_enable_access_logs_module" {
   remove_on_delete_stack        = var.auto_enable_access_logs_options.remove_on_delete_stack
 
   aws_resource_tags             = var.aws_resource_tags
+  aws_cli_profile               = var.aws_cli_profile
 }

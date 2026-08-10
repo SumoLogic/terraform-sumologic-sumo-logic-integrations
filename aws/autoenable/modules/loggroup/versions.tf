@@ -6,6 +6,10 @@ terraform {
       source  = "hashicorp/aws"
       version = ">= 5.16.2, < 7.0.0"
     }
+    sumologic = {
+      source  = "SumoLogic/sumologic"
+      version = ">= 3.2.9, < 4.0.0"
+    }
     time = {
       source  = "hashicorp/time"
       version = ">=0.7.1"

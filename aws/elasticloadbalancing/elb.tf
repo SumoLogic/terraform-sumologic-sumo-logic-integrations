@@ -216,4 +216,5 @@ module "auto_enable_access_logs_module" {
   remove_on_delete_stack        = var.auto_enable_access_logs_options.remove_on_delete_stack
 
   aws_resource_tags             = var.aws_resource_tags
+  aws_cli_profile               = var.aws_cli_profile
 }

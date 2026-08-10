@@ -123,3 +123,9 @@ variable "aws_resource_tags" {
   type        = map(string)
   default     = {}
 }
+
+variable "aws_cli_profile" {
+  description = "AWS profile to use for Lambda invocation. If empty, uses the default credential chain."
+  type        = string
+  default     = ""
+}

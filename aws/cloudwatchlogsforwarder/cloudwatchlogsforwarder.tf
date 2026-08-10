@@ -229,4 +229,5 @@ module "loggroup_auto_enable_module" {
   use_existing_logs = local.auto_enable_existing
 
   aws_resource_tags = var.aws_resource_tags
+  aws_cli_profile   = var.aws_cli_profile
 }
