@@ -1,5 +1,5 @@
 output "random_string" {
-  value       = random_string.aws_random
+  value       = random_string.aws_random.id
   description = "Random String value created."
 }
 
@@ -14,7 +14,11 @@ output "aws_cloudwatch_log_group" {
 }
 
 output "aws_iam_role" {
-  value       = aws_iam_role.lambda_iam_role
+  value = {
+    arn  = aws_iam_role.lambda_iam_role.arn
+    name = aws_iam_role.lambda_iam_role.name
+    id   = aws_iam_role.lambda_iam_role.id
+  }
   description = "AWS IAM role with permission to setup lambda."
 }
 

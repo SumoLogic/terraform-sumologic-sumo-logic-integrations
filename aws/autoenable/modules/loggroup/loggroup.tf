@@ -1,6 +1,7 @@
 # Random string for naming
 resource "random_string" "stack_suffix" {
   length  = 16
+  numeric = true
   special = false
   upper   = false
 }
@@ -45,7 +46,7 @@ resource "aws_iam_role_policy" "lambda_execution_policy" {
           "logs:ListTagsLogGroup"
         ]
         Resource = [
-          "arn:${data.aws_partition.current.partition}:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:*"
+          "arn:${data.aws_partition.current.partition}:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:log-group:*"
         ]
       },
       {
@@ -55,7 +56,7 @@ resource "aws_iam_role_policy" "lambda_execution_policy" {
           "lambda:InvokeFunction"
         ]
         Resource = [
-          "arn:${data.aws_partition.current.partition}:lambda:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:function:*SumoLogGroupLambda*"
+          "arn:${data.aws_partition.current.partition}:lambda:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:function:*SumoLogGroupLambda*"
         ]
       }
     ]
@@ -65,7 +66,7 @@ resource "aws_iam_role_policy" "lambda_execution_policy" {
 # Lambda Function - SumoLogGroupLambdaConnector
 resource "aws_lambda_function" "sumo_log_group_lambda_connector" {
   function_name = "SumoLogGroupLambdaConnector-${local.random_id_part}"
-  s3_bucket     = local.region_bucket_map[data.aws_region.current.id]
+  s3_bucket     = local.region_bucket_map[data.aws_region.current.region]
   s3_key        = "sumologic-aws-observability/functions/loggroup-lambda-connector/v1.0.16/loggroup-lambda-connector.zip"
   handler       = "loggroup-lambda-connector.handler"
   runtime       = "nodejs24.x"
@@ -123,9 +124,9 @@ resource "aws_lambda_permission" "sumo_cw_lambda_invoke" {
   statement_id  = "AllowExecutionFromCloudWatchLogs"
   action        = "lambda:InvokeFunction"
   function_name = var.destination_arn_value
-  principal     = "logs.${data.aws_region.current.id}.amazonaws.com"
+  principal     = "logs.${data.aws_region.current.region}.amazonaws.com"
   source_account = data.aws_caller_identity.current.account_id
-  source_arn    = "arn:${data.aws_partition.current.partition}:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:*:*"
+  source_arn    = "arn:${data.aws_partition.current.partition}:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:log-group:*:*"
 }
 
 # IAM Policy for Kinesis PassRole (conditional)
@@ -190,7 +191,7 @@ resource "aws_iam_role_policy" "existing_lambda_invoke_policy" {
           "logs:ListTagsLogGroup"
         ]
         Resource = [
-          "arn:${data.aws_partition.current.partition}:logs:${data.aws_region.current.id}:${data.aws_caller_identity.current.account_id}:log-group:*"
+          "arn:${data.aws_partition.current.partition}:logs:${data.aws_region.current.region}:${data.aws_caller_identity.current.account_id}:log-group:*"
         ]
       },
       {
@@ -299,7 +300,7 @@ resource "null_resource" "invoke_lambda_connector" {
       aws lambda invoke \
         --function-name ${aws_lambda_function.sumo_log_group_existing_lambda_connector[0].function_name} \
         --invocation-type Event \
-        --region ${data.aws_region.current.id} \
+        --region ${data.aws_region.current.region} \
         /dev/null
     EOF
   }

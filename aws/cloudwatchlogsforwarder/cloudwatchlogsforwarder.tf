@@ -7,6 +7,7 @@
 
 resource "random_string" "aws_random" {
   length  = 10
+  numeric = true
   special = false
   upper   = false
 }

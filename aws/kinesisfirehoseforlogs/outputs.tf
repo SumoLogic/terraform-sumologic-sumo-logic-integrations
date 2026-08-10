@@ -1,5 +1,5 @@
 output "random_string" {
-  value       = random_string.aws_random
+  value       = random_string.aws_random.id
   description = "Random String value created."
 }
 
@@ -19,7 +19,10 @@ output "aws_cloudwatch_log_stream" {
 }
 
 output "aws_iam_role" {
-  value       = tomap({ "logs_role" = aws_iam_role.logs_role, "firehose_role" = aws_iam_role.firehose_role })
+  value = tomap({
+    "logs_role"    = { arn = aws_iam_role.logs_role.arn, name = aws_iam_role.logs_role.name, id = aws_iam_role.logs_role.id }
+    "firehose_role" = { arn = aws_iam_role.firehose_role.arn, name = aws_iam_role.firehose_role.name, id = aws_iam_role.firehose_role.id }
+  })
   description = "AWS IAM role with permission to setup kinesis firehose logs."
 }
 
