@@ -7,7 +7,7 @@ terraform {
       version = ">= 2.1"
     }
     sumologic = {
-      version = ">= 3.2.9, < 4.0.0"
+      version = ">= 3.3.0, < 4.0.0"
       source  = "SumoLogic/sumologic"
     }
   }
