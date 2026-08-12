@@ -2,7 +2,7 @@ locals {
 
   aws_account_id = data.aws_caller_identity.current.account_id
 
-  aws_region = data.aws_region.current.name
+  aws_region = data.aws_region.current.region
 
   # create bucket if flag is set to true.
   create_bucket = var.create_bucket
