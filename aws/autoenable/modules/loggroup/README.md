@@ -15,6 +15,7 @@
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | n/a |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.1.0 |
+| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 3.3.0, < 4.0.0 |
 | <a name="provider_time"></a> [time](#provider\_time) | >=0.7.1 |
 
 ## Modules
@@ -37,6 +38,7 @@ No modules.
 | [aws_lambda_permission.auto_subscribe_cw_log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [aws_lambda_permission.sumo_cw_lambda_invoke](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [null_resource.invoke_lambda_connector](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
+| [sumologic_async_aws_lambda_invocation.invoke_lambda_connector](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs/resources/async_aws_lambda_invocation) | resource |
 | [random_string.stack_suffix](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [time_sleep.wait_for_iam_propagation](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [archive_file.existing_lambda_zip](https://registry.terraform.io/providers/hashicorp/archive/latest/docs/data-sources/file) | data source |

@@ -30,7 +30,7 @@ The modules configure/create the following resources:
         }
         sumologic = {
           source  = "sumologic/sumologic"
-          version = ">= 3.2.9, < 4.0.0"
+          version = ">= 3.3.0, < 4.0.0"
         }
         jira = {
           source  = "fourplusone/jira"
