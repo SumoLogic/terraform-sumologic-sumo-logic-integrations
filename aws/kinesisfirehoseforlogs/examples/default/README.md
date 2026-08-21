@@ -21,7 +21,7 @@
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_kinesis_firehose_for_logs_module"></a> [kinesis\_firehose\_for\_logs\_module](#module\_kinesis\_firehose\_for\_logs\_module) | /Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/kinesisfirehoseforlogs | n/a |
+| <a name="module_kinesis_firehose_for_logs_module"></a> [kinesis\_firehose\_for\_logs\_module](#module\_kinesis\_firehose\_for\_logs\_module) | git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/kinesisfirehoseforlogs?ref=master | n/a |
 
 ## Resources
 

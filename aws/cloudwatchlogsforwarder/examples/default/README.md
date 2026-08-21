@@ -17,7 +17,7 @@
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_cloudwatch_logs_lambda_log_forwarder_module"></a> [cloudwatch\_logs\_lambda\_log\_forwarder\_module](#module\_cloudwatch\_logs\_lambda\_log\_forwarder\_module) | /Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/cloudwatchlogsforwarder | n/a |
+| <a name="module_cloudwatch_logs_lambda_log_forwarder_module"></a> [cloudwatch\_logs\_lambda\_log\_forwarder\_module](#module\_cloudwatch\_logs\_lambda\_log\_forwarder\_module) | git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/cloudwatchlogsforwarder?ref=master | n/a |
 
 ## Resources
 

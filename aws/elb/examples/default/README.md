@@ -21,7 +21,7 @@
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_lb_module"></a> [lb\_module](#module\_lb\_module) | /Users/akhil.dangore.ctr/Documents/ProjectSource/terraform-sumologic-sumo-logic-integrations/aws/elb | n/a |
+| <a name="module_lb_module"></a> [lb\_module](#module\_lb\_module) | git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/elb?ref=master | n/a |
 
 ## Resources
 
