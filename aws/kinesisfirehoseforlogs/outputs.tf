@@ -4,7 +4,13 @@ output "random_string" {
 }
 
 output "aws_s3_bucket" {
-  value       = local.create_bucket ? aws_s3_bucket.s3_bucket : {}
+  value = local.create_bucket ? {
+    for k, v in aws_s3_bucket.s3_bucket : k => {
+      id     = v.id
+      arn    = v.arn
+      bucket = v.bucket
+    }
+  } : {}
   description = "AWS S3 Bucket name created to Store the Failed data."
 }
 
@@ -37,9 +43,4 @@ output "aws_kinesis_firehose_delivery_stream" {
   value       = aws_kinesis_firehose_delivery_stream.logs_delivery_stream
   sensitive   = true
   description = "AWS Kinesis firehose delivery stream to send logs to Sumo Logic."
-}
-
-output "aws_serverlessapplicationrepository_cloudformation_stack" {
-  value       = local.auto_enable_logs_subscription ? aws_serverlessapplicationrepository_cloudformation_stack.auto_enable_logs_subscription : {}
-  description = "AWS CloudFormation stack for Auto Enable logs subscription."
 }

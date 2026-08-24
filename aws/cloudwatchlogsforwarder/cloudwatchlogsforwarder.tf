@@ -86,7 +86,7 @@ resource "aws_iam_role_policy_attachment" "invoke_lambda_policy_attachment" {
 resource "aws_lambda_function" "logs_lambda_function" {
   function_name = "SumoCWLogsLambda-${random_string.aws_random.id}"
   handler       = "cloudwatchlogs_lambda.handler"
-  runtime       = "nodejs22.x"
+  runtime       = "nodejs24.x"
   role          = aws_iam_role.lambda_iam_role.arn
   s3_bucket     = "appdevzipfiles-${local.aws_region}"
   s3_key        = "cloudwatchLogsDLQ/v1.3.0/cloudwatchlogs-with-dlq.zip"
@@ -110,7 +110,7 @@ resource "aws_lambda_function" "logs_lambda_function" {
 resource "aws_lambda_function" "process_dead_letter_queue_lambda" {
   function_name = "SumoCWProcessDLQLambda-${random_string.aws_random.id}"
   handler       = "DLQProcessor.handler"
-  runtime       = "nodejs22.x"
+  runtime       = "nodejs24.x"
   role          = aws_iam_role.lambda_iam_role.arn
   s3_bucket     = "appdevzipfiles-${local.aws_region}"
   s3_key        = "cloudwatchLogsDLQ/v1.3.0/cloudwatchlogs-with-dlq.zip"
@@ -196,19 +196,39 @@ resource "sumologic_http_source" "source" {
 }
 
 # Reason to use the SAM app, is to have single source of truth for Auto Subscribe functionality.
-resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_logs_subscription" {
-  for_each = toset(local.auto_enable_logs_subscription ? ["auto_enable_logs_subscription"] : [])
+# resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_logs_subscription" {
+#   for_each = toset(local.auto_enable_logs_subscription ? ["auto_enable_logs_subscription"] : [])
+#
+#   name             = "Auto-Enable-Logs-Subscription-${random_string.aws_random.id}"
+#   application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector"
+#   semantic_version = var.app_semantic_version
+#   capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
+#   parameters = {
+#     DestinationArnType  = "Lambda"
+#     DestinationArnValue = aws_lambda_function.logs_lambda_function.arn
+#     LogGroupPattern     = var.auto_enable_logs_subscription_options.filter
+#     LogGroupTags        = var.auto_enable_logs_subscription_options.tags_filter
+#     UseExistingLogs     = local.auto_enable_existing
+#   }
+#   tags = var.aws_resource_tags
+# }
 
-  name             = "Auto-Enable-Logs-Subscription-${random_string.aws_random.id}"
-  application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector"
-  semantic_version = var.app_semantic_version
-  capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
-  parameters = {
-    DestinationArnType  = "Lambda"
-    DestinationArnValue = aws_lambda_function.logs_lambda_function.arn
-    LogGroupPattern     = var.auto_enable_logs_subscription_options.filter
-    LogGroupTags        = var.auto_enable_logs_subscription_options.tags_filter
-    UseExistingLogs     = local.auto_enable_existing
-  }
-  tags = var.aws_resource_tags
+module "loggroup_auto_enable_module" {
+  for_each = toset(local.auto_enable_logs_subscription ? ["loggroup_auto_enable"] : [])
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/autoenable/modules/loggroup"
+  version = "3.0.0"
+
+ # Destination Configuration
+  destination_arn_type  = "Lambda"
+  destination_arn_value = aws_lambda_function.logs_lambda_function.arn
+
+  # Log Group Configuration
+  log_group_pattern = var.auto_enable_logs_subscription_options.filter
+  log_group_tags    = var.auto_enable_logs_subscription_options.tags_filter
+
+  # Optional Configuration
+  use_existing_logs = local.auto_enable_existing
+
+  aws_resource_tags = var.aws_resource_tags
+  aws_cli_profile   = var.aws_cli_profile
 }

@@ -1,0 +1,34 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "elasticloadbalancing:DescribeLoadBalancerAttributes",
+        "elasticloadbalancing:DescribeLoadBalancers",
+        "elasticloadbalancing:ModifyLoadBalancerAttributes",
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents",
+        "s3:GetBucketPolicy",
+        "s3:PutBucketPolicy",
+        "ec2:DescribeInstances",
+        "ec2:DescribeVpcs",
+        "ec2:DeleteFlowLogs",
+        "ec2:CreateFlowLogs",
+        "ec2:DescribeFlowLogs",
+        "logs:CreateLogDelivery",
+        "logs:DeleteLogDelivery",
+        "s3:GetBucketPolicy",
+        "s3:PutBucketPolicy",
+        "s3:ListAllMyBuckets",
+        "s3:GetBucketLocation",
+        "s3:PutBucketAcl",
+        "s3:GetBucketAcl",
+        "s3:GetBucketLogging",
+        "s3:PutBucketLogging"
+      ],
+      "Resource": "*"
+    }
+  ]
+}

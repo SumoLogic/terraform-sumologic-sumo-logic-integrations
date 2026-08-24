@@ -4,7 +4,13 @@ output "random_string" {
 }
 
 output "aws_s3_bucket" {
-  value       = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket : {}
+  value = var.source_details.bucket_details.create_bucket ? {
+    for k, v in aws_s3_bucket.s3_bucket : k => {
+      id     = v.id
+      arn    = v.arn
+      bucket = v.bucket
+    }
+  } : {}
   description = "AWS S3 Bucket name created to Store the CloudTrail logs."
 }
 
@@ -44,6 +50,6 @@ output "sumologic_source" {
 }
 
 output "aws_sns_subscription" {
-  value       = aws_sns_topic_subscription.subscription
+  value       = var.create_sns_subscription ? aws_sns_topic_subscription.subscription : {}
   description = "AWS SNS subscription to Sumo Logic AWS CloudTrail source."
 }

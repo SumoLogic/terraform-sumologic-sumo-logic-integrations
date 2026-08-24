@@ -7,8 +7,8 @@ terraform {
       version = ">= 5.16.2, < 7.0.0"
     }
     sumologic = {
-      version = ">= 2.31.3, < 4.0.0"
       source  = "SumoLogic/sumologic"
+      version = ">= 3.3.0, < 4.0.0"
     }
     time = {
       source  = "hashicorp/time"
@@ -19,4 +19,8 @@ terraform {
       version = ">= 3.1.0"
     }
   }
+}
+
+provider "aws" {
+  region = "ap-southeast-1"
 }

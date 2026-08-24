@@ -3,8 +3,18 @@ output "random_string" {
   description = "Random String value created."
 }
 
+output "elasticloadbalancing_current_region" {
+  value = data.aws_region.current.region
+}
+
 output "aws_s3_bucket" {
-  value       = var.source_details.bucket_details.create_bucket ? aws_s3_bucket.s3_bucket : {}
+  value = var.source_details.bucket_details.create_bucket ? {
+    for k, v in aws_s3_bucket.s3_bucket : k => {
+      id     = v.id
+      arn    = v.arn
+      bucket = v.bucket
+    }
+  } : {}
   description = "AWS S3 Bucket name created to Store the ELB logs."
 }
 
@@ -34,11 +44,6 @@ output "sumologic_source" {
 }
 
 output "aws_sns_subscription" {
-  value       = aws_sns_topic_subscription.subscription
+  value       = var.create_sns_subscription ? aws_sns_topic_subscription.subscription : {}
   description = "AWS SNS subscription to Sumo Logic AWS ELB source."
-}
-
-output "aws_serverlessapplicationrepository_cloudformation_stack" {
-  value       = local.auto_enable_access_logs ? aws_serverlessapplicationrepository_cloudformation_stack.auto_enable_access_logs : {}
-  description = "AWS CloudFormation stack for ELB Auto Enable access logs."
 }

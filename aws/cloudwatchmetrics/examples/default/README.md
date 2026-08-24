@@ -2,9 +2,9 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7        |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 7.0.0 |
-| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.31.3, < 4.0.0 |
+| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 3.3.0, < 4.0.0 |
 
 ## Providers
 
@@ -14,7 +14,7 @@ No providers.
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_cloudwatch_metrics"></a> [cloudwatch\_metrics](#module\_cloudwatch\_metrics) | git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/cloudwatchmetrics | n/a |
+| <a name="module_cloudwatch_metrics"></a> [cloudwatch\_metrics](#module\_cloudwatch\_metrics) | SumoLogic/sumo-logic-integrations/sumologic//aws/cloudwatchmetrics | n/a |
 
 ## Resources
 

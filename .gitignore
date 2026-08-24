@@ -21,3 +21,4 @@
 *.tfstate.backup
 *.terraform.lock.hcl
 .idea
+*.DS_Store

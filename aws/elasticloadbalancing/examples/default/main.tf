@@ -5,7 +5,12 @@ resource "random_string" "aws_random" {
 }
 
 module "lb_module" {
-  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/elasticloadbalancing"
+  source = "git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/elasticloadbalancing?ref=master"
+
+  providers = {
+    aws       = aws
+    sumologic = sumologic
+  }
 
   create_collector          = true
   sumologic_organization_id = var.sumologic_organization_id

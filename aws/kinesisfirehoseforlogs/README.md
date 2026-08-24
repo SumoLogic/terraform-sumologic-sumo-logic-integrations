@@ -7,14 +7,15 @@ This module is used to create the SumoLogic AWS Kinesis Firehose for Logs source
 - Create Sumo Logic AWS Kinesis Firehose for logs source.
 - Auto enable logs subscription for Existing and New log groups after installing the module.
 
+<!-- BEGIN_TF_DOCS -->
 ## Requirements
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7        |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.1.0 |
-| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.31.3, < 4.0.0 |
+| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 3.3.0, < 4.0.0 |
 
 ## Providers
 
@@ -22,11 +23,13 @@ This module is used to create the SumoLogic AWS Kinesis Firehose for Logs source
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 3.1.0 |
-| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 2.31.3, < 4.0.0 |
+| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 3.3.0, < 4.0.0 |
 
 ## Modules
 
-No modules.
+| Name | Source | Version |
+|------|--------|---------|
+| <a name="module_loggroup_auto_enable_module"></a> [loggroup\_auto\_enable\_module](#module\_loggroup\_auto\_enable\_module) | SumoLogic/sumo-logic-integrations/sumologic//aws/autoenable/modules/loggroup | 3.0.0 |
 
 ## Resources
 
@@ -47,28 +50,27 @@ No modules.
 | [aws_kinesis_firehose_delivery_stream.logs_delivery_stream](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/kinesis_firehose_delivery_stream) | resource |
 | [aws_s3_bucket.s3_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_public_access_block.s3_bucket_access_block](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
-| [aws_serverlessapplicationrepository_cloudformation_stack.auto_enable_logs_subscription](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/serverlessapplicationrepository_cloudformation_stack) | resource |
 | [random_string.aws_random](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [sumologic_collector.collector](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs/resources/collector) | resource |
 | [sumologic_http_source.source](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs/resources/http_source) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
-| [aws_serverlessapplicationrepository_application.app](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/serverlessapplicationrepository_application) | data source |
-| [sumologic_caller_identity.current](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs/data-sources/caller_identity) | data source |
 
 ## Inputs
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_app_semantic_version"></a> [app\_semantic\_version](#input\_app\_semantic\_version) | Provide the latest version of Serverless Application Repository 'sumologic-loggroup-connector'. | `string` | `"1.0.14"` | no |
+| <a name="input_app_semantic_version"></a> [app\_semantic\_version](#input\_app\_semantic\_version) | Terraform Provide the version of 'loggroup-auto-enable'. | `string` | `"1.0.15"` | no |
 | <a name="input_auto_enable_logs_subscription"></a> [auto\_enable\_logs\_subscription](#input\_auto\_enable\_logs\_subscription) | New - Automatically subscribes new log groups to send logs to Sumo Logic.<br/>				Existing - Automatically subscribes existing log groups to send logs to Sumo Logic.<br/>				Both - Automatically subscribes new and existing log groups.<br/>				None - Skips Automatic subscription. | `string` | `"Both"` | no |
-| <a name="input_auto_enable_logs_subscription_options"></a> [auto\_enable\_logs\_subscription\_options](#input\_auto\_enable\_logs\_subscription\_options) | filter - Enter regex for matching logGroups. Regex will check for the name.<br/>        tags\_filter - Enter comma separated key value pairs for filtering logGroups using tags. Ex KeyName1=string,KeyName2=string. This is optional leave it blank if tag based filtering is not needed.<br/>        Visit https://help.sumologic.com/docs/send-data/collect-from-other-data-sources/autosubscribe-arn-destination/#configuringparameters | <pre>object({<br/>    filter = string<br/>    tags_filter = string<br/>  })</pre> | <pre>{<br/>  "filter": "lambda",<br/>  "tags_filter": ""<br/>}</pre> | no |
+| <a name="input_auto_enable_logs_subscription_options"></a> [auto\_enable\_logs\_subscription\_options](#input\_auto\_enable\_logs\_subscription\_options) | filter - Enter regex for matching logGroups. Regex will check for the name.<br/>        tags\_filter - Enter comma separated key value pairs for filtering logGroups using tags. Ex KeyName1=string,KeyName2=string. This is optional leave it blank if tag based filtering is not needed.<br/>        Visit https://help.sumologic.com/docs/send-data/collect-from-other-data-sources/autosubscribe-arn-destination/#configuringparameters | <pre>object({<br/>    filter      = string<br/>    tags_filter = string<br/>  })</pre> | <pre>{<br/>  "filter": "apigateway|lambda|rds",<br/>  "tags_filter": null<br/>}</pre> | no |
+| <a name="input_aws_cli_profile"></a> [aws\_cli\_profile](#input\_aws\_cli\_profile) | AWS profile to use for Lambda invocation. If empty, uses the default credential chain. | `string` | `""` | no |
+| <a name="input_aws_resource_tags"></a> [aws\_resource\_tags](#input\_aws\_resource\_tags) | Map of tags to apply to all AWS resources provisioned through the Module | `map(string)` | `{}` | no |
 | <a name="input_bucket_details"></a> [bucket\_details](#input\_bucket\_details) | Provide details for the AWS S3 bucket. If not provided, existing will be used. | <pre>object({<br/>    bucket_name          = string<br/>    force_destroy_bucket = bool<br/>  })</pre> | <pre>{<br/>  "bucket_name": "sumologic-kinesis-firehose-logs-random-id",<br/>  "force_destroy_bucket": true<br/>}</pre> | no |
 | <a name="input_collector_details"></a> [collector\_details](#input\_collector\_details) | Provide details for the Sumo Logic collector. If not provided, then defaults will be used. | <pre>object({<br/>    collector_name = string<br/>    description    = string<br/>    fields         = map(string)<br/>  })</pre> | <pre>{<br/>  "collector_name": "SumoLogic Kinesis Firehose for Logs Collector <Random ID>",<br/>  "description": "This collector is created using Sumo Logic terraform AWS Kinesis Firehose for logs module to collect AWS cloudwatch logs.",<br/>  "fields": {}<br/>}</pre> | no |
 | <a name="input_create_bucket"></a> [create\_bucket](#input\_create\_bucket) | Provide "true" if you would like to create AWS S3 bucket to store logs. Provide "bucket\_details" if set to "false". | `bool` | `true` | no |
 | <a name="input_create_collector"></a> [create\_collector](#input\_create\_collector) | Provide "true" if you would like to create the Sumo Logic Collector. | `bool` | n/a | yes |
 | <a name="input_source_details"></a> [source\_details](#input\_source\_details) | Provide details for the Sumo Logic Kinesis Firehose for Logs source. If not provided, then defaults will be used. | <pre>object({<br/>    source_name     = string<br/>    source_category = string<br/>    collector_id    = string<br/>    description     = string<br/>    fields          = map(string)<br/>  })</pre> | <pre>{<br/>  "collector_id": "",<br/>  "description": "This source is created using Sumo Logic terraform AWS Kinesis Firehose for logs module to collect AWS Cloudwatch logs.",<br/>  "fields": {},<br/>  "source_category": "Labs/aws/cloudwatch/logs",<br/>  "source_name": "Kinesis Firehose for Logs Source"<br/>}</pre> | no |
-| <a name="input_aws_resource_tags"></a> [aws\_resource\_tags](#input\_aws\_resource\_tags) | Map of tags to apply to all AWS resources provisioned through the Module | `map(string)` | `{}` | no |
 
 ## Outputs
 
@@ -79,7 +81,6 @@ No modules.
 | <a name="output_aws_iam_role"></a> [aws\_iam\_role](#output\_aws\_iam\_role) | AWS IAM role with permission to setup kinesis firehose logs. |
 | <a name="output_aws_kinesis_firehose_delivery_stream"></a> [aws\_kinesis\_firehose\_delivery\_stream](#output\_aws\_kinesis\_firehose\_delivery\_stream) | AWS Kinesis firehose delivery stream to send logs to Sumo Logic. |
 | <a name="output_aws_s3_bucket"></a> [aws\_s3\_bucket](#output\_aws\_s3\_bucket) | AWS S3 Bucket name created to Store the Failed data. |
-| <a name="output_aws_serverlessapplicationrepository_cloudformation_stack"></a> [aws\_serverlessapplicationrepository\_cloudformation\_stack](#output\_aws\_serverlessapplicationrepository\_cloudformation\_stack) | AWS CloudFormation stack for Auto Enable logs subscription. |
 | <a name="output_random_string"></a> [random\_string](#output\_random\_string) | Random String value created. |
 | <a name="output_sumologic_collector"></a> [sumologic\_collector](#output\_sumologic\_collector) | Sumo Logic hosted collector. |
 | <a name="output_sumologic_source"></a> [sumologic\_source](#output\_sumologic\_source) | Sumo Logic AWS Kinesis Firehose for Logs source. |

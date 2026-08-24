@@ -1,5 +1,5 @@
 module "cloudwatch_logs_lambda_log_forwarder_module" {
-  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/cloudwatchlogsforwarder"
+  source = "git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/cloudwatchlogsforwarder?ref=master"
 
   create_collector  = true
   aws_resource_tags = local.aws_resource_tags

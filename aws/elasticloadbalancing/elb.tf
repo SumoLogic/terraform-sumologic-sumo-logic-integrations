@@ -25,9 +25,18 @@ resource "aws_s3_bucket_policy" "dump_access_logs_to_s3" {
 
   bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
   policy = templatefile("${path.module}/templates/elb_bucket_policy.tmpl", {
-    BUCKET_NAME     = local.bucket_name
-    ELB_ACCCOUNT_ID = local.region_to_elb_account_id[local.aws_region]
-    AWS_PARTITION   = data.aws_partition.current.partition
+    BUCKET_NAME   = local.bucket_name
+    AWS_PARTITION = data.aws_partition.current.partition
+  })
+}
+
+resource "aws_s3_bucket_policy" "existing_bucket_policy" {
+  for_each = toset(!var.source_details.bucket_details.create_bucket && var.create_existing_bucket_policy ? (local.bucket_name != "" ? ["existing"] : []) : [])
+
+  bucket = local.bucket_name
+  policy = templatefile("${path.module}/templates/elb_bucket_policy.tmpl", {
+    BUCKET_NAME   = local.bucket_name
+    AWS_PARTITION = data.aws_partition.current.partition
   })
 }
 
@@ -49,6 +58,17 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   for_each = toset(var.source_details.sns_topic_details.create_sns_topic && var.source_details.bucket_details.create_bucket ? ["bucket_notification"] : [])
 
   bucket = aws_s3_bucket.s3_bucket["s3_bucket"].id
+
+  topic {
+    topic_arn = aws_sns_topic.sns_topic["sns_topic"].arn
+    events    = ["s3:ObjectCreated:Put"]
+  }
+}
+
+resource "aws_s3_bucket_notification" "existing_bucket_notification" {
+  for_each = toset(var.source_details.sns_topic_details.create_sns_topic && !var.source_details.bucket_details.create_bucket && var.create_existing_bucket_notification ? (local.bucket_name != "" ? ["bucket_notification"] : []) : [])
+
+  bucket = local.bucket_name
 
   topic {
     topic_arn = aws_sns_topic.sns_topic["sns_topic"].arn
@@ -130,6 +150,8 @@ resource "sumologic_elb_source" "source" {
 }
 
 resource "aws_sns_topic_subscription" "subscription" {
+  for_each = toset(var.create_sns_subscription ? ["subscription"] : [])
+
   delivery_policy = jsonencode({
     "guaranteed" = false,
     "healthyRetryPolicy" = {
@@ -152,25 +174,47 @@ resource "aws_sns_topic_subscription" "subscription" {
 
 # Reason to use the SAM app, is to have single source of truth for Auto Enable access logs functionality.
 # Ignore changes has been implemented to bypass aws resource issue: https://github.com/hashicorp/terraform-provider-aws/issues/16485
-resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_access_logs" {
-  for_each = toset(local.auto_enable_access_logs ? ["auto_enable_access_logs"] : [])
+# resource "aws_serverlessapplicationrepository_cloudformation_stack" "auto_enable_access_logs" {
+#   for_each = toset(local.auto_enable_access_logs ? ["auto_enable_access_logs"] : [])
+#
+#   name             = "Auto-Enable-Access-Logs-${var.auto_enable_access_logs_options.auto_enable_logging}-${random_string.aws_random.id}"
+#   application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable"
+#   semantic_version = var.app_semantic_version
+#   capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
+#   parameters = {
+#     BucketName                = local.bucket_name
+#     BucketPrefix              = var.auto_enable_access_logs_options.bucket_prefix
+#     AutoEnableLogging         = var.auto_enable_access_logs_options.auto_enable_logging
+#     AutoEnableResourceOptions = var.auto_enable_access_logs
+#     FilterExpression          = var.auto_enable_access_logs_options.filter
+#     RemoveOnDeleteStack       = var.auto_enable_access_logs_options.remove_on_delete_stack
+#   }
+#   lifecycle {
+#     ignore_changes = [
+#       parameters, tags
+#     ]
+#   }
+#   tags = var.aws_resource_tags
+# }
 
-  name             = "Auto-Enable-Access-Logs-${var.auto_enable_access_logs_options.auto_enable_logging}-${random_string.aws_random.id}"
-  application_id   = "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable"
-  semantic_version = var.app_semantic_version
-  capabilities     = data.aws_serverlessapplicationrepository_application.app.required_capabilities
-  parameters = {
-    BucketName                = local.bucket_name
-    BucketPrefix              = var.auto_enable_access_logs_options.bucket_prefix
-    AutoEnableLogging         = var.auto_enable_access_logs_options.auto_enable_logging
-    AutoEnableResourceOptions = var.auto_enable_access_logs
-    FilterExpression          = var.auto_enable_access_logs_options.filter
-    RemoveOnDeleteStack       = var.auto_enable_access_logs_options.remove_on_delete_stack
+
+module "auto_enable_access_logs_module" {
+  depends_on = [sumologic_elb_source.source]
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/autoenable/modules/s3_logging"
+  version = "3.0.0"
+
+  providers = {
+    aws       = aws
+    sumologic = sumologic
   }
-  lifecycle {
-    ignore_changes = [
-      parameters, tags
-    ]
-  }
-  tags = var.aws_resource_tags
+
+  auto_enable_logging           = var.auto_enable_access_logs_options.auto_enable_logging
+  auto_enable_resource_options  = var.auto_enable_access_logs
+  bucket_name                   = local.bucket_name
+  bucket_prefix                 = var.auto_enable_access_logs_options.bucket_prefix
+  filter_expression             = var.auto_enable_access_logs_options.filter
+  remove_on_delete_stack        = var.auto_enable_access_logs_options.remove_on_delete_stack
+
+  aws_resource_tags             = var.aws_resource_tags
+  aws_cli_profile               = var.aws_cli_profile
 }

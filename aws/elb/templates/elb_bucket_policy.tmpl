@@ -2,33 +2,22 @@
   "Version": "2012-10-17",
   "Statement": [
     {
-      "Effect": "Allow",
-      "Principal": {
-        "AWS": "arn:${AWS_PARTITION}:iam::${ELB_ACCCOUNT_ID}:root"
-      },
-      "Action": "s3:PutObject",
-      "Resource": "arn:${AWS_PARTITION}:s3:::${BUCKET_NAME}/*"
-    },
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Service": "delivery.logs.amazonaws.com"
-      },
-      "Action": "s3:PutObject",
-      "Resource": "arn:${AWS_PARTITION}:s3:::${BUCKET_NAME}/*",
-      "Condition": {
-        "StringEquals": {
-          "s3:x-amz-acl": "bucket-owner-full-control"
-        }
-      }
-    },
-    {
+      "Sid": "AWSALBLogDeliveryAclCheck",
       "Effect": "Allow",
       "Principal": {
         "Service": "delivery.logs.amazonaws.com"
       },
       "Action": "s3:GetBucketAcl",
       "Resource": "arn:${AWS_PARTITION}:s3:::${BUCKET_NAME}"
+    },
+    {
+      "Sid": "AddALBLogsStatement",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "logdelivery.elasticloadbalancing.amazonaws.com"
+      },
+      "Action": "s3:PutObject",
+      "Resource": "arn:${AWS_PARTITION}:s3:::${BUCKET_NAME}/*"
     }
   ]
 }

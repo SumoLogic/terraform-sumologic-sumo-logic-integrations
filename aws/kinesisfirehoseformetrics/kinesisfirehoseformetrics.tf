@@ -172,6 +172,7 @@ resource "aws_iam_role" "source_iam_role" {
     ENVIRONMENT           = data.sumologic_caller_identity.current.environment
     SUMO_LOGIC_ORG_ID     = var.sumologic_organization_id,
     AWS_PARTITION         = data.aws_partition.current.partition
+
   })
   tags = var.aws_resource_tags
 }

@@ -2,21 +2,21 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7        |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 7.0.0 |
-| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.31.3, < 4.0.0 |
+| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 3.3.0, < 4.0.0 |
 
 ## Providers
 
-| Name | Version            |
-|------|--------------------|
+| Name | Version |
+|------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 7.0.0 |
 
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
-| <a name="module_cloudwatch_logs_lambda_log_forwarder_module"></a> [cloudwatch\_logs\_lambda\_log\_forwarder\_module](#module\_cloudwatch\_logs\_lambda\_log\_forwarder\_module) | SumoLogic/sumo-logic-integrations/sumologic//aws/cloudwatchlogsforwarder | n/a |
+| ---- | ------ | ------- |
+| <a name="module_cloudwatch_logs_lambda_log_forwarder_module"></a> [cloudwatch\_logs\_lambda\_log\_forwarder\_module](#module\_cloudwatch\_logs\_lambda\_log\_forwarder\_module) | git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/cloudwatchlogsforwarder?ref=master | n/a |
 
 ## Resources
 

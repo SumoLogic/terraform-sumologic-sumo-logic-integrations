@@ -2,25 +2,25 @@
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7        |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.1.0 |
-| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 2.31.3, < 4.0.0 |
+| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 3.3.0, < 4.0.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.11.1 |
 
 ## Providers
 
-| Name | Version            |
-|------|--------------------|
+| Name | Version |
+|------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 7.0.0 |
-| <a name="provider_random"></a> [random](#provider\_random) | >= 3.1.0           |
-| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 2.31.3, < 4.0.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 3.1.0 |
+| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 3.3.0, < 4.0.0 |
 
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
-| <a name="module_lb_module"></a> [lb\_module](#module\_lb\_module) | SumoLogic/sumo-logic-integrations/sumologic//aws/elasticloadbalancing | n/a |
+| ---- | ------ | ------- |
+| <a name="module_lb_module"></a> [lb\_module](#module\_lb\_module) | git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/elasticloadbalancing?ref=master | n/a |
 
 ## Resources
 

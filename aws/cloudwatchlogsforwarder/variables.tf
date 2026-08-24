@@ -77,7 +77,7 @@ variable "source_details" {
 
 variable "app_semantic_version" {
   type        = string
-  description = "Provide the latest version of Serverless Application Repository 'sumologic-loggroup-connector'."
+  description = "Terraform Provide the version of 'loggroup-auto-enable'."
   default     = "1.0.15"
 }
 
@@ -122,4 +122,10 @@ variable "aws_resource_tags" {
   description = "Map of tags to apply to all AWS resources provisioned through the Module"
   type        = map(string)
   default     = {}
+}
+
+variable "aws_cli_profile" {
+  description = "AWS profile to use for Lambda invocation. If empty, uses the default credential chain."
+  type        = string
+  default     = ""
 }

@@ -32,6 +32,16 @@ resource "aws_s3_bucket_policy" "s3_bucket" {
   })
 }
 
+resource "aws_s3_bucket_policy" "existing_bucket_policy" {
+  for_each = toset(!var.source_details.bucket_details.create_bucket && var.create_existing_bucket_policy ? (local.bucket_name != "" ? ["existing"] : []) : [])
+
+  bucket = local.bucket_name
+  policy = templatefile("${path.module}/templates/cloudtrail_bucket_policy.tmpl", {
+    BUCKET_NAME   = local.bucket_name
+    AWS_PARTITION = data.aws_partition.current.partition
+  })
+}
+
 resource "aws_sns_topic" "sns_topic" {
   for_each = toset(var.source_details.sns_topic_details.create_sns_topic ? ["sns_topic"] : [])
 
@@ -57,8 +67,19 @@ resource "aws_s3_bucket_notification" "bucket_notification" {
   }
 }
 
+resource "aws_s3_bucket_notification" "existing_bucket_notification" {
+  for_each = toset(var.source_details.sns_topic_details.create_sns_topic && !var.source_details.bucket_details.create_bucket && var.create_existing_bucket_notification ? (local.bucket_name != "" ? ["bucket_notification"] : []) : [])
+
+  bucket = local.bucket_name
+
+  topic {
+    topic_arn = aws_sns_topic.sns_topic["sns_topic"].arn
+    events    = ["s3:ObjectCreated:Put"]
+  }
+}
+
 resource "aws_cloudtrail" "cloudtrail" {
-  depends_on = [aws_s3_bucket_policy.s3_bucket]
+  depends_on = [aws_s3_bucket_policy.s3_bucket, aws_s3_bucket_policy.existing_bucket_policy]
   for_each   = toset(local.create_trail ? ["cloudtrail"] : [])
 
   name                          = local.cloudtrail_name
@@ -143,6 +164,8 @@ resource "sumologic_cloudtrail_source" "source" {
 }
 
 resource "aws_sns_topic_subscription" "subscription" {
+  for_each = toset(var.create_sns_subscription ? ["subscription"] : [])
+
   delivery_policy = jsonencode({
     "guaranteed" = false,
     "healthyRetryPolicy" = {
