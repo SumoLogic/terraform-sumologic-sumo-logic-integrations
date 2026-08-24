@@ -199,7 +199,8 @@ resource "aws_sns_topic_subscription" "subscription" {
 
 module "auto_enable_access_logs_module" {
   depends_on = [sumologic_elb_source.source]
-  source = "git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/autoenable/modules/s3_logging?ref=fy27q2"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/autoenable/modules/s3_logging"
+  version = "3.0.0"
 
   providers = {
     aws       = aws

@@ -17,6 +17,7 @@ This module is used to create AWS resources to automatically enable logging for 
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >=3.1.0 |
+| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 3.3.0, < 4.0.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >=0.7.1 |
 
 ## Providers
@@ -51,8 +52,8 @@ No modules.
 | [aws_lambda_permission.elb_events_invoke_permission](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [aws_lambda_permission.s3_events_invoke_permission](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
 | [aws_lambda_permission.vpc_events_invoke_permission](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/lambda_permission) | resource |
-| [sumologic_s3_logging_lambda_enable.enable_logging](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs/resources/s3_logging_lambda_enable) | resource |
 | [random_string.stack_suffix](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
+| [sumologic_s3_logging_lambda_enable.enable_logging](https://registry.terraform.io/providers/SumoLogic/sumologic/latest/docs/resources/s3_logging_lambda_enable) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
@@ -63,6 +64,7 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_auto_enable_logging"></a> [auto\_enable\_logging](#input\_auto\_enable\_logging) | S3 - To Enable S3 Audit Logging for new S3 buckets. VPC - To Enable VPC flow logs for new VPC, Subnets and Network Interfaces. ALB - To Enable S3 Logging for new Application Load Balancer. ELB - To Enable S3 logging for new Classic Load Balancer | `string` | n/a | yes |
 | <a name="input_auto_enable_resource_options"></a> [auto\_enable\_resource\_options](#input\_auto\_enable\_resource\_options) | New - Automatically enables S3 logging for newly created AWS resources to send logs to S3 Buckets. Existing - Automatically enables S3 logging for existing AWS resources. Both - Automatically enables S3 logging for new and existing AWS resources. None - Skips Automatic S3 Logging enable for AWS resources. | `string` | `"Both"` | no |
+| <a name="input_aws_cli_profile"></a> [aws\_cli\_profile](#input\_aws\_cli\_profile) | AWS profile to use for Lambda invocation. If empty, uses the default credential chain. | `string` | `""` | no |
 | <a name="input_aws_resource_tags"></a> [aws\_resource\_tags](#input\_aws\_resource\_tags) | Map of tags to apply to all AWS resources provisioned through the Module | `map(string)` | `{}` | no |
 | <a name="input_bucket_name"></a> [bucket\_name](#input\_bucket\_name) | Provide an Existing bucket Name. | `string` | n/a | yes |
 | <a name="input_bucket_prefix"></a> [bucket\_prefix](#input\_bucket\_prefix) | Provide an bucket prefix. | `string` | `""` | no |
@@ -75,3 +77,4 @@ No modules.
 |------|-------------|
 | <a name="output_enable_existing_aws_resources_lambda_arn"></a> [enable\_existing\_aws\_resources\_lambda\_arn](#output\_enable\_existing\_aws\_resources\_lambda\_arn) | Lambda Function ARN for Existing AWS Resources |
 | <a name="output_enable_new_aws_resources_lambda_arn"></a> [enable\_new\_aws\_resources\_lambda\_arn](#output\_enable\_new\_aws\_resources\_lambda\_arn) | Lambda Function ARN for New AWS Resources |
+| <a name="output_s3_logging_current_region"></a> [s3\_logging\_current\_region](#output\_s3\_logging\_current\_region) | Outputs s3 logging |

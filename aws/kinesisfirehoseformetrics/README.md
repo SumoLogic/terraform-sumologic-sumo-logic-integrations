@@ -10,20 +10,20 @@ This module is used to create the SumoLogic AWS Kinesis Firehose for Metrics sou
 ## Requirements
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 3.1.0 |
-| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 3.2.9, < 4.0.0 |
+| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 3.3.0, < 4.0.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.7.1 |
 
 ## Providers
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 3.1.0 |
-| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 3.2.9, < 4.0.0 |
+| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 3.3.0, < 4.0.0 |
 | <a name="provider_time"></a> [time](#provider\_time) | >= 0.7.1 |
 
 ## Modules
@@ -33,7 +33,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-| ---- | ---- |
+|------|------|
 | [aws_cloudwatch_log_group.log_group](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_group) | resource |
 | [aws_cloudwatch_log_stream.http_log_stream](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_stream) | resource |
 | [aws_cloudwatch_log_stream.s3_log_stream](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/cloudwatch_log_stream) | resource |
@@ -64,7 +64,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-| ---- | ----------- | ---- | ------- | :------: |
+|------|-------------|------|---------|:--------:|
 | <a name="input_aws_resource_tags"></a> [aws\_resource\_tags](#input\_aws\_resource\_tags) | Map of tags to apply to all AWS resources provisioned through the Module | `map(string)` | `{}` | no |
 | <a name="input_bucket_details"></a> [bucket\_details](#input\_bucket\_details) | Provide details for the AWS S3 bucket. If not provided, existing will be used. | <pre>object({<br/>    bucket_name          = string<br/>    force_destroy_bucket = bool<br/>  })</pre> | <pre>{<br/>  "bucket_name": "sumologic-kinesis-firehose-metrics-random-id",<br/>  "force_destroy_bucket": true<br/>}</pre> | no |
 | <a name="input_collector_details"></a> [collector\_details](#input\_collector\_details) | Provide details for the Sumo Logic collector. If not provided, then defaults will be used. | <pre>object({<br/>    collector_name = string<br/>    description    = string<br/>    fields         = map(string)<br/>  })</pre> | <pre>{<br/>  "collector_name": "SumoLogic Kinesis Firehose for Metrics Collector <Random ID>",<br/>  "description": "This collector is created using Sumo Logic terraform AWS Kinesis Firehose for metrics module to collect AWS cloudwatch metrics.",<br/>  "fields": {}<br/>}</pre> | no |
@@ -77,7 +77,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-| ---- | ----------- |
+|------|-------------|
 | <a name="output_aws_cloudwatch_log_group"></a> [aws\_cloudwatch\_log\_group](#output\_aws\_cloudwatch\_log\_group) | AWS Log group created to attach to delivery stream. |
 | <a name="output_aws_cloudwatch_log_stream"></a> [aws\_cloudwatch\_log\_stream](#output\_aws\_cloudwatch\_log\_stream) | AWS Log stream created to attach to log group. |
 | <a name="output_aws_cloudwatch_metric_stream"></a> [aws\_cloudwatch\_metric\_stream](#output\_aws\_cloudwatch\_metric\_stream) | CloudWatch metrics stream to send metrics. |
@@ -88,4 +88,3 @@ No modules.
 | <a name="output_source_aws_iam_role"></a> [source\_aws\_iam\_role](#output\_source\_aws\_iam\_role) | AWS IAM role with permission to setup Sumo Logic permissions. |
 | <a name="output_sumologic_collector"></a> [sumologic\_collector](#output\_sumologic\_collector) | Sumo Logic hosted collector. |
 | <a name="output_sumologic_source"></a> [sumologic\_source](#output\_sumologic\_source) | Sumo Logic AWS Kinesis Firehose for Metrics source. |
-<!-- END_TF_DOCS -->

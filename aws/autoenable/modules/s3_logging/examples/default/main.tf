@@ -5,7 +5,8 @@ resource "random_string" "aws_random" {
 }
 
 module "s3_logging_auto_enable_module" {
-  source = "git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/autoenable/modules/s3_logging?ref=fy27q2"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/autoenable/modules/s3_loggings"
+  version = "3.0.0"
 
   providers = {
     aws       = aws

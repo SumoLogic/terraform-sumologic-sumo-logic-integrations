@@ -215,7 +215,8 @@ resource "sumologic_http_source" "source" {
 
 module "loggroup_auto_enable_module" {
   for_each = toset(local.auto_enable_logs_subscription ? ["loggroup_auto_enable"] : [])
-  source   = "git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/autoenable/modules/loggroup?ref=fy27q2"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/autoenable/modules/loggroup"
+  version = "3.0.0"
 
  # Destination Configuration
   destination_arn_type  = "Lambda"

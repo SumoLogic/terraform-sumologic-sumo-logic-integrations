@@ -12,38 +12,40 @@ This module is used to create AWS and Sumo Logic resource to collect ELB logs fr
 ## Requirements
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >=3.1.0 |
-| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 3.2.9, < 4.0.0 |
+| <a name="requirement_sumologic"></a> [sumologic](#requirement\_sumologic) | >= 3.3.0, < 4.0.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >=0.7.1 |
 
 ## Providers
 
 | Name | Version |
-| ---- | ------- |
+|------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 5.16.2, < 7.0.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >=3.1.0 |
-| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 3.2.9, < 4.0.0 |
+| <a name="provider_sumologic"></a> [sumologic](#provider\_sumologic) | >= 3.3.0, < 4.0.0 |
 | <a name="provider_time"></a> [time](#provider\_time) | >=0.7.1 |
 
 ## Modules
 
 | Name | Source | Version |
-| ---- | ------ | ------- |
-| <a name="module_auto_enable_access_logs_module"></a> [auto\_enable\_access\_logs\_module](#module\_auto\_enable\_access\_logs\_module) | git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/autoenable/modules/s3_logging | fy27q2 |
+|------|--------|---------|
+| <a name="module_auto_enable_access_logs_module"></a> [auto\_enable\_access\_logs\_module](#module\_auto\_enable\_access\_logs\_module) | SumoLogic/sumo-logic-integrations/sumologic//aws/autoenable/modules/s3_logging | 3.0.0 |
 
 ## Resources
 
 | Name | Type |
-| ---- | ---- |
+|------|------|
 | [aws_iam_policy.iam_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.source_iam_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.source-role-policy-attach](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_s3_bucket.s3_bucket](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
 | [aws_s3_bucket_notification.bucket_notification](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_notification) | resource |
+| [aws_s3_bucket_notification.existing_bucket_notification](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_notification) | resource |
 | [aws_s3_bucket_policy.dump_access_logs_to_s3](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
+| [aws_s3_bucket_policy.existing_bucket_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
 | [aws_sns_topic.sns_topic](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic) | resource |
 | [aws_sns_topic_subscription.subscription](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/sns_topic_subscription) | resource |
 | [random_string.aws_random](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
@@ -58,13 +60,17 @@ This module is used to create AWS and Sumo Logic resource to collect ELB logs fr
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-| ---- | ----------- | ---- | ------- | :------: |
+|------|-------------|------|---------|:--------:|
 | <a name="input_app_semantic_version"></a> [app\_semantic\_version](#input\_app\_semantic\_version) | Terraform Provide the version 's3-logging-auto-enable'. | `string` | `"1.0.18"` | no |
 | <a name="input_auto_enable_access_logs"></a> [auto\_enable\_access\_logs](#input\_auto\_enable\_access\_logs) | New - Automatically enables access logging for newly created ELB resources to collect logs for ELB resources. This does not affect ELB resources already collecting logs.<br/>				Existing - Automatically enables access logging for existing ELB resources to collect logs for ELB resources.<br/>				Both - Automatically enables access logging for new and existing ELB resources.<br/>				None - Skips Automatic access Logging enable for ELB resources. | `string` | `"Both"` | no |
 | <a name="input_auto_enable_access_logs_options"></a> [auto\_enable\_access\_logs\_options](#input\_auto\_enable\_access\_logs\_options) | filter - provide a regex to filter the ELB for which access logs should be enabled. Empty means all resources. For eg :- 'Type': 'application'\|'type': 'application', will enable access logs for Application load balancer only.<br/>		remove\_on\_delete\_stack - provide true if you would like to disable access logging when you destroy the terraform resources. | <pre>object({<br/>    bucket_prefix          = string<br/>    auto_enable_logging    = string<br/>    filter                 = string<br/>    remove_on_delete_stack = bool<br/>  })</pre> | <pre>{<br/>  "auto_enable_logging": "",<br/>  "bucket_prefix": "",<br/>  "filter": "",<br/>  "remove_on_delete_stack": true<br/>}</pre> | no |
+| <a name="input_aws_cli_profile"></a> [aws\_cli\_profile](#input\_aws\_cli\_profile) | AWS profile to use for Lambda invocation. If empty, uses the default credential chain. | `string` | `""` | no |
 | <a name="input_aws_resource_tags"></a> [aws\_resource\_tags](#input\_aws\_resource\_tags) | Map of tags to apply to all AWS resources provisioned through the Module | `map(string)` | `{}` | no |
 | <a name="input_collector_details"></a> [collector\_details](#input\_collector\_details) | Provide details for the Sumo Logic collector. If not provided, then defaults will be used. | <pre>object({<br/>    collector_name = string<br/>    description    = string<br/>    fields         = map(string)<br/>  })</pre> | <pre>{<br/>  "collector_name": "SumoLogic Elb Collector <Random ID>",<br/>  "description": "This collector is created using Sumo Logic terraform AWS ELB module to collect AWS elb logs.",<br/>  "fields": {}<br/>}</pre> | no |
 | <a name="input_create_collector"></a> [create\_collector](#input\_create\_collector) | Provide "true" if you would like to create the Sumo Logic Collector. | `bool` | n/a | yes |
+| <a name="input_create_existing_bucket_notification"></a> [create\_existing\_bucket\_notification](#input\_create\_existing\_bucket\_notification) | Set to false to skip configuring S3 notification on an existing bucket. Used when the Lambda helper (ConfigureBucketNotifications) handles it for AWSO. | `bool` | `true` | no |
+| <a name="input_create_existing_bucket_policy"></a> [create\_existing\_bucket\_policy](#input\_create\_existing\_bucket\_policy) | Set to false to skip applying bucket policy on an existing bucket. Used when the Lambda helper (AddBucketPolicy) handles it for AWSO. | `bool` | `true` | no |
+| <a name="input_create_sns_subscription"></a> [create\_sns\_subscription](#input\_create\_sns\_subscription) | Set to false to skip creating the SNS subscription. Used when the Lambda helper handles subscription for existing buckets. | `bool` | `true` | no |
 | <a name="input_source_details"></a> [source\_details](#input\_source\_details) | Provide details for the Sumo Logic ELB source. If not provided, then defaults will be used. | <pre>object({<br/>    source_name     = string<br/>    source_category = string<br/>    collector_id    = string<br/>    description     = string<br/>    bucket_details = object({<br/>      create_bucket        = bool<br/>      bucket_name          = string<br/>      path_expression      = string<br/>      force_destroy_bucket = bool<br/>    })<br/>    paused               = bool<br/>    scan_interval        = string<br/>    sumo_account_id      = string<br/>    cutoff_relative_time = string<br/>    fields               = map(string)<br/>    iam_details = object({<br/>      create_iam_role = bool<br/>      iam_role_arn    = string<br/>    })<br/>    sns_topic_details = object({<br/>      create_sns_topic = bool<br/>      sns_topic_arn    = string<br/>    })<br/>  })</pre> | <pre>{<br/>  "bucket_details": {<br/>    "bucket_name": "elb-logs-random-id",<br/>    "create_bucket": true,<br/>    "force_destroy_bucket": true,<br/>    "path_expression": "*AWSLogs/<ACCOUNT-ID>/elasticloadbalancing/<REGION-NAME>/*"<br/>  },<br/>  "collector_id": "",<br/>  "cutoff_relative_time": "-1d",<br/>  "description": "This source is created using Sumo Logic terraform AWS elb module to collect AWS elb logs.",<br/>  "fields": {},<br/>  "iam_details": {<br/>    "create_iam_role": true,<br/>    "iam_role_arn": null<br/>  },<br/>  "paused": false,<br/>  "scan_interval": 300000,<br/>  "sns_topic_details": {<br/>    "create_sns_topic": true,<br/>    "sns_topic_arn": null<br/>  },<br/>  "source_category": "Labs/aws/elb",<br/>  "source_name": "Elb Source",<br/>  "sumo_account_id": "926226587429"<br/>}</pre> | no |
 | <a name="input_sumologic_organization_id"></a> [sumologic\_organization\_id](#input\_sumologic\_organization\_id) | Appears on the Account Overview page that displays information about your Sumo Logic organization. Used for IAM Role in Sumo Logic AWS Sources. | `string` | n/a | yes |
 | <a name="input_wait_for_seconds"></a> [wait\_for\_seconds](#input\_wait\_for\_seconds) | wait\_for\_seconds is used to delay sumo logic source creation. This helps persisting IAM role in AWS system.<br/>        Default value is 180 seconds.<br/>        If the AWS IAM role is created outside the module, the value can be decreased to 1 second. | `number` | `180` | no |
@@ -72,7 +78,7 @@ This module is used to create AWS and Sumo Logic resource to collect ELB logs fr
 ## Outputs
 
 | Name | Description |
-| ---- | ----------- |
+|------|-------------|
 | <a name="output_aws_iam_role"></a> [aws\_iam\_role](#output\_aws\_iam\_role) | AWS IAM role with permission to allow Sumo Logic to read logs from S3 Bucket. |
 | <a name="output_aws_s3_bucket"></a> [aws\_s3\_bucket](#output\_aws\_s3\_bucket) | AWS S3 Bucket name created to Store the ELB logs. |
 | <a name="output_aws_s3_bucket_notification"></a> [aws\_s3\_bucket\_notification](#output\_aws\_s3\_bucket\_notification) | AWS S3 Bucket Notification attached to the AWS S3 Bucket |
@@ -82,4 +88,3 @@ This module is used to create AWS and Sumo Logic resource to collect ELB logs fr
 | <a name="output_random_string"></a> [random\_string](#output\_random\_string) | Random String value created. |
 | <a name="output_sumologic_collector"></a> [sumologic\_collector](#output\_sumologic\_collector) | Sumo Logic hosted collector. |
 | <a name="output_sumologic_source"></a> [sumologic\_source](#output\_sumologic\_source) | Sumo Logic AWS ELB source. |
-<!-- END_TF_DOCS -->

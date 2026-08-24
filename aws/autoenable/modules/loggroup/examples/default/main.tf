@@ -5,7 +5,8 @@ resource "random_string" "aws_random" {
 }
 
 module "loggroup_auto_enable_module" {
-  source = "git::https://github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations.git//aws/autoenable/modules/loggroup?ref=fy27q2"
+  source = "SumoLogic/sumo-logic-integrations/sumologic//aws/autoenable/modules/loggroup"
+  version = "3.0.0"
 
  # Destination Configuration
   destination_arn_type  = "Kinesis"
