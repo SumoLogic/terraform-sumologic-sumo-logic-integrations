@@ -2,24 +2,7 @@
   "random_string": {
     "lower": true
   },
-  "aws_serverlessapplicationrepository_cloudformation_stack": [
-    {
-      "auto_enable_access_logs": {
-        "name": "Auto-Enable-Access-Logs-Elb-{RandomString}",
-        "application_id": "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable",
-        "capabilities": [
-          "CAPABILITY_IAM",
-          "CAPABILITY_RESOURCE_POLICY"
-        ],
-        "parameters": {
-          "AutoEnableLogging": "ALB",
-          "BucketName": "elb-logs-{RandomString}",
-          "BucketPrefix": "elasticloadbalancing"
-        },
-        "semantic_version": "1.0.18"
-      }
-    }
-  ],
+  "elb_current_region": "{Region}",
   "aws_iam_role": [
     {
       "source_iam_role": {

@@ -1,11 +1,17 @@
 package elb
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
+	"strings"
 	"testing"
 	"time"
+
+	aws_sdk "github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/service/s3"
 
 	"github.com/SumoLogic/terraform-sumologic-sumo-logic-integrations/tree/master/terratest/common"
 	"github.com/gruntwork-io/terratest/modules/aws"
@@ -38,6 +44,11 @@ func UpdateTerraform(t *testing.T, vars map[string]interface{}, options *terrafo
 func TestWithDefaultValues(t *testing.T) {
 	t.Parallel()
 	aws_region := "us-east-2"
+
+	// Create the LB before deploying the module so the "Existing" lambda auto-enables access logs at deploy time
+	assertResource := common.GetAssertResource(t, map[string]string{"AWS_DEFAULT_REGION": aws_region})
+	lb_id, _ := assertResource.CreateELB("TestWithDefaultValuesLB", "TestWithDefaultValuesTG")
+
 	vars := map[string]interface{}{
 		"create_collector":          true,
 		"sumologic_organization_id": common.SumologicOrganizationId,
@@ -48,7 +59,7 @@ func TestWithDefaultValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 13, 0, 0)
+		common.AssertResourceCounts(t, count, 21, 0, 0)
 	})
 
 	outputs := common.FetchAllOutputs(t, options)
@@ -67,15 +78,56 @@ func TestWithDefaultValues(t *testing.T) {
 		common.AssertOutputs(t, options, expectedOutputs)
 	})
 
-	// Before checking logs, create a load balancer, check if access logs has been enabled and then hit it to generate logs
-	assertResource := common.GetAssertResource(t, options.EnvVars)
-	lb_id, dns := assertResource.CreateELB("TestWithDefaultValuesLB", "TestWithDefaultValuesTG")
+	// Validate that the auto-enable lambda configured access logs on the LB
 	time.Sleep(2 * time.Minute)
-	http.Get(fmt.Sprintf("http://%s", *dns))
+	bucket := outputs["aws_s3_bucket"].(map[string]interface{})["s3_bucket"].(map[string]interface{})["bucket"].(string)
+	assertResource.ValidateLoadBalancerAccessLogs(lb_id, bucket)
 
-	// Assert if the logs are sent to Sumo Logic.
-	assertResource.CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
-	assertResource.ValidateLoadBalancerAccessLogs(lb_id, outputs["aws_s3_bucket"].(map[string]interface{})["s3_bucket"].(map[string]interface{})["bucket"].(string))
+	// Upload a synthetic ELB access log directly to S3.
+	// This tests the real S3 → SNS → Sumo Logic ingestion pipeline without relying on network connectivity to the ALB 
+	accountId := aws.GetAccountId(t)
+	now := time.Now().UTC()
+	logKey := fmt.Sprintf("elasticloadbalancing/AWSLogs/%s/elasticloadbalancing/%s/%s/%s_elasticloadbalancing_%s_app.TestWithDefaultValuesLB_%sZ_10.0.0.1_test.log",
+		accountId, aws_region, now.Format("2006/01/02"),
+		accountId, aws_region, now.Format("20060102T1504"))
+	logContent := fmt.Sprintf(
+		`http %s app/TestWithDefaultValuesLB/abcdef1234567890 10.0.0.1:12345 10.0.1.1:80 0.001 0.002 0.000 200 200 0 57 "GET http://TestWithDefaultValuesLB-1076212475.us-east-2.elb.amazonaws.com:80/ HTTP/1.1" "curl/7.64.1" - - arn:aws:elasticloadbalancing:us-east-2:%s:targetgroup/TestWithDefaultValuesTG/abcdef1234567890 "Root=1-abcdef12-abcdef1234567890abcdef12" "-" "-" 0 %s "forward" "-" "-" "10.0.1.1:80" "200" "-" "-"`,
+		now.Format("2006-01-02T15:04:05.000000Z"), accountId, now.Format("2006-01-02T15:04:05.000000Z"))
+
+	fmt.Printf("Uploading synthetic ELB log to s3://%s/%s\n", bucket, logKey)
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(aws_region))
+	if err != nil {
+		t.Fatalf("Failed to load AWS config: %v", err)
+	}
+	s3Client := s3.NewFromConfig(cfg)
+	_, err = s3Client.PutObject(context.TODO(), &s3.PutObjectInput{
+		Bucket: aws_sdk.String(bucket),
+		Key:    aws_sdk.String(logKey),
+		Body:   strings.NewReader(logContent),
+	})
+	if err != nil {
+		t.Fatalf("Failed to upload synthetic log to S3: %v", err)
+	}
+	fmt.Println("Synthetic log uploaded successfully.")
+
+	// Verify the file exists in S3
+	headOut, headErr := s3Client.HeadObject(context.TODO(), &s3.HeadObjectInput{
+		Bucket: aws_sdk.String(bucket),
+		Key:    aws_sdk.String(logKey),
+	})
+	if headErr != nil {
+		t.Fatalf("Synthetic log file not found in S3: %v", headErr)
+	}
+	fmt.Printf("Confirmed file in S3: size=%d, lastModified=%s\n", *headOut.ContentLength, headOut.LastModified.String())
+
+	// Wait for Sumo Logic to pick up the file via polling (scan_interval=5min)
+	fmt.Println("Waiting 6 minutes for Sumo Logic source to scan and ingest...")
+	time.Sleep(6 * time.Minute)
+
+	// Search with retries: 10 retries x 1 min = 10 min additional wait
+	sourceId := outputs["sumologic_source"].(map[string]interface{})["id"].(string)
+	fmt.Printf("Searching for logs with _sourceid=%s\n", sourceId)
+	assertResource.CheckLogsForPastSixtyMinutes("_sourceid="+sourceId, 10, 1*time.Minute)
 }
 
 func TestWithExistingResourcesValues(t *testing.T) {
@@ -261,7 +313,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 13, 0, 0)
+		common.AssertResourceCounts(t, count, 17, 0, 0)
 	})
 
 	vars = map[string]interface{}{

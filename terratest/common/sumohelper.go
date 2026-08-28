@@ -3,6 +3,7 @@ package common
 import (
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"time"
 
 	http_helper "github.com/gruntwork-io/terratest/modules/http-helper"
@@ -11,17 +12,20 @@ import (
 
 func (a *ResourcesAssert) CheckLogsForPastSixtyMinutes(query string, retries int, sleep time.Duration) {
 	var body []map[string]interface{}
-	tz, _ := time.Now().Zone()
 	for i := 1; i <= retries; i++ {
-		from := time.Now().Add(-60 * time.Minute).Format("2006-01-02T15:04:05")
-		to := time.Now().Format("2006-01-02T15:04:05")
-		out := http_helper.HTTPDoWithRetry(a.t, "GET", a.getSearchJobsURL(query, from, to, tz),
+		from := time.Now().UTC().Add(-60 * time.Minute).Format("2006-01-02T15:04:05")
+		to := time.Now().UTC().Format("2006-01-02T15:04:05")
+		searchURL := a.getSearchJobsURL(query, from, to, "UTC")
+		fmt.Printf("\n[Retry %d/%d] Searching Sumo: %s\n", i, retries, searchURL)
+		out := http_helper.HTTPDoWithRetry(a.t, "GET", searchURL,
 			nil, a.SumoHeaders, 200, 1, 1*time.Second, nil)
+		fmt.Printf("[Retry %d/%d] Response: %s\n", i, retries, out)
 		json.Unmarshal([]byte(out), &body)
 		if len(body) <= 0 {
-			fmt.Printf("Sleeping for %v and will retry with current counter as %v.", sleep.String(), i)
+			fmt.Printf("[Retry %d/%d] No results yet, sleeping %v...\n", i, retries, sleep)
 			time.Sleep(sleep)
 		} else {
+			fmt.Printf("[Retry %d/%d] Found %d log messages!\n", i, retries, len(body))
 			break
 		}
 	}
@@ -122,7 +126,7 @@ func (a *ResourcesAssert) getMonitorsFoldersURL() string {
 }
 
 func (a *ResourcesAssert) getSearchJobsURL(query, from, to, timezone string) string {
-	return fmt.Sprintf("%s/api/v1/logs/search?q=%s&from=%v&to=%v&tz=%v", a.SumoLogicBaseApiUrl, query, from, to, timezone)
+	return fmt.Sprintf("%s/api/v1/logs/search?q=%s&from=%s&to=%s&tz=%s", a.SumoLogicBaseApiUrl, url.QueryEscape(query), url.QueryEscape(from), url.QueryEscape(to), url.QueryEscape(timezone))
 }
 
 func (a *ResourcesAssert) getMetricResultsURL() string {
