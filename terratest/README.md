@@ -24,6 +24,10 @@ Integration test checks for :
   - Test cases have been written based on various inputs that can impact terraform resource creation.
 - Validate expected and actual resource create, changed and destroyed.
 - Validate expected (this takes up a JSON file with expected outputs) and actual outputs from modules.
+- `TestAWSOCallPattern` (in `aws/cloudtrail`, `aws/elb` and `aws/elasticloadbalancing`) mirrors how the
+  AWS Observability (AWSO 3.0.0) `collections` module calls these modules: existing collector, bucket, IAM role and
+  SNS topic, with `create_sns_subscription`, `create_existing_bucket_policy` and
+  `create_existing_bucket_notification` set to `false` because the AWSO Lambda helper handles them.
 - Validate if the logs or metrics have been received in Sumo Logic.
 
 ## Testing
@@ -46,6 +50,11 @@ Integration test checks for :
   - TOPIC_ARN -> A SNS topic ARN from us-east-1 region.
   - TOPIC_ARN_US_WEST_1 -> A SNS topic ARN from us-west-1 region.
   - COLLECTOR_ID -> A Existing Sumo Logic hosted collector ID.
+- `aws/elb`, `aws/elasticloadbalancing` and `aws/kinesisfirehoseforlogs` also create the
+  `aws/autoenable` Lambda, IAM role and EventBridge resources, so the AWS identity needs permission to manage them.
+  `aws_cli_profile` is passed from `AWS_PROFILE` for the Lambda invocation made by the Sumo Logic provider.
+- Resource counts in `AssertResourceCounts` come from `terraform plan`. Re-run a plan for each scenario and update the
+  counts whenever a module (or an `autoenable` submodule it calls) adds or removes resources.
 - One above 2 steps have been performed, run the test cases for the module you would like to test.
   - You can update the `modules` the variable in `run_tests.sh` file.
 - A `test.log` file will be generated in the module's test folder.

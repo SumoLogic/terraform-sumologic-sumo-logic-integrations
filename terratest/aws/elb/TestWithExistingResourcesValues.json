@@ -2,30 +2,15 @@
   "random_string": {
     "lower": true
   },
-  "aws_serverlessapplicationrepository_cloudformation_stack": [
-    {
-      "auto_enable_access_logs": {
-        "name": "Auto-Enable-Access-Logs-Elb-{RandomString}",
-        "application_id": "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable",
-        "capabilities": [
-          "CAPABILITY_IAM",
-          "CAPABILITY_RESOURCE_POLICY"
-        ],
-        "parameters": {
-          "AutoEnableLogging": "ALB",
-          "BucketName": "aws-integration-random-{Region}",
-          "BucketPrefix": "elasticloadbalancing"
-        },
-        "semantic_version": "1.0.18"
-      }
-    }
-  ],
+  "elb_current_region": "{Region}",
   "aws_iam_role": {},
   "aws_s3_bucket": {},
   "aws_sns_subscription": {
-    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"requestPolicy\":null,\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
-    "endpoint_auto_confirms": true,
-    "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-3zu74ts6j3"
+    "subscription": {
+      "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"requestPolicy\":null,\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
+      "endpoint_auto_confirms": true,
+      "topic_arn": "{SnsTopicArn}"
+    }
   },
   "aws_sns_topic": {},
   "aws_s3_bucket_notification": {},

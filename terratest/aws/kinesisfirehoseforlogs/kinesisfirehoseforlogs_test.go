@@ -44,7 +44,7 @@ func TestWithDefaultValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 19, 0, 0)
+		common.AssertResourceCounts(t, count, 31, 0, 0)
 	})
 
 	assertResource := common.GetAssertResource(t, options.EnvVars)
@@ -104,7 +104,7 @@ func TestWithExistingValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 16, 0, 0)
+		common.AssertResourceCounts(t, count, 23, 0, 0)
 	})
 
 	assertResource := common.GetAssertResource(t, options.EnvVars)
@@ -149,7 +149,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 19, 0, 0)
+		common.AssertResourceCounts(t, count, 31, 0, 0)
 	})
 
 	vars = map[string]interface{}{
@@ -167,7 +167,7 @@ func TestUpdates(t *testing.T) {
 	count = UpdateTerraform(t, vars, options)
 
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 1, 1)
+		common.AssertResourceCounts(t, count, 0, 1, 5)
 	})
 
 	vars = map[string]interface{}{
@@ -191,6 +191,6 @@ func TestUpdates(t *testing.T) {
 	count = UpdateTerraform(t, vars, options)
 
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 1, 5, 2)
+		common.AssertResourceCounts(t, count, 1, 11, 2)
 	})
 }

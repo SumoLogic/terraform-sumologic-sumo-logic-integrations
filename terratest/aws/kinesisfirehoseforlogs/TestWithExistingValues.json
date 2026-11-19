@@ -55,11 +55,12 @@
             "compression_format": "UNCOMPRESSED",
             "role_arn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-{RandomString}",
             "cloudwatch_logging_options": [
-            {
-              "enabled": true,
-              "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
-              "log_stream_name": "S3Delivery"
-            }]
+              {
+                "enabled": true,
+                "log_group_name": "/aws/kinesisfirehose/kinesis-logs-log-group-{RandomString}",
+                "log_stream_name": "S3Delivery"
+              }
+            ]
           }
         ],
         "url": "{URL}"
@@ -67,25 +68,6 @@
     ]
   },
   "aws_s3_bucket": {},
-  "aws_serverlessapplicationrepository_cloudformation_stack": [
-    {
-      "auto_enable_logs_subscription": {
-        "name": "Auto-Enable-Logs-Subscription-{RandomString}",
-        "application_id": "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-loggroup-connector",
-        "capabilities": [
-          "CAPABILITY_IAM",
-          "CAPABILITY_RESOURCE_POLICY"
-        ],
-        "parameters": {
-          "DestinationArnType": "Kinesis",
-          "DestinationArnValue": "arn:aws:firehose:{Region}:{AccountId}:deliverystream/Kinesis-Logs-{RandomString}",
-          "LogGroupPattern": "aws",
-          "RoleArn": "arn:aws:iam::{AccountId}:role/SumoLogic-Firehose-Logs-{RandomString}"
-        },
-        "semantic_version": "1.0.15"
-      }
-    }
-  ],
   "sumologic_collector": {},
   "sumologic_source": {
     "category": "My/Test/cvategory",

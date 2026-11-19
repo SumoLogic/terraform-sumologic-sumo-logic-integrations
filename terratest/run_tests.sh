@@ -75,6 +75,8 @@ function set_env_variables()
         echo "Setting env variables for ${type}"
         export BUCKET_NAME="<YourS3BucketName>"
         export PATH_EXPRESSION="AWSLogs/<AWS_ACCOUNT_ID>/CloudTrail/us-east-1/*"
+        export BUCKET_NAME_AP_SOUTH_1="<YourS3BucketName>-ap-south-1"
+        export PATH_EXPRESSION_AP_SOUTH_1="AWSLogs/<AWS_ACCOUNT_ID>/CloudTrail/ap-south-1/*"
         export IAM_ROLE="arn:aws:iam::<AWS_ACCOUNT_ID>:role/TestingTerraformCloudTrailRole"
         export TOPIC_ARN="arn:aws:sns:us-east-1:<AWS_ACCOUNT_ID>:dynamodb"
         export COLLECTOR_ID="<COLLECTOR_ID>"
@@ -91,6 +93,13 @@ function set_env_variables()
         export TOPIC_ARN_US_WEST_1="arn:aws:sns:us-west-1:<AWS_ACCOUNT_ID>:dynamodb"
         export BUCKET_NAME_AP_SOUTH_1="<YourS3BucketName>-ap-south-1"
         export PATH_EXPRESSION_AP_SOUTH_1="*AWSLogs/<AWS_ACCOUNT_ID>/elasticloadbalancing/ap-south-1/*"
+        export IAM_ROLE="arn:aws:iam::<AWS_ACCOUNT_ID>:role/TestingTerraformCloudTrailRole"
+        export COLLECTOR_ID="<COLLECTOR_ID>"
+    elif [[ "${type}" = *"elasticloadbalancing"* ]];then
+        echo "Setting env variables for ${type}"
+        export BUCKET_NAME_US_WEST_1="<YourS3BucketName>-us-west-1"
+        export PATH_EXPRESSION_US_WEST_1="*AWSLogs/<AWS_ACCOUNT_ID>/elasticloadbalancing/us-west-1/*"
+        export TOPIC_ARN_US_WEST_1="arn:aws:sns:us-west-1:<AWS_ACCOUNT_ID>:dynamodb"
         export IAM_ROLE="arn:aws:iam::<AWS_ACCOUNT_ID>:role/TestingTerraformCloudTrailRole"
         export COLLECTOR_ID="<COLLECTOR_ID>"
     elif [[ "${type}" = *"kinesisfirehoseforlogs"* ]];then
@@ -127,7 +136,7 @@ export AWS_PROFILE=
 # 2. Declaring the modules. Please update the array, if some new modules are added.
 # Deprecated "aws/rootcause" - https://help.sumologic.com/release-notes-service/2025/06/03/observability/
 declare -a modules=(
-    "aws/cloudtrail" "aws/elb" "aws/cloudwatchmetrics" "aws/kinesisfirehoseforlogs" "aws/kinesisfirehoseformetrics" "aws/cloudwatchlogsforwarder" "sumologic"
+    "aws/cloudtrail" "aws/elb" "aws/elasticloadbalancing" "aws/cloudwatchmetrics" "aws/kinesisfirehoseforlogs" "aws/kinesisfirehoseformetrics" "aws/cloudwatchlogsforwarder" "sumologic"
 )
 
 # 3. Iterating through the module array to run unit and integration test cases.

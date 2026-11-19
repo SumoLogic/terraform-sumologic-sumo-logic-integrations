@@ -24,8 +24,7 @@
   "aws_s3_bucket": [
     {
       "s3_bucket": {
-        "bucket": "cloudtrail-logs-{RandomString}",
-        "region": "{Region}"
+        "bucket": "cloudtrail-logs-{RandomString}"
       }
     }
   ],
@@ -37,9 +36,11 @@
     }
   ],
   "aws_sns_subscription": {
-    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"requestPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
-    "endpoint_auto_confirms": true,
-    "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{RandomString}"
+    "subscription": {
+      "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"sicklyRetryPolicy\":null,\"requestPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
+      "endpoint_auto_confirms": true,
+      "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-CloudTrail-Module-{RandomString}"
+    }
   },
   "aws_sns_topic": [
     {

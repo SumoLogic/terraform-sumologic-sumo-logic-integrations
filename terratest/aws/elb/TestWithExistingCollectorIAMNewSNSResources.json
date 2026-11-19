@@ -2,36 +2,21 @@
   "random_string": {
     "lower": true
   },
-  "aws_serverlessapplicationrepository_cloudformation_stack": [
-    {
-      "auto_enable_access_logs": {
-        "name": "Auto-Enable-Access-Logs-Elb-{RandomString}",
-        "application_id": "arn:aws:serverlessrepo:us-east-1:956882708938:applications/sumologic-s3-logging-auto-enable",
-        "capabilities": [
-          "CAPABILITY_IAM",
-          "CAPABILITY_RESOURCE_POLICY"
-        ],
-        "parameters": {
-          "AutoEnableLogging": "ALB",
-          "BucketName": "aws-integration-random-{Region}",
-          "BucketPrefix": "elasticloadbalancing"
-        },
-        "semantic_version": "1.0.18"
-      }
-    }
-  ],
+  "elb_current_region": "{Region}",
   "aws_iam_role": {},
   "aws_s3_bucket": {},
   "aws_sns_subscription": {
-    "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"requestPolicy\":null,\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
-    "endpoint_auto_confirms": true,
-    "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-{RandomString}"
+    "subscription": {
+      "delivery_policy": "{\"healthyRetryPolicy\":{\"minDelayTarget\":10,\"maxDelayTarget\":300,\"numRetries\":40,\"numMaxDelayRetries\":5,\"numNoDelayRetries\":0,\"numMinDelayRetries\":3,\"backoffFunction\":\"exponential\"},\"requestPolicy\":null,\"sicklyRetryPolicy\":null,\"throttlePolicy\":null,\"guaranteed\":false}",
+      "endpoint_auto_confirms": true,
+      "topic_arn": "arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-{RandomString}"
+    }
   },
   "aws_sns_topic": [
     {
       "sns_topic": {
         "name": "SumoLogic-Terraform-Elb-Module-{RandomString}",
-        "policy": "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":\"sns:Publish\",\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-{RandomString}\",\"Condition\":{\"StringEquals\":{\"aws:SourceAccount\":\"{AccountId}\"},\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::aws-integration-random-{Region}\"}}}]}"
+        "policy": "{\"Version\":\"2008-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"Service\":\"s3.amazonaws.com\"},\"Action\":\"sns:Publish\",\"Resource\":\"arn:aws:sns:{Region}:{AccountId}:SumoLogic-Terraform-Elb-Module-{RandomString}\",\"Condition\":{\"StringEquals\":{\"aws:SourceAccount\":\"{AccountId}\"},\"ArnLike\":{\"aws:SourceArn\":\"arn:aws:s3:::{BucketName}\"}}}]}"
       }
     }
   ],

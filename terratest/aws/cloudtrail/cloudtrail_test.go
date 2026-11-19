@@ -10,6 +10,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
+	"github.com/stretchr/testify/assert"
 )
 
 // Env Variables
@@ -229,6 +230,70 @@ func TestWithExistingBucketTrailCollectorSNSIAM(t *testing.T) {
 	common.GetAssertResource(t, options.EnvVars).CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 }
 
+// TestAWSOCallPattern mirrors how the terraform-sumologic-aws-observability (AWSO 3.0.0) collections
+// module calls this module with an existing collector, bucket, IAM role and SNS topic, while the
+// SNS subscription, bucket policy and bucket notification are delegated to the AWSO Lambda helper.
+func TestAWSOCallPattern(t *testing.T) {
+	t.Parallel()
+	aws_region := "us-east-1"
+	PATH_EXPRESSION := fmt.Sprintf("AWSLogs/%s/CloudTrail/%s/*", aws.GetAccountId(t), aws_region)
+	vars := map[string]interface{}{
+		"create_collector":                    false,
+		"sumologic_organization_id":           common.SumologicOrganizationId,
+		"create_trail":                        false,
+		"wait_for_seconds":                    1,
+		"create_sns_subscription":             false,
+		"create_existing_bucket_policy":       false,
+		"create_existing_bucket_notification": false,
+		"aws_resource_tags": map[string]interface{}{
+			"Creator":     "SumoLogic",
+			"Environment": "Test",
+		},
+		"source_details": map[string]interface{}{
+			"source_name":     "My Test Source AWSO Call Pattern",
+			"source_category": "Labs/test/cloudtrail",
+			"description":     "This source is created using Sumo Logic terraform AWS cloudtrail module to collect AWS cloudtrail logs.",
+			"bucket_details": map[string]interface{}{
+				"create_bucket":        false,
+				"bucket_name":          BUCKET_NAME,
+				"path_expression":      PATH_EXPRESSION,
+				"force_destroy_bucket": false,
+			},
+			"paused":               false,
+			"scan_interval":        60000,
+			"cutoff_relative_time": "-1d",
+			"fields": map[string]interface{}{
+				"MySource": "TestSourceTerraform",
+			},
+			"sumo_account_id": common.SumoAccountId,
+			"collector_id":    COLLECTOR_ID,
+			"iam_details": map[string]interface{}{
+				"create_iam_role": false,
+				"iam_role_arn":    IAM_ROLE,
+			},
+			"sns_topic_details": map[string]interface{}{
+				"create_sns_topic": false,
+				"sns_topic_arn":    SNS_TOPIC,
+			},
+		},
+	}
+
+	options, count := SetUpTest(t, vars, aws_region)
+
+	// Source, wait and random string only. No bucket policy, bucket notification or SNS subscription.
+	test_structure.RunTestStage(t, "AssertCount", func() {
+		common.AssertResourceCounts(t, count, 3, 0, 0)
+	})
+
+	outputs := common.FetchAllOutputs(t, options)
+	test_structure.RunTestStage(t, "AssertDelegatedResourcesNotCreated", func() {
+		for _, key := range []string{"aws_sns_subscription", "aws_s3_bucket_policy", "aws_s3_bucket_notification", "aws_sns_topic", "aws_s3_bucket", "aws_iam_role", "sumologic_collector"} {
+			assert.Empty(t, outputs[key], "Output %s must be empty when the resource is managed outside this module.", key)
+		}
+		assert.NotEmpty(t, outputs["sumologic_source"].(map[string]interface{})["id"])
+	})
+}
+
 // 4. With New Bucket, Existing Trail (we will create a new trail), new Collector, New SNS Topic, New IAM Role
 func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
 	t.Parallel()
@@ -309,7 +374,9 @@ func TestWithExistingTrailNewBucketCollectorSNSIAM(t *testing.T) {
 func TestUpdates(t *testing.T) {
 	t.Parallel()
 	aws_region := "ap-south-1"
-	var PATH_EXPRESSION = os.Getenv("PATH_EXPRESSION")
+	// This test runs in ap-south-1, so the existing bucket and path expression must be from that region.
+	BUCKET_NAME_AP_SOUTH_1 := os.Getenv("BUCKET_NAME_AP_SOUTH_1")
+	PATH_EXPRESSION := os.Getenv("PATH_EXPRESSION_AP_SOUTH_1")
 	vars := map[string]interface{}{
 		"create_collector":          true,
 		"sumologic_organization_id": common.SumologicOrganizationId,
@@ -368,7 +435,7 @@ func TestUpdates(t *testing.T) {
 			"description":     "This source is created using Sumo Logic terraform AWS cloudtrail module to collect AWS cloudtrail logs.",
 			"bucket_details": map[string]interface{}{
 				"create_bucket":   false,
-				"bucket_name":     BUCKET_NAME,
+				"bucket_name":     BUCKET_NAME_AP_SOUTH_1,
 				"path_expression": PATH_EXPRESSION,
 				// This does not have any impact as terraform does not manage existing bucket.
 				"force_destroy_bucket": true,
@@ -394,7 +461,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 4, 7)
+		common.AssertResourceCounts(t, count, 2, 4, 7)
 	})
 
 	// update fields to source
@@ -420,7 +487,7 @@ func TestUpdates(t *testing.T) {
 			"description":     "This source is created using Sumo Logic terraform AWS cloudtrail module to collect AWS cloudtrail logs.",
 			"bucket_details": map[string]interface{}{
 				"create_bucket":   false,
-				"bucket_name":     BUCKET_NAME,
+				"bucket_name":     BUCKET_NAME_AP_SOUTH_1,
 				"path_expression": PATH_EXPRESSION,
 				// This does not have any impact as terraform does not manage existing bucket.
 				"force_destroy_bucket": true,

@@ -43,7 +43,7 @@
       "source_iam_role": {
         "name": "SumoLogic-Kinesis-firehose-Metrics-Module-{RandomString}",
         "assume_role_policy": "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Principal\":{\"AWS\":\"arn:aws:iam::{SumoAccountId}:root\"},\"Action\":\"sts:AssumeRole\",\"Condition\":{\"StringEquals\":{\"sts:ExternalId\":\"{Deployment}:{OrgId}\"}}}]}"
-      } 
+      }
     }
   ],
   "aws_kinesis_firehose_delivery_stream": {
@@ -84,8 +84,7 @@
   "aws_s3_bucket": [
     {
       "s3_bucket": {
-        "bucket": "sumologic-kinesis-firehose-metrics-{RandomString}",
-        "region": "{Region}"
+        "bucket": "sumologic-kinesis-firehose-metrics-{RandomString}"
       }
     }
   ],

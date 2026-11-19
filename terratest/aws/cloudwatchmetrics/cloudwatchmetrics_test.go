@@ -247,7 +247,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 2, 0)
+		common.AssertResourceCounts(t, count, 0, 3, 0)
 	})
 
 	vars = map[string]interface{}{
@@ -279,6 +279,6 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 1, 1, 2)
+		common.AssertResourceCounts(t, count, 1, 2, 2)
 	})
 }

@@ -128,8 +128,8 @@ variable "auto_enable_access_logs_options" {
 	EOT
 
   default = {
-    bucket_prefix          = ""
-    auto_enable_logging    = ""
+    bucket_prefix          = "elasticloadbalancing"
+    auto_enable_logging    = "ELB"
     filter                 = ""
     remove_on_delete_stack = true
   }

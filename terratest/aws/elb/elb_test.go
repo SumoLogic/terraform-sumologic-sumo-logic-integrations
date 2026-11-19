@@ -11,6 +11,7 @@ import (
 	"github.com/gruntwork-io/terratest/modules/aws"
 	"github.com/gruntwork-io/terratest/modules/terraform"
 	test_structure "github.com/gruntwork-io/terratest/modules/test-structure"
+	"github.com/stretchr/testify/assert"
 )
 
 var IAM_ROLE = os.Getenv("IAM_ROLE")
@@ -48,7 +49,7 @@ func TestWithDefaultValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 13, 0, 0)
+		common.AssertResourceCounts(t, count, 21, 0, 0)
 	})
 
 	outputs := common.FetchAllOutputs(t, options)
@@ -129,7 +130,7 @@ func TestWithExistingResourcesValues(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 6, 0, 0)
+		common.AssertResourceCounts(t, count, 10, 0, 0)
 	})
 
 	outputs := common.FetchAllOutputs(t, options)
@@ -141,6 +142,7 @@ func TestWithExistingResourcesValues(t *testing.T) {
 		"OrgId":          common.SumologicOrganizationId,
 		"BucketName":     BUCKET_NAME,
 		"PathExpression": PATH_EXPRESSION,
+		"SnsTopicArn":    SNS_TOPIC,
 		"RandomString":   outputs["random_string"].(map[string]interface{})["id"].(string),
 	}
 	// Assert if the outputs are actually created in AWS and Sumo Logic.
@@ -208,7 +210,7 @@ func TestWithExistingCollectorIAMNewSNSResources(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 8, 0, 0)
+		common.AssertResourceCounts(t, count, 12, 0, 0)
 	})
 
 	outputs := common.FetchAllOutputs(t, options)
@@ -237,6 +239,81 @@ func TestWithExistingCollectorIAMNewSNSResources(t *testing.T) {
 	assertResource.CheckLogsForPastSixtyMinutes("_sourceid="+outputs["sumologic_source"].(map[string]interface{})["id"].(string), 5, 2*time.Minute)
 }
 
+// TestAWSOCallPattern mirrors how the terraform-sumologic-aws-observability (AWSO 3.0.0) collections
+// module calls this module: existing collector, bucket, IAM role and SNS topic, with the SNS
+// subscription, bucket policy and bucket notification all delegated to the AWSO Lambda helper.
+// None of those three resources may be created by this module in that mode.
+func TestAWSOCallPattern(t *testing.T) {
+	t.Parallel()
+	BUCKET_NAME := os.Getenv("BUCKET_NAME_US_WEST_1")
+	PATH_EXPRESSION := os.Getenv("PATH_EXPRESSION_US_WEST_1")
+	SNS_TOPIC := os.Getenv("TOPIC_ARN_US_WEST_1")
+
+	aws_region := "us-west-1"
+	vars := map[string]interface{}{
+		"create_collector":                    false,
+		"sumologic_organization_id":           common.SumologicOrganizationId,
+		"auto_enable_access_logs":             "Both",
+		"wait_for_seconds":                    1,
+		"create_sns_subscription":             false,
+		"create_existing_bucket_policy":       false,
+		"create_existing_bucket_notification": false,
+		"aws_cli_profile":                     os.Getenv("AWS_PROFILE"),
+		"auto_enable_access_logs_options": map[string]interface{}{
+			"filter":                 "'Type': 'application'|'type': 'application'",
+			"remove_on_delete_stack": true,
+		},
+		"source_details": map[string]interface{}{
+			"source_name":     "My ELB Source AWSO Call Pattern",
+			"source_category": "Labs/test/elb",
+			"description":     "This source is created.",
+			"bucket_details": map[string]interface{}{
+				"create_bucket":        false,
+				"bucket_name":          BUCKET_NAME,
+				"path_expression":      PATH_EXPRESSION,
+				"force_destroy_bucket": false,
+			},
+			"paused":               false,
+			"scan_interval":        60000,
+			"cutoff_relative_time": "-1d",
+			"fields": map[string]string{
+				"TestCollector": "MyValue",
+			},
+			"sumo_account_id": common.SumoAccountId,
+			"collector_id":    COLLECTOR_ID,
+			"iam_details": map[string]interface{}{
+				"create_iam_role": false,
+				"iam_role_arn":    IAM_ROLE,
+			},
+			"sns_topic_details": map[string]interface{}{
+				"create_sns_topic": false,
+				"sns_topic_arn":    SNS_TOPIC,
+			},
+		},
+		"aws_resource_tags": map[string]interface{}{
+			"Creator":     "SumoLogic",
+			"Environment": "Test",
+		},
+	}
+
+	options, count := SetUpTest(t, vars, aws_region)
+
+	// Source + wait + random string + auto enable (IAM role/policy, 2 lambdas, event rule/target/permission,
+	// random string, lambda enable resource). No S3 policy, notification or SNS subscription.
+	test_structure.RunTestStage(t, "AssertCount", func() {
+		common.AssertResourceCounts(t, count, 12, 0, 0)
+	})
+
+	outputs := common.FetchAllOutputs(t, options)
+	test_structure.RunTestStage(t, "AssertDelegatedResourcesNotCreated", func() {
+		for _, key := range []string{"aws_sns_subscription", "aws_s3_bucket_notification", "aws_sns_topic", "aws_s3_bucket", "aws_iam_role", "sumologic_collector"} {
+			assert.Empty(t, outputs[key], "Output %s must be empty when the resource is managed outside this module.", key)
+		}
+		assert.Equal(t, aws_region, outputs["elb_current_region"])
+		assert.NotEmpty(t, outputs["sumologic_source"].(map[string]interface{})["id"])
+	})
+}
+
 func TestUpdates(t *testing.T) {
 	t.Parallel()
 	aws_region := "us-east-1"
@@ -261,7 +338,7 @@ func TestUpdates(t *testing.T) {
 
 	// Assert count of Expected resources.
 	test_structure.RunTestStage(t, "AssertCount", func() {
-		common.AssertResourceCounts(t, count, 13, 0, 0)
+		common.AssertResourceCounts(t, count, 17, 0, 0)
 	})
 
 	vars = map[string]interface{}{
@@ -280,6 +357,6 @@ func TestUpdates(t *testing.T) {
 	count = UpdateTerraform(t, vars, options)
 
 	test_structure.RunTestStage(t, "UpdateFirst", func() {
-		common.AssertResourceCounts(t, count, 0, 4, 1)
+		common.AssertResourceCounts(t, count, 0, 6, 2)
 	})
 }
